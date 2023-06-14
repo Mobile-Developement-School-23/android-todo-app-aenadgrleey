@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_label">Мои дела</string>
+    <string name="buy_something">Купить что-то</string>
+    <string name="add_new">Добавить</string>
+    <string name="deadline">Дедлайн:</string>
+</resources>

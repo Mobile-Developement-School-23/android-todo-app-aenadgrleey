@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/catalogueFragment">
+
+    <fragment
+        android:id="@+id/catalogueFragment"
+        android:name="com.aenadgrleey.tobedone.presentation.catalogue.CatalogueFragment"
+        android:label="catalogue_fragment"
+        tools:layout="@layout/catalogue_fragment">
+        <action
+            android:id="@+id/action_catalogueFragment_to_refactorFragment"
+            app:destination="@id/refactorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/refactorFragment"
+        android:name="com.aenadgrleey.tobedone.presentation.RefactorFragment"
+        android:label="refactor_fragment"
+        tools:layout="@layout/adding_fragment" />
+</navigation>
