@@ -76,6 +76,10 @@ class RefactorFragment : Fragment() {
                         paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                     }
                     binding!!.deadline.setTextColor(typedValue.data)
+                    optedDeadline = it
+                    val dateFormat =
+                        SimpleDateFormat("dd LLL yy", resources.configuration.locales[0])
+                    binding!!.deadline.text = dateFormat.format(optedDeadline)
                 }
                 isCompleted = it.completed ?: false
                 binding!!.toolbar.menu[0].icon!!.setTint(

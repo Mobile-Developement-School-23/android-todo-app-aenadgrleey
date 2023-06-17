@@ -66,7 +66,7 @@ class CatalogueFragment : Fragment() {
         adapter = TodoItemsRecyclerViewAdapter(
             scrollUp = { layoutManager!!.scrollToPosition(0) },
             onTodoItemClick = { todoItem ->
-                requireActivity().supportFragmentManager.commit {
+                parentFragmentManager.commit {
                     val arguments = Bundle()
                     arguments.putParcelable("todoItem", todoItem)
                     val aim = RefactorFragment().also { it.arguments = arguments }
@@ -139,6 +139,20 @@ class CatalogueFragment : Fragment() {
         binding!!.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val seekPosition = -verticalOffset / appBarLayout.totalScrollRange.toFloat()
             binding!!.toolbar.motionLayout.progress = seekPosition
+        }
+        binding!!.fab.setOnClickListener {
+            parentFragmentManager.commit {
+                val arguments = Bundle()
+                arguments.putParcelable("todoItem", null)
+                val aim = RefactorFragment().also { it.arguments = arguments }
+                replace(
+                    androidx.fragment.R.id.fragment_container_view_tag,
+                    aim,
+                    "tag"
+                )
+                setReorderingAllowed(true)
+                addToBackStack(null)
+            }
         }
         return binding!!.root
     }
