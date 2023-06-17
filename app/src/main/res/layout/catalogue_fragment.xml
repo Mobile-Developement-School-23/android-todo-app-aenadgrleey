@@ -4,21 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.MainActivity">
+    android:background="?android:colorBackground"
+    tools:context=".presentation.catalogue.CatalogueFragment">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="0dp">
+        android:layout_height="260dp"
+        android:fitsSystemWindows="true"
+        app:expanded="true"
+        app:liftOnScroll="false">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/roboto_bold"
-            android:gravity="center|start"
-            android:padding="60dp"
-            android:text="@string/main_label"
-            android:textAppearance="?attr/textAppearanceDisplaySmall" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/expendable_toolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -26,6 +25,15 @@
         android:id="@+id/todo_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fadeScrollbars="false"
+        android:nestedScrollingEnabled="true"
+        android:overScrollMode="never"
+        android:paddingBottom="64dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarSize="5dip"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/todo_list_item" />
 
@@ -37,6 +45,5 @@
         android:src="@drawable/round_edit_24"
         android:tint="?colorOnPrimaryContainer"
         app:elevation="2dp" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

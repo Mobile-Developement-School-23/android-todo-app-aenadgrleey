@@ -12,4 +12,14 @@ data class TodoItemData(
     var deadline: Date? = null,
     val created: Date = Calendar.getInstance().time,
     var lastModified: Date = Calendar.getInstance().time
-)
+) {
+    fun copy(
+        body: String = this.body,
+        completed: Boolean = this.completed,
+        importance: String = this.importance,
+        deadline: Date? = this.deadline,
+        created: Date = this.created,
+        lastModified: Date = this.lastModified
+    ): TodoItemData =
+        TodoItemData(this.id, body, completed, importance, deadline, created, lastModified)
+}

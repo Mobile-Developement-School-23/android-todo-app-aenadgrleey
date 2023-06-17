@@ -2,4 +2,7 @@
 <resources>
     <dimen name="fab_margin">24dp</dimen>
     <dimen name="fab_size">56dp</dimen>
+    <dimen name="small_fab_size">40dp</dimen>
+    <dimen name="list_element_min_size">72dp</dimen>
+    <dimen name="toolbar_size">64dp</dimen>
 </resources>

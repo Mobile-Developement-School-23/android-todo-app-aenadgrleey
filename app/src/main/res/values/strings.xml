@@ -3,6 +3,16 @@
     <string name="main_label">To do</string>
     <string name="buy_something">Buy something</string>
     <string name="add_new">Add new</string>
+    <string name="tasksCompleted">Completed -</string>
+    <string name="markCompleted">Completed</string>
+    <string name="editTask">Edit</string>
+    <string name="deleteTask">Delete</string>
+    <string name="insertTask">Insert task description</string>
+    <string name="importance">Importance</string>
+    <string name="highImportance">‼️High</string>
+    <string name="lowImportance">⬇️Low</string>
+    <string name="commonImportance">Common</string>
+    <string name="deadlineExample" translatable="false">12.12.12</string>
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

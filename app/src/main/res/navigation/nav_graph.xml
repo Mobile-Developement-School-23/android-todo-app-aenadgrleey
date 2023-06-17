@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/refactorFragment"
-        android:name="com.aenadgrleey.tobedone.presentation.RefactorFragment"
+        android:name="com.aenadgrleey.tobedone.presentation.refactor.RefactorFragment"
         android:label="refactor_fragment"
         tools:layout="@layout/adding_fragment" />
 </navigation>

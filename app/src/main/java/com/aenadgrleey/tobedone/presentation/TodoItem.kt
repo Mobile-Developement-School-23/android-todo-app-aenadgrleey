@@ -13,4 +13,13 @@ data class TodoItem(
     val deadline: Date? = null,
     val created: Date? = null,
     val lastModified: Date? = null
-) : Parcelable
+) : Parcelable {
+    fun copy(
+        body: String? = this.body,
+        completed: Boolean? = this.completed,
+        importance: String? = this.importance,
+        deadline: Date? = this.deadline,
+        created: Date? = this.created,
+        lastModified: Date? = this.lastModified
+    ): TodoItem = TodoItem(this.id, body, completed, importance, deadline, created, lastModified)
+}

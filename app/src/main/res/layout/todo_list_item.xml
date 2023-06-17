@@ -1,90 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dragged_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?colorSurface"
-    android:minHeight="64dp">
-
-    <FrameLayout
-        android:id="@+id/complete_indicator_holder"
-        android:layout_width="52dp"
-        android:layout_height="48dp"
-        app:layout_constraintBaseline_toBaselineOf="@id/body"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/complete_indicator"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:tint="?colorOutlineVariant"
-            app:srcCompat="@drawable/round_check_circle_outline_24" />
-
-    </FrameLayout>
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:minHeight="@dimen/list_element_min_size">
 
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:ellipsize="end"
+        android:layout_marginHorizontal="4dp"
+        android:fontFamily="@font/roboto_medium"
         android:maxLines="3"
-        android:text="@string/lorem_ipsum"
-        android:textAppearance="?attr/textAppearanceTitleLarge"
+        android:text="@string/buy_something"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         android:textColor="?colorOnSurfaceVariant"
         app:layout_constraintBottom_toTopOf="@id/deadline"
-        app:layout_constraintEnd_toStartOf="@id/more_button_holder"
-        app:layout_constraintStart_toEndOf="@+id/complete_indicator_holder"
-
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/more_button"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/complete_indicator"
+        app:layout_constraintTop_toTopOf="@id/guideline"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/deadline"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="13dp"
+        android:layout_height="match_parent"
         android:ellipsize="end"
+        android:layout_marginHorizontal="4dp"
+        android:fontFamily="@font/roboto_light"
         android:maxLines="1"
         android:text="@string/deadline"
-        android:textAppearance="?attr/textAppearanceLabelMedium"
+        android:textAppearance="?attr/textAppearanceLabelLarge"
         android:textColor="?colorOnSurfaceVariant"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/more_button_holder"
-        app:layout_constraintStart_toEndOf="@+id/complete_indicator_holder"
+        app:layout_constraintBottom_toBottomOf="@id/guideline2"
+        app:layout_constraintEnd_toStartOf="@id/more_button"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/complete_indicator"
         app:layout_constraintTop_toBottomOf="@id/body"
+        tools:visibility="gone" />
 
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <FrameLayout
-        android:id="@+id/more_button_holder"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/complete_indicator"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="4dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="center"
+        android:tint="?colorOutline"
+        app:layout_constraintBottom_toBottomOf="@id/guideline2"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:layout_constraintVertical_bias="0.25"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/round_check_circle_outline_24" />
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/more_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="center"
+        android:tint="?colorOnSurfaceVariant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/round_more_horiz_24" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/more_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:tint="?colorOutlineVariant"
-            app:srcCompat="@drawable/round_more_horiz_24" />
-
-    </FrameLayout>
-
-
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="8dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="8dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

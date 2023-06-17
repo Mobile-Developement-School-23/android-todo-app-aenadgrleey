@@ -1,16 +1,24 @@
 package com.aenadgrleey.tobedone.di
 
 import android.app.Application
+import android.content.Context
+import com.aenadgrleey.tobedone.R
 import com.aenadgrleey.tobedone.data.TodoItemData
 import com.aenadgrleey.tobedone.data.TodoItemsDataSource
+import com.aenadgrleey.tobedone.presentation.TodoItem
+import com.aenadgrleey.tobedone.presentation.TodoItemDataToTodoItem
+import com.aenadgrleey.tobedone.presentation.TodoItemToTodoItemData
+import com.aenadgrleey.tobedone.utils.Importance
+import com.aenadgrleey.tobedone.utils.Mapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
+import java.util.Calendar
 import javax.inject.Singleton
 
 @Module
@@ -23,36 +31,94 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideDataViewMapper(): Mapper<TodoItemData, TodoItem> = TodoItemDataToTodoItem()
+
+    @Singleton
+    @Provides
+    fun provideViewDataMapper(): Mapper<TodoItem, TodoItemData> = TodoItemToTodoItemData()
+
+    @Singleton
+    @Provides
     fun provideDataSource(
-//        @ApplicationContext app: Application
+        @ApplicationContext context: Context
     ): TodoItemsDataSource {
         return object : TodoItemsDataSource {
-            var onUpdate: suspend () -> Unit = {}
-            val items = mutableListOf(
-                TodoItemData(
-                    id = "abad",
-                    body = "adad"
+            var updateItemFlow: suspend () -> Unit = {}
+            var updateCountFlow: suspend () -> Unit = {}
+
+            val items = mutableListOf<TodoItemData>().apply {
+                var counter = 0
+                val texts = listOf(
+                    context.getText(R.string.buy_something),
+                    context.getString(R.string.lorem_ipsum)
                 )
-            )
-
-            override suspend fun addTodoItem(item: TodoItemData) {
-                items.add(item)
-                onUpdate()
-            }
-
-            override fun getTodoItems(): Flow<List<TodoItemData>> {
-                return flow {
-                    onUpdate = { emit(items) }
-                    while (true) {
-                        onUpdate()
-                        delay(1000L)
+                val completed = listOf(true, false)
+                val importance = listOf(Importance.Common, Importance.High, Importance.Low)
+                val deadline = listOf(Calendar.getInstance().time, null)
+                for (importanceType in 0..2) {
+                    for (textType in 0..1) {
+                        for (completenessType in 0..1) {
+                            for (deadlineExistence in 0..1) {
+                                this.add(
+                                    TodoItemData(
+                                        id = counter.toString(),
+                                        body = texts[textType].toString(),
+                                        completed = completed[completenessType],
+                                        importance = importance[importanceType],
+                                        deadline = deadline[deadlineExistence],
+                                    )
+                                )
+                                counter += 1
+                            }
+                        }
                     }
                 }
             }
 
-            override suspend fun deleteTodoItem(item: TodoItemData) {
-                items.remove(item)
-                onUpdate()
+            override suspend fun addTodoItem(todoItem: TodoItemData) {
+                var insertFlag = true
+                items.forEachIndexed { index, item ->
+                    if (item.id == todoItem.id) {
+                        items[index] = todoItem
+                        insertFlag = false
+                    }
+                }
+                if (insertFlag)
+                    items.add(todoItem)
+
+                updateItemFlow()
+                updateCountFlow()
+            }
+
+            override fun getTodoItems(includeCompleted: Boolean): Flow<List<TodoItemData>> {
+                return channelFlow {
+                    updateItemFlow = {
+                        send(items.filter {
+                            (!(includeCompleted || it.completed)) || includeCompleted
+                        })
+                    }
+                    updateItemFlow()
+                    awaitClose()
+                }
+            }
+
+            override fun completedItemsCount(): Flow<Int> = channelFlow {
+                updateCountFlow = {
+                    send(items.filter { it.completed }.size)
+                }
+                updateCountFlow()
+                awaitClose()
+            }
+
+            override suspend fun deleteTodoItem(todoItem: TodoItemData) {
+                for (index in 0..items.lastIndex) {
+                    if (items[index].id == todoItem.id) {
+                        items.removeAt(index)
+                        break
+                    }
+                }
+                updateItemFlow()
+                updateCountFlow()
             }
         }
     }

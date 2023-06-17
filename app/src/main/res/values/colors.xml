@@ -63,10 +63,11 @@
     <color name="transparent">#00000000</color>
     <color name="yellow">#ffda59</color>
     <color name="orange">#DA5919</color>
-    <color name="green">#93D172</color>
     <color name="purple">#592E83</color>
     <color name="red">#E65151</color>
-    <color name="blue">#0075A2</color>
+    <color name="blue">#03A9F4</color>
     <color name="grey">#979080</color>
-    <color name="successColor">#C1F8A4</color>
+    <color name="green">#9BD31A</color>
+    <color name="greenContainer">#D9F378</color>
+
 </resources>
