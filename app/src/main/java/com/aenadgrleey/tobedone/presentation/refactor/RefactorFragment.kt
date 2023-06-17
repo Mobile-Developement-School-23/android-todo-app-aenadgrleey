@@ -106,7 +106,6 @@ class RefactorFragment : Fragment() {
                 val scrollY: Int = nestedScroll.scrollY // For // ScrollView
                 toolbar.elevation =
                     scrollY.coerceAtMost(actionbarSize.toInt()).div(actionbarSize) * 10
-                println(scrollY.coerceAtMost(actionbarSize.toInt()).div(actionbarSize) * 10)
             }
         }
         binding!!.deadline.setOnClickListener {
@@ -169,6 +168,11 @@ class RefactorFragment : Fragment() {
                 }
             }
             true
+        }
+
+        binding!!.deleteButton.setOnClickListener {
+            viewModel.deleteTodoItem(formTodoItem())
+            parentFragmentManager.popBackStack()
         }
     }
 
