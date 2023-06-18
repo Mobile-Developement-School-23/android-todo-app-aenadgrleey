@@ -14,6 +14,7 @@
     <string name="lowImportance">⬇️ Неважное</string>
     <string name="commonImportance">Обычное</string>
     <string name="completeBefore">Выполнить до:</string>
+    <string name="noText">Нет текста!</string>
 
 
 </resources>

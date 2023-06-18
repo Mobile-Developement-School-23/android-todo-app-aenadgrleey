@@ -31,7 +31,10 @@ class TodoItemsSwipeCallback(
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: ViewHolder
-    ) = makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+    ) =
+        if ((recyclerView.adapter as TodoItemsRecyclerViewAdapter).getItemViewType(viewHolder.adapterPosition) == TodoItemsRecyclerViewAdapter.lastItemTag)
+            makeMovementFlags(0, 0)
+        else makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
 
     override fun onMove(
         recyclerView: RecyclerView,

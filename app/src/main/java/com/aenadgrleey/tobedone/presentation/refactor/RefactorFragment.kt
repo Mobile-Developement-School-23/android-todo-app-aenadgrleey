@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.get
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.aenadgrleey.tobedone.R
@@ -72,9 +73,8 @@ class RefactorFragment : Fragment() {
                     val typedValue = TypedValue()
                     deadlineSwitch.isChecked = true
                     requireContext().theme.resolveAttribute(attr.colorOnSurface, typedValue, true)
-                    binding!!.deadline.run {
-                        paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                    }
+                    binding!!.deadline
+                        .run { paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv() }
                     binding!!.deadline.setTextColor(typedValue.data)
                     optedDeadline = it
                     val dateFormat =
@@ -146,8 +146,12 @@ class RefactorFragment : Fragment() {
         binding!!.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.save -> {
-                    viewModel.addTodoItem(formTodoItem())
-                    parentFragmentManager.popBackStack()
+                    if (binding!!.body.text.isNullOrEmpty()) {
+                        binding!!.bodyHolder.error = resources.getText(R.string.noText)
+                    } else {
+                        viewModel.addTodoItem(formTodoItem())
+                        parentFragmentManager.popBackStack()
+                    }
                 }
 
                 R.id.done -> {
@@ -177,6 +181,13 @@ class RefactorFragment : Fragment() {
         binding!!.deleteButton.setOnClickListener {
             viewModel.deleteTodoItem(formTodoItem())
             parentFragmentManager.popBackStack()
+        }
+
+        binding!!.body.addTextChangedListener {
+            binding!!.bodyHolder.error =
+                if (binding!!.body.text.isNullOrEmpty()) resources.getText(R.string.noText)
+                else ""
+
         }
     }
 

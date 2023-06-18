@@ -14,6 +14,7 @@
     <string name="commonImportance">Common</string>
     <string name="completeBefore">Completer before:</string>
     <string name="deadlineExample" translatable="false">12.12.12</string>
+    <string name="noText">No text inserted!</string>
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

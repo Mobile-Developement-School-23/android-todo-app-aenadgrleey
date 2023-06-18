@@ -27,6 +27,7 @@ import com.google.android.material.imageview.ShapeableImageView
 class TodoItemsRecyclerViewAdapter(
     private val scrollUp: () -> Unit,
     private val onTodoItemClick: (TodoItem) -> Unit,
+    private val onLastItemClick: () -> Unit,
     private val onCompleteButtonClick: (TodoItem) -> Unit,
     private val onEditButtonClick: (TodoItem) -> Unit,
     private val onDeleteButtonClick: (TodoItem) -> Unit
@@ -188,6 +189,8 @@ class TodoItemsRecyclerViewAdapter(
                 }.show()
             }
         }
+        if (holder is LastItemViewHolder)
+            holder.itemView.setOnClickListener { onLastItemClick() }
     }
 
     companion object {

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.aenadgrleey.tobedone.R.*
 import com.aenadgrleey.tobedone.databinding.CatalogueFragmentBinding
 import com.aenadgrleey.tobedone.presentation.SharedViewModel
+import com.aenadgrleey.tobedone.presentation.TodoItem
 import com.aenadgrleey.tobedone.presentation.catalogue.utils.TodoItemsRecyclerViewAdapter
 import com.aenadgrleey.tobedone.presentation.catalogue.utils.TodoItemsSwipeCallback
 import com.aenadgrleey.tobedone.presentation.refactor.RefactorFragment
@@ -72,20 +73,8 @@ class CatalogueFragment : Fragment() {
 
         adapter = TodoItemsRecyclerViewAdapter(
             scrollUp = { layoutManager!!.scrollToPosition(0) },
-            onTodoItemClick = { todoItem ->
-                parentFragmentManager.commit {
-                    val arguments = Bundle()
-                    arguments.putParcelable("todoItem", todoItem)
-                    val aim = RefactorFragment().also { it.arguments = arguments }
-                    replace(
-                        androidx.fragment.R.id.fragment_container_view_tag,
-                        aim,
-                        "tag"
-                    )
-                    setReorderingAllowed(true)
-                    addToBackStack(null)
-                }
-            },
+            onTodoItemClick = { todoItem -> navigateToRefactorFragment(todoItem) },
+            onLastItemClick = { navigateToRefactorFragment(null) },
             onCompleteButtonClick = { todoItem ->
                 viewModel.addTodoItem(todoItem.copy(completed = !todoItem.completed!!))
             },
@@ -148,19 +137,9 @@ class CatalogueFragment : Fragment() {
             binding!!.toolbar.motionLayout.progress = seekPosition
         }
         binding!!.fab.setOnClickListener {
-            parentFragmentManager.commit {
-                val arguments = Bundle()
-                arguments.putParcelable("todoItem", null)
-                val aim = RefactorFragment().also { it.arguments = arguments }
-                replace(
-                    androidx.fragment.R.id.fragment_container_view_tag,
-                    aim,
-                    "tag"
-                )
-                setReorderingAllowed(true)
-                addToBackStack(null)
-            }
+            navigateToRefactorFragment(null)
         }
+
         return binding!!.root
     }
 
@@ -168,6 +147,21 @@ class CatalogueFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding!!.toolbar.visibilityIcon.setOnClickListener {
             viewModel.toggleShowCompleted()
+        }
+    }
+
+    private fun navigateToRefactorFragment(todoItem: TodoItem?) {
+        parentFragmentManager.commit {
+            val arguments = Bundle()
+            arguments.putParcelable("todoItem", todoItem)
+            val aim = RefactorFragment().also { it.arguments = arguments }
+            replace(
+                androidx.fragment.R.id.fragment_container_view_tag,
+                aim,
+                "tag"
+            )
+            setReorderingAllowed(true)
+            addToBackStack(null)
         }
     }
 
