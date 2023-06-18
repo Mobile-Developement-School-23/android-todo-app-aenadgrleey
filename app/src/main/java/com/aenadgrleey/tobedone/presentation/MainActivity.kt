@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
                     "tag"
                 )
                 setReorderingAllowed(true)
-                addToBackStack(null)
             }
 
     }

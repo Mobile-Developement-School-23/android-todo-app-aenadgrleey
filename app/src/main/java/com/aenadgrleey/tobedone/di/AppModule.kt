@@ -46,8 +46,8 @@ object AppModule {
             var updateItemFlow: suspend () -> Unit = {}
             var updateCountFlow: suspend () -> Unit = {}
 
+            var counter = 0
             val items = mutableListOf<TodoItemData>().apply {
-                var counter = 0
                 val texts = listOf(
                     context.getText(R.string.buy_something),
                     context.getString(R.string.lorem_ipsum)
@@ -83,8 +83,10 @@ object AppModule {
                         insertFlag = false
                     }
                 }
-                if (insertFlag)
+                if (insertFlag) {
+                    todoItem.id = counter.toString()
                     items.add(todoItem)
+                }
 
                 updateItemFlow()
                 updateCountFlow()

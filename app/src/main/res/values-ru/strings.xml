@@ -13,6 +13,7 @@
     <string name="highImportance">‼️Очень важное</string>
     <string name="lowImportance">⬇️ Неважное</string>
     <string name="commonImportance">Обычное</string>
+    <string name="completeBefore">Выполнить до:</string>
 
 
 </resources>

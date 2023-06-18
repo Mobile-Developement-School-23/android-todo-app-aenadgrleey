@@ -36,7 +36,9 @@ class SharedViewModel @Inject constructor(
     val completedCount = repository.completedItemsCount()
 
     fun toggleShowCompleted() {
-        mShowCompleted.value = !mShowCompleted.value
+        viewModelScope.launch(Dispatchers.Default) {
+            mShowCompleted.value = !mShowCompleted.value
+        }
     }
 
     fun addTodoItem(todoItem: TodoItem) {

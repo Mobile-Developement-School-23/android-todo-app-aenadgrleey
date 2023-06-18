@@ -24,8 +24,10 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class CatalogueFragment : Fragment() {
@@ -45,20 +47,25 @@ class CatalogueFragment : Fragment() {
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
             .apply { duration = animDuration }
 
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.showCompleted.collectLatest {
                     viewModel.todoItems.collectLatest {
-                        adapter!!.setTodoItems(it)
+                        withContext(Dispatchers.Main) {
+                            adapter!!.setTodoItems(it)
+                        }
                     }
                 }
             }
         }
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.completedCount.collectLatest {
-                    binding!!.toolbar.helperText.text =
-                        resources.getText(string.tasksCompleted).toString() + " " + it.toString()
+                    withContext(Dispatchers.Main) {
+                        binding!!.toolbar.helperText.text =
+                            resources.getText(string.tasksCompleted)
+                                .toString() + " " + it.toString()
+                    }
                 }
             }
         }
