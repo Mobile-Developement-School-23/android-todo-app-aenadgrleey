@@ -1,4 +1,4 @@
-package com.aenadgrleey.tobedone.presentation.catalogue.utils
+package com.aenadgrleey.tobedone.presentation.catalogue_fragment.utils
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aenadgrleey.tobedone.R
 import com.aenadgrleey.tobedone.databinding.TodoLastListItemBinding
 import com.aenadgrleey.tobedone.databinding.TodoListItemBinding
-import com.aenadgrleey.tobedone.presentation.TodoItem
+import com.aenadgrleey.tobedone.presentation.models.TodoItem
 import com.aenadgrleey.tobedone.utils.Importance
 import com.google.android.material.R.*
 import com.google.android.material.imageview.ShapeableImageView
@@ -37,7 +37,7 @@ class TodoItemsRecyclerViewAdapter(
     private var mTodoItems = emptyList<TodoItem>()
 
     fun setTodoItems(newItems: List<TodoItem>) {
-        val shouldScroll = mTodoItems.isEmpty()
+        val shouldScroll = mTodoItems.size - newItems.size != 1
         val diffCallback = TodoItemsDiffCallback(mTodoItems, newItems)
         mTodoItems = newItems
         val diffCourses = DiffUtil.calculateDiff(diffCallback)

@@ -1,4 +1,4 @@
-package com.aenadgrleey.tobedone.presentation.catalogue.utils
+package com.aenadgrleey.tobedone.presentation.catalogue_fragment.utils
 
 import android.content.Context
 import android.graphics.Canvas
@@ -64,6 +64,16 @@ class TodoItemsSwipeCallback(
                 viewHolder.itemView.bottom
             )
             val paint = Paint()
+            val typedValue = TypedValue()
+            context.theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnErrorContainer,
+                typedValue,
+                true
+            )
+            val colorOutline = typedValue.data
+            val marginHorizontal = 16.toPx
+            val vhHeight = viewHolder.itemView.bottom - viewHolder.itemView.top
+            val vhWidth = viewHolder.itemView.width
 
             when {
                 dX > 0 -> {
@@ -78,6 +88,16 @@ class TodoItemsSwipeCallback(
                         parsedColor.blue
                     )
                     paint.color = shownColor
+                    val completeIcon =
+                        AppCompatResources.getDrawable(context, R.drawable.round_done_24)!!
+                            .apply { setTint(colorOutline) }
+                    completeIcon.bounds = Rect(
+                        marginHorizontal,
+                        (viewHolder.itemView.top + vhHeight.div(2) - completeIcon.intrinsicHeight.div(2)),
+                        marginHorizontal + completeIcon.intrinsicWidth,
+                        viewHolder.itemView.top + vhHeight.div(2) + completeIcon.intrinsicHeight.div(2)
+                    )
+                    completeIcon.draw(canvas)
                 }
 
                 dX < 0 -> {
@@ -98,42 +118,20 @@ class TodoItemsSwipeCallback(
                         parsedColor.blue
                     )
                     paint.color = shownColor
+                    val deleteIcon =
+                        AppCompatResources.getDrawable(context, R.drawable.round_delete_outline_24)!!
+                            .apply { setTint(colorOutline) }
+                    deleteIcon.bounds = Rect(
+                        vhWidth - deleteIcon.intrinsicWidth - marginHorizontal,
+                        (viewHolder.itemView.top + vhHeight.div(2) - deleteIcon.intrinsicHeight.div(2)),
+                        vhWidth - marginHorizontal,
+                        viewHolder.itemView.top + vhHeight.div(2) + deleteIcon.intrinsicHeight.div(2)
+                    )
+                    deleteIcon.draw(canvas)
                 }
             }
 
             canvas.drawRect(rect, paint)
-
-            val typedValue = TypedValue()
-            context.theme.resolveAttribute(
-                com.google.android.material.R.attr.colorOnErrorContainer,
-                typedValue,
-                true
-            )
-            val colorOutline = typedValue.data
-            val completeIcon =
-                AppCompatResources.getDrawable(context, R.drawable.round_done_24)!!
-                    .apply { setTint(colorOutline) }
-            val deleteIcon =
-                AppCompatResources.getDrawable(context, R.drawable.round_delete_outline_24)!!
-                    .apply { setTint(colorOutline) }
-            val marginHorizontal = 16.toPx
-
-            val vhHeight = viewHolder.itemView.bottom - viewHolder.itemView.top
-            val vhWidth = viewHolder.itemView.width
-            completeIcon.bounds = Rect(
-                marginHorizontal,
-                (viewHolder.itemView.top + vhHeight.div(2) - completeIcon.intrinsicHeight.div(2)),
-                marginHorizontal + completeIcon.intrinsicWidth,
-                viewHolder.itemView.top + vhHeight.div(2) + completeIcon.intrinsicHeight.div(2)
-            )
-            deleteIcon.bounds = Rect(
-                vhWidth - deleteIcon.intrinsicWidth - marginHorizontal,
-                (viewHolder.itemView.top + vhHeight.div(2) - deleteIcon.intrinsicHeight.div(2)),
-                vhWidth - marginHorizontal,
-                viewHolder.itemView.top + vhHeight.div(2) + deleteIcon.intrinsicHeight.div(2)
-            )
-
-            if (dX > 0) completeIcon.draw(canvas) else deleteIcon.draw(canvas)
 
             super.onChildDraw(
                 canvas,
@@ -145,11 +143,5 @@ class TodoItemsSwipeCallback(
                 isCurrentlyActive
             )
         }
-
     }
-
-    companion object {
-        val width = 1000.toPx
-    }
-
 }

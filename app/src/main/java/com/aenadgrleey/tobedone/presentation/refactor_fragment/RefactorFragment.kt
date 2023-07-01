@@ -1,4 +1,4 @@
-package com.aenadgrleey.tobedone.presentation.refactor
+package com.aenadgrleey.tobedone.presentation.refactor_fragment
 
 import android.graphics.Paint
 import android.icu.text.SimpleDateFormat
@@ -16,7 +16,7 @@ import androidx.fragment.app.activityViewModels
 import com.aenadgrleey.tobedone.R
 import com.aenadgrleey.tobedone.databinding.AddingFragmentBinding
 import com.aenadgrleey.tobedone.presentation.SharedViewModel
-import com.aenadgrleey.tobedone.presentation.TodoItem
+import com.aenadgrleey.tobedone.presentation.models.TodoItem
 import com.aenadgrleey.tobedone.utils.Importance
 import com.google.android.material.R.*
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -57,7 +57,7 @@ class RefactorFragment : Fragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                 requireArguments().getParcelable("todoItem", TodoItem::class.java)
             else
-                requireArguments().getParcelable("todoItem")!!
+                requireArguments().getParcelable("todoItem")
 
         refactoredItem?.let {
             binding!!.apply {

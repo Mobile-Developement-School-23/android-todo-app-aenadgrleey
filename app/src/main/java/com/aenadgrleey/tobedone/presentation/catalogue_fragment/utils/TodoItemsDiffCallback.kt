@@ -1,7 +1,7 @@
-package com.aenadgrleey.tobedone.presentation.catalogue.utils
+package com.aenadgrleey.tobedone.presentation.catalogue_fragment.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.aenadgrleey.tobedone.presentation.TodoItem
+import com.aenadgrleey.tobedone.presentation.models.TodoItem
 
 class TodoItemsDiffCallback(
     private val oldItems: List<TodoItem>,

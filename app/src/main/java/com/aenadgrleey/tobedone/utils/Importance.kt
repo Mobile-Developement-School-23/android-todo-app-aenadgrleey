@@ -1,7 +1,14 @@
 package com.aenadgrleey.tobedone.utils
 
-object Importance {
-    const val Low = "LOW"
-    const val Common = "COMMON"
-    const val High = "HIGH"
+import com.google.gson.annotations.SerializedName
+
+enum class Importance {
+    @SerializedName("low")
+    Low,
+
+    @SerializedName("basic")
+    Common,
+
+    @SerializedName("important")
+    High
 }
