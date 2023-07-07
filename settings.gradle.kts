@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ToBeDone"
-include(":app")
+include(":appLayer")
+include(":dataLayer")
