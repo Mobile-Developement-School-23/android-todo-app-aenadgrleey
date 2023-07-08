@@ -2,54 +2,70 @@ package com.aenadgrleey.tobedone.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aenadgrleey.tobedone.data.TodoItemData
-import com.aenadgrleey.tobedone.data.TodoItemRepository
-import com.aenadgrleey.tobedone.utils.ListMapperImpl
+import com.aenadgrleey.tobedone.data.models.TodoItemData
+import com.aenadgrleey.tobedone.data.network.NetworkStatus
+import com.aenadgrleey.tobedone.data.repositories.TodoItemRepository
+import com.aenadgrleey.tobedone.presentation.models.TodoItem
 import com.aenadgrleey.tobedone.utils.Mapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class SharedViewModel @Inject constructor(
     private val repository: TodoItemRepository,
     private val dataPresenterMapper: Mapper<TodoItemData, TodoItem>,
     private val presenterDataMapper: Mapper<TodoItem, TodoItemData>
-) :
-    ViewModel() {
+) : ViewModel() {
+    val todoItems get() = mTodoItem
+    private val mTodoItem = MutableStateFlow<List<TodoItem>>(listOf())
 
-    val todoItems
-        get() = mTodoItems.map { ListMapperImpl(mapper = dataPresenterMapper).map(it) }
-            .flowOn(Dispatchers.IO)
-
-    val showCompleted
-        get() = mShowCompleted.onEach { mTodoItems = repository.todoItems(it) }
-
-    private var mShowCompleted = MutableStateFlow(true)
-    private var mTodoItems = repository.todoItems(includeCompleted = mShowCompleted.value)
+    val showCompleted: StateFlow<Boolean> get() = mShowCompleted
+    private var mShowCompleted = MutableStateFlow(false)
 
     val completedCount = repository.completedItemsCount()
 
-    fun toggleShowCompleted() {
-        viewModelScope.launch(Dispatchers.Default) {
-            mShowCompleted.value = !mShowCompleted.value
+    val networkStatus get() = mNetworkStatus
+    private val mNetworkStatus = MutableStateFlow(NetworkStatus.PENDING)
+
+
+    init {
+        viewModelScope.launch {
+            mShowCompleted.collectLatest {
+                repository.todoItems(mShowCompleted.value).debounce(100).collectLatest {
+                    todoItems.value = it.map(dataPresenterMapper::map)
+                }
+            }
         }
+        viewModelScope.launch {
+            repository.networkStatus.collect {
+                //that's called crutch
+                if (it != NetworkStatus.PENDING) delay(100)
+                mNetworkStatus.value = it
+            }
+        }
+    }
+
+    fun toggleShowCompleted() {
+        viewModelScope.launch { mShowCompleted.value = !mShowCompleted.value }
     }
 
     fun addTodoItem(todoItem: TodoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.addTodoItem(presenterDataMapper.map(todoItem))
-        }
+        viewModelScope.launch { repository.addTodoItem(presenterDataMapper.map(todoItem)) }
     }
 
     fun deleteTodoItem(todoItem: TodoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteTodoItem(presenterDataMapper.map(todoItem))
-        }
+        viewModelScope.launch { repository.deleteTodoItem(presenterDataMapper.map(todoItem)) }
+    }
+
+    fun fetchRemoteData() {
+        viewModelScope.launch { repository.fetchRemoteData() }
     }
 }

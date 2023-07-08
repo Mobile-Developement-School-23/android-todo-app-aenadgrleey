@@ -15,6 +15,7 @@
     <string name="commonImportance">Обычное</string>
     <string name="completeBefore">Выполнить до:</string>
     <string name="noText">Нет текста!</string>
-
-
+    <string name="noInternetError">Нет интеренета! Все изминения сохраняться на устройстве</string>
+    <string name="synced">Обновлено!</string>
+    <string name="serverError">Внутренняя ошибка на сервере. Извините(</string>
 </resources>

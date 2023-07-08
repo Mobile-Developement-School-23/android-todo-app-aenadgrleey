@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
+    id("kotlin-kapt")
     kotlin("kapt")
 }
 
@@ -18,6 +19,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
     buildFeatures {
         viewBinding = true
@@ -44,26 +51,40 @@ android {
 }
 
 dependencies {
-    val navVersion = "2.6.0"
     val hiltVersion = "2.46.1"
+    val retroFitVersion = "2.9.0"
+    val roomVersion = "2.5.2"
+    val workVersion = "2.8.1"
+
+
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.fragment:fragment-ktx:1.6.0")
-    implementation("com.github.zerobranch:SwipeLayout:1.3.1")
-    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$navVersion")
+
     implementation("com.google.dagger:hilt-android:$hiltVersion")
+
+    implementation("com.squareup.retrofit2:retrofit:$retroFitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retroFitVersion")
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    implementation("androidx.hilt:hilt-work:1.0.0")
+
+
+    kapt("androidx.room:room-compiler:$roomVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
+
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.navigation:navigation-testing:$navVersion")
+    testImplementation("androidx.room:room-testing:$roomVersion")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(kotlin("reflect"))
 }
 
-kapt {
-    correctErrorTypes = true
-}
+kapt { correctErrorTypes = true }

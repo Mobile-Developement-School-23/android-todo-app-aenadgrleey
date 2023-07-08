@@ -1,7 +1,7 @@
 package com.aenadgrleey.tobedone.di
 
-import com.aenadgrleey.tobedone.data.TodoItemRepository
-import com.aenadgrleey.tobedone.data.TodoItemsRepositoryImpl
+import com.aenadgrleey.tobedone.data.repositories.TodoItemRepository
+import com.aenadgrleey.tobedone.data.repositories.TodoItemsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,10 +10,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
+abstract class DataModule {
 
     @Binds
     @Singleton
-    abstract fun bindMyRepository(repository: TodoItemsRepositoryImpl): TodoItemRepository
+    abstract fun bindRepository(repository: TodoItemsRepositoryImpl): TodoItemRepository
 
 }
