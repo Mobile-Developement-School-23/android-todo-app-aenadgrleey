@@ -4,13 +4,15 @@ import android.app.Application
 import android.content.Context
 import androidx.work.Configuration
 import androidx.work.WorkerFactory
+import com.aenadgrleey.auth.ui.AuthFragmentNavigator
+import com.aenadgrleey.auth.ui.di.AuthComponentProvider
 import com.aenadgrleey.tobedone.di.ApplicationComponent
 import com.aenadgrleey.tobedone.di.DaggerApplicationComponent
 import com.google.android.material.color.DynamicColors
 import javax.inject.Inject
 
 
-class ToBeDone : Application(), Configuration.Provider {
+class ToBeDone : Application(), Configuration.Provider, AuthComponentProvider {
 
     lateinit var applicationComponent: ApplicationComponent
 
@@ -28,6 +30,11 @@ class ToBeDone : Application(), Configuration.Provider {
         Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
+
+    override fun provideAuthComponentProvider() =
+        applicationComponent.authUiComponent().create(object : AuthFragmentNavigator {
+            override fun onSuccessAuth() {}
+        })
 }
 
 val Context.applicationComponent: ApplicationComponent

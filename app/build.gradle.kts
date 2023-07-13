@@ -44,6 +44,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":auth:ui"))
+    implementation(project(":auth:domain"))
+    implementation(project(":auth:data"))
     implementation(project(":resources"))
     implementation(project(":core:di"))
     implementation(project(":core:data"))
@@ -56,7 +59,6 @@ dependencies {
     implementation(Dependencies.Android.appCompat)
     implementation(Dependencies.Android.fragments)
     implementation(Dependencies.Other.workManager)
-    implementation(Dependencies.Other.yandexAuthSdk)
     implementation(Dependencies.Android.material3)
     implementation(Dependencies.Dagger.dependency)
 
