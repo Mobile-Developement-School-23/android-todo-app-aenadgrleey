@@ -15,8 +15,7 @@ dependencies {
     implementation(project(":core:di"))
     implementation(project(":core:data"))
     implementation(project(":auth:domain"))
+    implementation(Dependencies.Android.material)
     implementation(Dependencies.Android.fragments)
-    implementation(Dependencies.Dagger.dependency)
     implementation(Dependencies.Other.yandexAuthSdk)
-    kapt(Dependencies.Dagger.compiler)
 }

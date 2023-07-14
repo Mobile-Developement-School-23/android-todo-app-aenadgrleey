@@ -1,8 +1,8 @@
 package com.aenadgrleey.auth.ui.di
 
 import com.aenadgrleey.auth.ui.AuthFragment
-import com.aenadgrleey.auth.ui.AuthFragmentNavigator
 import com.aenadgrleey.auth.ui.AuthFragmentViewModel
+import com.aenadgrleey.auth.ui.AuthNavigator
 import com.aenadgrleey.di.FeatureScope
 import dagger.BindsInstance
 import dagger.Subcomponent
@@ -13,7 +13,7 @@ interface AuthUiComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance navigator: AuthFragmentNavigator): AuthUiComponent
+        fun create(@BindsInstance navigator: AuthNavigator): AuthUiComponent
     }
 
     fun viewModelFactory(): AuthFragmentViewModel.ViewModelFactory
@@ -21,6 +21,6 @@ interface AuthUiComponent {
     fun inject(fragment: AuthFragment)
 }
 
-interface AuthComponentProvider {
+interface AuthUiComponentProvider {
     fun provideAuthComponentProvider(): AuthUiComponent
 }

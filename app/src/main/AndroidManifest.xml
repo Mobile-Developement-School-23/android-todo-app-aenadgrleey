@@ -17,7 +17,7 @@
         android:theme="@style/Theme.ToBeDone"
         tools:targetApi="33">
         <activity
-            android:name=".presentation.TodoItemsActivity"
+            android:name=".TodoItemsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

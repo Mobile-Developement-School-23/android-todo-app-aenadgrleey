@@ -9,6 +9,5 @@ android {
 dependencies {
     implementation(project(":core:di"))
     implementation(project(":auth:domain"))
-    implementation(Dependencies.Kotlin.coroutines)
     implementation(Dependencies.Other.datastore)
 }

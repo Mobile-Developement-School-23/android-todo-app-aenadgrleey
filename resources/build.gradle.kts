@@ -6,5 +6,5 @@ android {
     namespace = ProjectConfig.namespace("resources")
 }
 dependencies {
-    implementation(Dependencies.Android.material3)
+    implementation(Dependencies.Android.material)
 }

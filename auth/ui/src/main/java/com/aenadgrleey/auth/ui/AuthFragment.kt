@@ -7,28 +7,33 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.aenadgrleey.auth.ui.composables.AuthScreen
-import com.aenadgrleey.auth.ui.di.AuthComponentProvider
+import com.aenadgrleey.auth.ui.di.AuthUiComponentProvider
 import com.aenadgrleey.di.holder.scopedComponent
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
+import com.google.android.material.transition.MaterialSharedAxis
 import javax.inject.Inject
 
 class AuthFragment : Fragment() {
 
-    private val authFragmentComponent by scopedComponent {
-        (requireContext().applicationContext as AuthComponentProvider)
+    private val authUiComponent by scopedComponent {
+        (requireActivity() as AuthUiComponentProvider)
             .provideAuthComponentProvider()
     }
 
     private val viewModel: AuthFragmentViewModel by viewModels {
-        authFragmentComponent.viewModelFactory()
+        authUiComponent.viewModelFactory()
     }
 
     @Inject
-    lateinit var navigator: AuthFragmentNavigator
+    lateinit var navigator: AuthNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        authFragmentComponent.inject(this)
+        authUiComponent.inject(this)
+        val animDuration = resources
+            .getInteger(com.google.android.material.R.integer.m3_sys_motion_duration_long4).toLong()
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+            .apply { duration = animDuration }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =

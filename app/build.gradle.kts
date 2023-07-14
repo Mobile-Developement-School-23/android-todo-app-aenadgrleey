@@ -44,14 +44,24 @@ android {
 }
 
 dependencies {
-    implementation(project(":auth:ui"))
-    implementation(project(":auth:domain"))
-    implementation(project(":auth:data"))
     implementation(project(":resources"))
     implementation(project(":core:di"))
     implementation(project(":core:data"))
-    implementation(project(":data:repositories"))
-    implementation(project(":data:datasources"))
+
+    implementation(project(":auth:ui"))
+    implementation(project(":auth:domain"))
+    implementation(project(":auth:data"))
+
+    implementation(project(":todolist:ui"))
+    implementation(project(":todolist:domain"))
+
+//    implementation(project(":todorefactor:ui"))
+//    implementation(project(":todorefactor:domain"))
+
+    implementation(project(":tododata"))
+    implementation(project(":tododomain"))
+
+//    implementation(project(":work"))
 
     implementation(Dependencies.Android.constraintLayout)
     implementation(Dependencies.Android.swiperefreshLayout)
@@ -59,13 +69,10 @@ dependencies {
     implementation(Dependencies.Android.appCompat)
     implementation(Dependencies.Android.fragments)
     implementation(Dependencies.Other.workManager)
-    implementation(Dependencies.Android.material3)
+    implementation(Dependencies.Android.material)
     implementation(Dependencies.Dagger.dependency)
 
     kapt(Dependencies.Dagger.compiler)
-
-    testImplementation(Dependencies.Testing.junit4)
-    androidTestImplementation(Dependencies.Testing.junitAndroidExt)
 
 }
 

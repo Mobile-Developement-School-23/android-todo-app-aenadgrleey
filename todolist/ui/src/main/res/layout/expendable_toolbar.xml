@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/motion_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="64dp"
+    app:layoutDescription="@xml/expendable_toolbar_scene"
+    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+    <View
+        android:id="@+id/toolbar_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?colorPrimaryInverse"
+        android:elevation="0dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/main_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:gravity="center_vertical"
+        android:text="@string/main_label"
+        android:textAppearance="?attr/textAppearanceDisplaySmall"
+        android:textColor="?colorOnSurfaceVariant"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.139"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/helper_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="@string/tasksCompleted"
+        android:textAppearance="?attr/textAppearanceHeadlineSmall"
+        android:textColor="?colorOutline"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@id/main_text"
+        app:layout_constraintTop_toBottomOf="@id/main_text" />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/visibilityIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="center"
+        android:tint="?colorOnSurfaceVariant"
+        app:layout_constraintBottom_toBottomOf="@+id/helper_text"
+        app:layout_constraintEnd_toStartOf="@id/settingsButton"
+        app:layout_constraintTop_toTopOf="@+id/helper_text"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/visibility_selector" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/settingsButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="center"
+        android:tint="?colorOnSurfaceVariant"
+        app:layout_constraintBottom_toBottomOf="@+id/helper_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/helper_text"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/round_settings_24" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

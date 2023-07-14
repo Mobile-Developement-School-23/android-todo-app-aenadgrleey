@@ -12,7 +12,7 @@ object Dependencies {
 
     object Android {
         private const val gradlePluginVersion = "8.0.2"
-        private const val material3Version = "1.9.0"
+        private const val materialVersion = "1.9.0"
         private const val activityComposeVersion = "1.7.2"
         private const val coreKtxVersion = "1.10.1"
         private const val lifecycleVersion = "2.6.1"
@@ -25,7 +25,7 @@ object Dependencies {
         const val activityCompose = "androidx.activity:activity-compose:$activityComposeVersion"
         const val coreKtx = "androidx.core:core-ktx:$coreKtxVersion"
         const val appCompat = "androidx.appcompat:appcompat:$appCompatVersion"
-        const val material3 = "com.google.android.material:material:$material3Version"
+        const val material = "com.google.android.material:material:$materialVersion"
         const val lifecycle = "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"

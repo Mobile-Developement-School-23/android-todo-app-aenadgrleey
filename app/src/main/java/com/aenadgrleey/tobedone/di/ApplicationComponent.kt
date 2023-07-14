@@ -1,33 +1,31 @@
 package com.aenadgrleey.tobedone.di
 
 import android.content.Context
-import com.aenadgrleey.auth.data.di.AuthModule
 import com.aenadgrleey.auth.data.di.AuthProviderScope
 import com.aenadgrleey.auth.ui.di.AuthUiComponent
-import com.aenadgrleey.auth.ui.di.AuthUiModule
 import com.aenadgrleey.di.AppContext
+import com.aenadgrleey.di.AppScope
 import com.aenadgrleey.tobedone.ToBeDone
+import com.aenadgrleey.tobedone.TodoItemsActivity
 import com.aenadgrleey.tobedone.di.modules.AppModule
-import com.aenadgrleey.tobedone.presentation.TodoItemsActivity
-import com.aenadgrleey.tobedone.presentation.stateholders.SharedViewModel
+import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
 import dagger.BindsInstance
 import dagger.Component
 
-@ApplicationScope
+@AppScope
 @AuthProviderScope
-@Component(
-    modules = [AppModule::class,
-        AuthUiModule::class, AuthModule::class]
-)
+@Component(modules = [AppModule::class])
 interface ApplicationComponent {
 
     fun injectIntoApplication(application: ToBeDone)
 
     fun injectIntoActivity(activity: TodoItemsActivity)
 
-    fun viewModelsFactory(): SharedViewModel.ViewModelFactory
+    fun viewModelsFactory(): com.aenadgrleey.todolist.ui.TodoListViewModel.ViewModelFactory
 
     fun authUiComponent(): AuthUiComponent.Factory
+
+    fun todoListUiComponent(): TodoListUiComponent.Factory
 
 
     @Component.Builder

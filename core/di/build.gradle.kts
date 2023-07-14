@@ -7,7 +7,6 @@ android {
 }
 
 dependencies {
-    implementation(Dependencies.Dagger.dependency)
     implementation(Dependencies.Android.coreKtx)
     implementation(Dependencies.Android.lifecycle)
 }
