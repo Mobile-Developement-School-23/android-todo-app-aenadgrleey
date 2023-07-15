@@ -9,6 +9,7 @@ import com.aenadgrleey.tobedone.ToBeDone
 import com.aenadgrleey.tobedone.TodoItemsActivity
 import com.aenadgrleey.tobedone.di.modules.AppModule
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
+import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponent
 import dagger.BindsInstance
 import dagger.Component
 
@@ -26,6 +27,8 @@ interface ApplicationComponent {
     fun authUiComponent(): AuthUiComponent.Factory
 
     fun todoListUiComponent(): TodoListUiComponent.Factory
+
+    fun todoRefactorUiComponent(): TodoRefactorUiComponent.Factory
 
 
     @Component.Builder

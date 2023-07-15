@@ -11,12 +11,17 @@ import com.aenadgrleey.todolist.domain.TodoListNavigator
 import com.aenadgrleey.todolist.ui.TodosListFragment
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponentProvider
+import com.aenadgrleey.todorefactor.domain.TodoRefactorNavigator
+import com.aenadgrleey.todorefactor.ui.TodoRefactorFragment
+import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponent
+import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponentProvider
 import androidx.fragment.R as FragmentR
 
 
 class TodoItemsActivity : AppCompatActivity(),
     AuthUiComponentProvider,
-    TodoListUiComponentProvider {
+    TodoListUiComponentProvider,
+    TodoRefactorUiComponentProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,21 +53,32 @@ class TodoItemsActivity : AppCompatActivity(),
     override fun provideTodoListUiComponent(): TodoListUiComponent =
         applicationComponent.todoListUiComponent().create(object : TodoListNavigator {
             override fun navigateToRefactorFragment(todoItemId: String?) {
-//                supportFragmentManager.commit {
-//                    val arguments = Bundle()
-//                    arguments.putString("todoItem", todoItemId)
-//                    val aim = TodoRefactorFragment().also { it.arguments = arguments }
-//                    replace(
-//                        androidx.fragment.R.id.fragment_container_view_tag,
-//                        aim,
-//                        "tag"
-//                    )
-//                    setReorderingAllowed(true)
-//                    addToBackStack(null)
-//                }
+                supportFragmentManager.commit {
+                    val arguments = Bundle()
+                    arguments.putString("todoItemId", todoItemId)
+                    val aim = TodoRefactorFragment().also { it.arguments = arguments }
+                    replace(
+                        androidx.fragment.R.id.fragment_container_view_tag,
+                        aim,
+                        "tag"
+                    )
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                }
             }
 
         })
+
+    override fun provideTodoRefactorUiComponent(): TodoRefactorUiComponent {
+        return applicationComponent.todoRefactorUiComponent().create(
+            navigator = object : TodoRefactorNavigator {
+                override fun exitRefactor() {
+                    supportFragmentManager.popBackStack()
+                }
+            },
+            todoItemId = supportFragmentManager.fragments.first().requireArguments().getString("todoItemId")
+        )
+    }
 
 
 //    private fun createSyncWorkerRequest() =

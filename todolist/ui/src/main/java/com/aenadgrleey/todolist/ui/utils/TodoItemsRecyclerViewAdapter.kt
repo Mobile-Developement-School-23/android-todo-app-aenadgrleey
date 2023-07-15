@@ -19,7 +19,7 @@ import com.aenadgrleey.core.domain.Importance
 import com.aenadgrleey.todolist.ui.R
 import com.aenadgrleey.todolist.ui.databinding.TodoLastListItemBinding
 import com.aenadgrleey.todolist.ui.databinding.TodoListItemBinding
-import com.aenadgrleey.ui.TodoItem
+import com.aenadgrleey.todolist.ui.model.TodoItem
 import com.google.android.material.imageview.ShapeableImageView
 import com.aenadgrleey.resources.R as CommonR
 import com.google.android.material.R as MaterialR

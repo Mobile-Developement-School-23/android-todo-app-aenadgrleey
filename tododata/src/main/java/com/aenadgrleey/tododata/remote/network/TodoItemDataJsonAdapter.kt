@@ -1,5 +1,6 @@
 package com.aenadgrleey.tododata.remote.network
 
+import com.aenadgrleey.core.domain.models.TodoItemData
 import com.google.gson.Gson
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -13,9 +14,9 @@ import java.util.Date
 /*
 Adapter for remote operations
  */
-internal class TodoItemDataJsonAdapter : JsonDeserializer<com.aenadgrleey.core.domain.models.TodoItemData>, JsonSerializer<com.aenadgrleey.core.domain.models.TodoItemData> {
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): com.aenadgrleey.core.domain.models.TodoItemData {
-        val todoItemData = com.aenadgrleey.core.domain.models.TodoItemData()
+internal class TodoItemDataJsonAdapter : JsonDeserializer<TodoItemData>, JsonSerializer<TodoItemData> {
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): TodoItemData {
+        val todoItemData = TodoItemData("")
         if (json != null) {
             val jsonObject = json.asJsonObject
             todoItemData.id = jsonObject.get("id").asString
@@ -37,7 +38,7 @@ internal class TodoItemDataJsonAdapter : JsonDeserializer<com.aenadgrleey.core.d
         return todoItemData
     }
 
-    override fun serialize(todoItemData: com.aenadgrleey.core.domain.models.TodoItemData?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+    override fun serialize(todoItemData: TodoItemData?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
         val gson = Gson()
         val jsonObject = JsonObject()
         if (todoItemData != null) {

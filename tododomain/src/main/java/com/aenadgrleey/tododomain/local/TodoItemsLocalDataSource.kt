@@ -11,6 +11,8 @@ interface TodoItemsLocalDataSource {
 
     fun getTodoItems(): List<TodoItemData>
 
+    suspend fun todoItem(id: String): TodoItemData?
+
     fun clearDatabase()
 
     fun completedItemsCount(): Flow<Int>

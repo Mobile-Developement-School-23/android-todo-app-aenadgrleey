@@ -7,7 +7,7 @@ sealed class UiEvent {
     }
 
     sealed class CoordinatorEvent {
-        class DeleteItem(todoItem: com.aenadgrleey.ui.TodoItem) : CoordinatorEvent()
+        class DeleteItem(todoItem: TodoItem) : CoordinatorEvent()
     }
 
     object ToggleCompletedMark : UiEvent()

@@ -55,8 +55,8 @@ dependencies {
     implementation(project(":todolist:ui"))
     implementation(project(":todolist:domain"))
 
-//    implementation(project(":todorefactor:ui"))
-//    implementation(project(":todorefactor:domain"))
+    implementation(project(":todorefactor:ui"))
+    implementation(project(":todorefactor:domain"))
 
     implementation(project(":tododata"))
     implementation(project(":tododomain"))

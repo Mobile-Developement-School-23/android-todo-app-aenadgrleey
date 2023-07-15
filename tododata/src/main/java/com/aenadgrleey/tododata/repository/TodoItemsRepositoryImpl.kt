@@ -3,6 +3,7 @@ package com.aenadgrleey.tododata.repository
 import android.util.Log
 import com.aenadgrleey.auth.domain.AuthProvider
 import com.aenadgrleey.core.domain.NetworkStatus
+import com.aenadgrleey.core.domain.models.TodoItemData
 import com.aenadgrleey.data.remote.exceptions.DifferentRevisionsException
 import com.aenadgrleey.data.remote.exceptions.NoSuchElementOnServerException
 import com.aenadgrleey.data.remote.exceptions.ServerErrorException
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.withContext
 import java.util.Calendar
+import java.util.UUID
 import javax.inject.Inject
 
 /*
@@ -28,8 +30,10 @@ class TodoItemsRepositoryImpl @Inject constructor(
 ) : TodoItemRepository {
 
 
-    override fun todoItems(includeCompleted: Boolean): Flow<List<com.aenadgrleey.core.domain.models.TodoItemData>> =
+    override fun todoItems(includeCompleted: Boolean): Flow<List<TodoItemData>> =
         localDataSource.getTodoItems(includeCompleted)
+
+    override suspend fun todoItem(id: String): TodoItemData? = localDataSource.todoItem(id)
 
     override fun completedItemsCount(): Flow<Int> =
         localDataSource.completedItemsCount()
@@ -37,14 +41,16 @@ class TodoItemsRepositoryImpl @Inject constructor(
     private val networkStatusChannel = Channel<NetworkStatus>()
     override val networkStatus = networkStatusChannel.receiveAsFlow()
 
-    override suspend fun addTodoItem(todoItem: com.aenadgrleey.core.domain.models.TodoItemData) = withContext(Dispatchers.IO) {
+    override suspend fun addTodoItem(todoItem: TodoItemData) = withContext(Dispatchers.IO) {
+        if (todoItem.id == null) todoItem.id = UUID.randomUUID().toString()
+        if (todoItem.created == null) todoItem.created = Calendar.getInstance().time
         todoItem.lastModified = Calendar.getInstance().time
         todoItem.lastModifiedBy = authProvider.authInfo().deviceId
         localDataSource.addTodoItem(todoItem)
         tryRemote { remoteDataSource.addTodoItem(todoItem) }
     }
 
-    override suspend fun deleteTodoItem(todoItem: com.aenadgrleey.core.domain.models.TodoItemData) = withContext(Dispatchers.IO) {
+    override suspend fun deleteTodoItem(todoItem: TodoItemData) = withContext(Dispatchers.IO) {
         localDataSource.deleteTodoItem(todoItem)
         tryRemote { remoteDataSource.deleteTodoItem(todoItem) }
     }

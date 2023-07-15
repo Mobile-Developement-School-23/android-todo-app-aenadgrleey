@@ -1,6 +1,7 @@
 package com.aenadgrleey.tododata.local
 
 import android.content.Context
+import com.aenadgrleey.core.domain.models.TodoItemData
 import com.aenadgrleey.local.TodoItemsLocalDataSource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +17,7 @@ class HardcodedDataSourceImpl(private val context: Context) : TodoItemsLocalData
     var updateCountFlow: suspend () -> Unit = {}
 
     private var counter = 0
-    private val items = mutableListOf<com.aenadgrleey.core.domain.models.TodoItemData>().apply {
+    private val items = mutableListOf<TodoItemData>().apply {
         val texts = listOf(
             context.getText(CommonR.string.buy_something),
             context.getString(CommonR.string.lorem_ipsum)
@@ -29,7 +30,7 @@ class HardcodedDataSourceImpl(private val context: Context) : TodoItemsLocalData
                 for (completenessType in 0..1) {
                     for (deadlineExistence in 0..1) {
                         this.add(
-                            com.aenadgrleey.core.domain.models.TodoItemData(
+                            TodoItemData(
                                 id = counter.toString(),
                                 body = texts[textType].toString(),
                                 completed = completed[completenessType],
@@ -44,7 +45,7 @@ class HardcodedDataSourceImpl(private val context: Context) : TodoItemsLocalData
         }
     }
 
-    override suspend fun addTodoItem(todoItem: com.aenadgrleey.core.domain.models.TodoItemData) {
+    override suspend fun addTodoItem(todoItem: TodoItemData) {
         var insertFlag = true
         items.forEachIndexed { index, item ->
             if (item.id == todoItem.id) {
@@ -61,7 +62,7 @@ class HardcodedDataSourceImpl(private val context: Context) : TodoItemsLocalData
         updateCountFlow()
     }
 
-    override fun getTodoItems(excludeCompleted: Boolean): Flow<List<com.aenadgrleey.core.domain.models.TodoItemData>> {
+    override fun getTodoItems(excludeCompleted: Boolean): Flow<List<TodoItemData>> {
         return channelFlow {
             updateItemFlow = {
                 send(items.filter {
@@ -73,8 +74,12 @@ class HardcodedDataSourceImpl(private val context: Context) : TodoItemsLocalData
         }
     }
 
-    override fun getTodoItems(): List<com.aenadgrleey.core.domain.models.TodoItemData> {
+    override fun getTodoItems(): List<TodoItemData> {
         return items
+    }
+
+    override suspend fun todoItem(id: String): TodoItemData? {
+        return items.find { it.id == id }
     }
 
     override fun clearDatabase() {
@@ -89,7 +94,7 @@ class HardcodedDataSourceImpl(private val context: Context) : TodoItemsLocalData
         awaitClose()
     }
 
-    override suspend fun deleteTodoItem(todoItem: com.aenadgrleey.core.domain.models.TodoItemData) {
+    override suspend fun deleteTodoItem(todoItem: TodoItemData) {
         for (index in 0..items.lastIndex) {
             if (items[index].id == todoItem.id) {
                 items.removeAt(index)

@@ -1,7 +1,7 @@
 package com.aenadgrleey.todolist.ui.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.aenadgrleey.ui.TodoItem
+import com.aenadgrleey.todolist.ui.model.TodoItem
 
 class TodoItemsDiffCallback(
     private val oldItems: List<TodoItem>,

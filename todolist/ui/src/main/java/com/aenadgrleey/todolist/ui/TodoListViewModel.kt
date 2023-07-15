@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.aenadgrleey.core.domain.NetworkStatus
 import com.aenadgrleey.tododomain.repository.TodoItemRepository
+import com.aenadgrleey.todolist.ui.model.TodoItem
+import com.aenadgrleey.todolist.ui.model.TodoItemDataToTodoItem
+import com.aenadgrleey.todolist.ui.model.TodoItemToTodoItemData
 import com.aenadgrleey.todolist.ui.model.UiAction
 import com.aenadgrleey.todolist.ui.model.UiEvent
-import com.aenadgrleey.ui.TodoItem
-import com.aenadgrleey.ui.TodoItemDataToTodoItem
-import com.aenadgrleey.ui.TodoItemToTodoItemData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel

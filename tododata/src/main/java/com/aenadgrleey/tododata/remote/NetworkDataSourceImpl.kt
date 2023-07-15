@@ -90,7 +90,7 @@ class NetworkDataSourceImpl
 
     override suspend fun addTodoItem(item: com.aenadgrleey.core.domain.models.TodoItemData): com.aenadgrleey.core.domain.models.TodoItemData {
         try {
-            retrofitClient.getTodoItem(item.id).run {
+            retrofitClient.getTodoItem(item.id!!).run {
                 checkResponseCode()
                 retrofitClient.updateTodoItem(body()!!.revision, TodoItemRequest(item)).run {
                     checkResponseCode()
@@ -108,7 +108,7 @@ class NetworkDataSourceImpl
     }
 
     override suspend fun deleteTodoItem(item: com.aenadgrleey.core.domain.models.TodoItemData) {
-        retrofitClient.deleteTodoItem(lastKnownRevision, item.id).run {
+        retrofitClient.deleteTodoItem(lastKnownRevision, item.id!!).run {
             checkResponseCode()
             lastKnownRevision = body()!!.revision
         }

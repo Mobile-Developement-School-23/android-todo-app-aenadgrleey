@@ -13,7 +13,6 @@ dependencies {
     implementation(project(":resources"))
     implementation(project(":core:domain"))
     implementation(project(":core:di"))
-    implementation(project(":core:ui"))
     implementation(project(":tododomain"))
     implementation(project(":todolist:domain"))
 

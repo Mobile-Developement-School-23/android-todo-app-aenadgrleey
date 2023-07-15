@@ -10,6 +10,8 @@ Repository for giving data to ui layer
 interface TodoItemRepository {
     fun todoItems(includeCompleted: Boolean): Flow<List<TodoItemData>>
 
+    suspend fun todoItem(id: String): TodoItemData?
+
     fun completedItemsCount(): Flow<Int>
 
     val networkStatus: Flow<NetworkStatus>

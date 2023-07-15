@@ -6,7 +6,7 @@ import java.util.Date
 import java.util.UUID
 
 data class TodoItemData(
-    var id: String = UUID.randomUUID().toString(),
+    var id: String?,
     var body: String? = null,
     var completed: Boolean? = false,
     var importance: Importance? = Importance.Common,
