@@ -45,12 +45,17 @@ android {
 
 dependencies {
     implementation(project(":resources"))
+
     implementation(project(":core:di"))
     implementation(project(":core:data"))
+    implementation(project(":core:domain"))
 
     implementation(project(":auth:ui"))
     implementation(project(":auth:domain"))
     implementation(project(":auth:data"))
+
+    implementation(project(":tododata"))
+    implementation(project(":tododomain"))
 
     implementation(project(":todolist:ui"))
     implementation(project(":todolist:domain"))
@@ -58,10 +63,7 @@ dependencies {
     implementation(project(":todorefactor:ui"))
     implementation(project(":todorefactor:domain"))
 
-    implementation(project(":tododata"))
-    implementation(project(":tododomain"))
-
-//    implementation(project(":work"))
+    implementation(project(":work"))
 
     implementation(Dependencies.Android.constraintLayout)
     implementation(Dependencies.Android.swiperefreshLayout)
@@ -71,6 +73,10 @@ dependencies {
     implementation(Dependencies.Other.workManager)
     implementation(Dependencies.Android.material)
     implementation(Dependencies.Dagger.dependency)
+
+    testImplementation(Dependencies.Testing.junit4)
+    androidTestImplementation(Dependencies.Testing.junitAndroidExt)
+    androidTestImplementation(Dependencies.Testing.espressoCore)
 
     kapt(Dependencies.Dagger.compiler)
 

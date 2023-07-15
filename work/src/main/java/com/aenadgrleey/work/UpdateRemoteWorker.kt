@@ -1,4 +1,4 @@
-package com.aenadgrleey.tobedone.work
+package com.aenadgrleey.work
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -8,7 +8,6 @@ import com.aenadgrleey.data.remote.exceptions.DifferentRevisionsException
 import com.aenadgrleey.data.remote.exceptions.NoSuchElementOnServerException
 import com.aenadgrleey.data.remote.exceptions.ServerErrorException
 import com.aenadgrleey.data.remote.exceptions.WrongAuthorizationException
-import com.aenadgrleey.remote.TodoItemsRemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
