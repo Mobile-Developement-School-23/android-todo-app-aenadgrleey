@@ -30,7 +30,6 @@ class CoordinatorViewController @Inject constructor(
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.coordinatorEvents.collectLatest { event ->
-                    println("collected $event in cl")
                     when (event) {
                         UiEvent.ConnectionError -> context.resources.getString(R.string.noInternetError)
                         UiEvent.SyncedWithServer -> context.resources.getString(R.string.synced)

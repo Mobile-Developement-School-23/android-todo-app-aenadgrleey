@@ -3,6 +3,7 @@
     <string name="main_label">Мои дела</string>
     <string name="buy_something">Купить что-то</string>
     <string name="add_new">Добавить</string>
+    <string name="saved">Сохранено!</string>
     <string name="deadline">Дедлайн:</string>
     <string name="tasksCompleted">Выполнено - </string>
     <string name="markCompleted">Выполнено</string>

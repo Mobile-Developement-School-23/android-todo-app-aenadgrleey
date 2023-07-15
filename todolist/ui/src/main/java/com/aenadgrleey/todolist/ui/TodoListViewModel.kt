@@ -58,7 +58,6 @@ class TodoListViewModel @Inject constructor(
         }
         viewModelScope.launch(Dispatchers.Main) {
             repository.networkStatus.collect {
-                println(it)
                 when (it) {
                     NetworkStatus.SYNCED -> {
                         mSwipeRefreshEvents.send(UiEvent.SyncedWithServer)

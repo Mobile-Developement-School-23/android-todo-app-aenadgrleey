@@ -4,6 +4,8 @@ import com.aenadgrleey.core.domain.Importance
 import java.util.Date
 
 sealed class UiAction {
+    data class InitTodoItem(val id: String?) : UiAction()
+    object ResetTodoItem : UiAction()
     data class OnTextChange(val text: String) : UiAction()
 
     data class OnImportanceChange(val importance: Importance) : UiAction()

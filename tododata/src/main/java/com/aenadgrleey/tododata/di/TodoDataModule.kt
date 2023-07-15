@@ -11,7 +11,7 @@ import dagger.Binds
 import dagger.Module
 
 @Module
-abstract class DataModule {
+abstract class TodoDataModule {
     @Binds
     @AppScope
     abstract fun bindRepository(repository: TodoItemsRepositoryImpl): TodoItemRepository

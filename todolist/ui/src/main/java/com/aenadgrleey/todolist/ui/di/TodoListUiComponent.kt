@@ -1,12 +1,10 @@
 package com.aenadgrleey.todolist.ui.di
 
 import com.aenadgrleey.di.FeatureScope
-import com.aenadgrleey.todolist.domain.TodoListNavigator
 import com.aenadgrleey.todolist.ui.TodoListViewModel
 import com.aenadgrleey.todolist.ui.TodosListFragment
 import com.aenadgrleey.todolist.ui.di.view_component.TodoListViewComponent
 import com.aenadgrleey.todolist.ui.di.view_component.TodoListViewModule
-import dagger.BindsInstance
 import dagger.Subcomponent
 
 @FeatureScope
@@ -14,7 +12,7 @@ import dagger.Subcomponent
 interface TodoListUiComponent {
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance navigator: TodoListNavigator): TodoListUiComponent
+        fun create(): TodoListUiComponent
     }
 
     fun viewModelFactory(): TodoListViewModel.ViewModelFactory

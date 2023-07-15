@@ -40,7 +40,7 @@ internal interface RetrofitClient {
     suspend fun updateTodoItem(
         @Header("X-Last-Known-Revision") revision: Int,
         @Body request: TodoItemRequest,
-        @Path(value = "uuid") uuid: String = request.item.id,
+        @Path(value = "uuid") uuid: String = request.item.id!!,
     ): Response<TodoItemResponse>
 
     @DELETE("${URLs.ITEMS_LIST_URL}/{uuid}")

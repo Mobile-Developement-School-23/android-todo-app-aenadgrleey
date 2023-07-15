@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.aenadgrleey.core.domain.Importance
 import com.aenadgrleey.tododomain.repository.TodoItemRepository
-import com.aenadgrleey.todorefactor.domain.TodoItemId
 import com.aenadgrleey.todorefactor.ui.model.TodoItemDataToUiStateMapper
 import com.aenadgrleey.todorefactor.ui.model.UiAction
 import com.aenadgrleey.todorefactor.ui.model.UiEvent
@@ -25,34 +24,18 @@ import javax.inject.Provider
 
 @OptIn(FlowPreview::class)
 class TodoRefactorViewModel @Inject constructor(
-    @TodoItemId todoItemId: String?,
     private val repository: TodoItemRepository,
 ) : ViewModel() {
-
-    private val todoItemDataToUiStateMapper = TodoItemDataToUiStateMapper()
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (todoItemId != null)
-                mUiState.value = todoItemDataToUiStateMapper.map(repository.todoItem(todoItemId))
-            else
-                mUiState.value = UiState(
-                    id = null,
-                    lastModifiedBy = null,
-                    created = null,
-                    lastModified = null
-                )
-        }
-    }
 
     private val uiStateDataMapper = UiStateToTodoItemData()
     private val dataUiStateMapper = TodoItemDataToUiStateMapper()
 
-
     val uiEvents: Flow<UiEvent> get() = mUiEvents.receiveAsFlow()
     private var mUiEvents = Channel<UiEvent>()
+
     val uiState: StateFlow<UiState?> get() = mUiState
     private var mUiState = MutableStateFlow<UiState?>(null)
+    private var mTodoItemIsSet = false
 
     fun onUiAction(uiAction: UiAction) {
         viewModelScope.launch {
@@ -64,7 +47,25 @@ class TodoRefactorViewModel @Inject constructor(
                 UiAction.OnSaveRequest -> saveTodoItem()
                 UiAction.OnDeleteRequest -> deleteTodoItem()
                 UiAction.OnExitRequest -> mUiEvents.send(UiEvent.ExitRequest)
+                is UiAction.InitTodoItem -> setTodoItem(uiAction.id)
+                UiAction.ResetTodoItem -> mTodoItemIsSet = false
             }
+        }
+    }
+
+    private fun setTodoItem(todoItemId: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (!mTodoItemIsSet)
+                if (todoItemId != null) {
+                    mTodoItemIsSet = true
+                    mUiState.value = dataUiStateMapper.map(repository.todoItem(todoItemId))
+                } else
+                    mUiState.value = UiState(
+                        id = null,
+                        lastModifiedBy = null,
+                        created = null,
+                        lastModified = null
+                    )
         }
     }
 

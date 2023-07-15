@@ -2,15 +2,20 @@ package com.aenadgrleey.todorefactor.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.aenadgrleey.di.holder.scopedComponent
+import com.aenadgrleey.todorefactor.domain.TodoItemId
+import com.aenadgrleey.todorefactor.domain.TodoRefactorNavigator
 import com.aenadgrleey.todorefactor.ui.composables.RefactorScreen
 import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponentProvider
+import com.aenadgrleey.todorefactor.ui.model.UiAction
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.transition.platform.MaterialSharedAxis
+import javax.inject.Inject
 
 class TodoRefactorFragment : Fragment() {
 
@@ -21,6 +26,9 @@ class TodoRefactorFragment : Fragment() {
     private val viewModel: TodoRefactorViewModel by activityViewModels {
         todoRefactorUiComponent.viewModelFactory()
     }
+
+    @Inject
+    lateinit var navigator: TodoRefactorNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +44,19 @@ class TodoRefactorFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ) = ComposeView(requireContext()).apply {
-        setContent {
-            Mdc3Theme {
-                RefactorScreen(lifecycle = viewLifecycleOwner.lifecycle, viewModel = viewModel)
+    ): View {
+        val id = requireArguments().getString(TodoItemId.TAG)
+        viewModel.onUiAction(UiAction.InitTodoItem(id))
+        todoRefactorUiComponent.inject(this)
+        return ComposeView(requireContext()).apply {
+            setContent {
+                Mdc3Theme {
+                    RefactorScreen(
+                        lifecycle = viewLifecycleOwner.lifecycle,
+                        navigator = navigator,
+                        viewModel = viewModel
+                    )
+                }
             }
         }
     }

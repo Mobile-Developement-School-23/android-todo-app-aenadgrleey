@@ -3,6 +3,7 @@
     <string name="main_label">To do</string>
     <string name="buy_something">Buy something</string>
     <string name="add_new">Add new</string>
+    <string name="saved">Saving!</string>
     <string name="tasksCompleted">Completed -</string>
     <string name="markCompleted">Completed</string>
     <string name="editTask">Edit</string>

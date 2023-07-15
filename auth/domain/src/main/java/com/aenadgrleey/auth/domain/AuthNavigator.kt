@@ -1,4 +1,4 @@
-package com.aenadgrleey.auth.ui
+package com.aenadgrleey.auth.domain
 
 interface AuthNavigator {
     fun onSuccessAuth()

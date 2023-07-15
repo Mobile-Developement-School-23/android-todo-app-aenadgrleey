@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.aenadgrleey.di.holder.scopedComponent
 import com.aenadgrleey.todolist.ui.databinding.TodosListFragmentBinding
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponentProvider
@@ -16,12 +15,11 @@ import com.google.android.material.transition.platform.MaterialSharedAxis
 
 class TodosListFragment : Fragment() {
 
-    private val todoListUiComponent: TodoListUiComponent by scopedComponent {
+    private val todoListUiComponent: TodoListUiComponent by lazy {
         (requireActivity() as TodoListUiComponentProvider).provideTodoListUiComponent()
     }
 
     private val viewModel: TodoListViewModel by activityViewModels {
-        println("vm requested")
         todoListUiComponent.viewModelFactory()
     }
 

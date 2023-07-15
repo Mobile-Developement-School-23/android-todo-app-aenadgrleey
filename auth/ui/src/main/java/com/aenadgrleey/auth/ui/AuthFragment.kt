@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.aenadgrleey.auth.domain.AuthNavigator
 import com.aenadgrleey.auth.ui.composables.AuthScreen
 import com.aenadgrleey.auth.ui.di.AuthUiComponentProvider
 import com.aenadgrleey.di.holder.scopedComponent
@@ -16,8 +17,7 @@ import javax.inject.Inject
 class AuthFragment : Fragment() {
 
     private val authUiComponent by scopedComponent {
-        (requireActivity() as AuthUiComponentProvider)
-            .provideAuthComponentProvider()
+        (requireActivity() as AuthUiComponentProvider).provideAuthComponentProvider()
     }
 
     private val viewModel: AuthFragmentViewModel by viewModels {

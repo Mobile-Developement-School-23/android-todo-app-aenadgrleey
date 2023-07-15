@@ -1,6 +1,5 @@
 package com.aenadgrleey.todolist.ui.ioc
 
-import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -24,19 +23,15 @@ class SwipeRefreshViewController @Inject constructor(
     private val lifecycleOwner: LifecycleOwner,
 ) {
     fun setUpSwipeRefreshLayout() {
-        Log.v("SwipeRefreshController", "init")
         lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                println("collectStarted")
                 viewModel.swipeRefreshEvents.collect {
-                    println("collected $it")
                     if (it == UiEvent.ConnectionError
                         || it == UiEvent.BadServerResponse
                         || it == UiEvent.SyncedWithServer
                         || it == null
                     ) swipeRefreshLayout.isRefreshing = false
                 }
-                println("collectEnded")
             }
         }
         swipeRefreshLayout.run {
