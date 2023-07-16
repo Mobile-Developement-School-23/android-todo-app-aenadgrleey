@@ -10,6 +10,7 @@ import com.aenadgrleey.core.di.FragmentContext
 import com.aenadgrleey.core.di.ViewLifecycleOwner
 import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.resources.R
+import com.aenadgrleey.todolist.domain.TodoListNavigator
 import com.aenadgrleey.todolist.ui.TodoListViewModel
 import com.aenadgrleey.todolist.ui.databinding.ExpendableToolbarBinding
 import com.aenadgrleey.todolist.ui.model.UiAction
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class ExpendableToolbarViewController @Inject constructor(
     @FragmentContext
     private val context: Context,
+    private val navigator: TodoListNavigator,
     private val toolbarBinding: ExpendableToolbarBinding,
     private val appBarLayout: AppBarLayout,
     private val viewModel: TodoListViewModel,
@@ -49,6 +51,8 @@ class ExpendableToolbarViewController @Inject constructor(
         }
 
         toolbarBinding.visibilityIcon.setOnClickListener { viewModel.onUiAction(UiAction.ToggledCompletedMark) }
+
+        toolbarBinding.settingsButton.setOnClickListener { navigator.navigateToSettings() }
 
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val seekPosition = -verticalOffset / appBarLayout.totalScrollRange.toFloat()

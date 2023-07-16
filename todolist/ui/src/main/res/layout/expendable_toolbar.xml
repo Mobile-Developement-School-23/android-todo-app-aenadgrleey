@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toStartOf="@id/settingsButton"
         app:layout_constraintTop_toTopOf="@+id/helper_text"
         app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
-        app:srcCompat="@drawable/visibility_selector" />
+        app:srcCompat="@drawable/visibility_off_48px" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/settingsButton"
