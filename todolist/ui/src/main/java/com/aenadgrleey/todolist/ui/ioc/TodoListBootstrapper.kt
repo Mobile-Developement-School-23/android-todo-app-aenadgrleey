@@ -1,6 +1,6 @@
 package com.aenadgrleey.todolist.ui.ioc
 
-import com.aenadgrleey.di.ViewScope
+import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.todolist.ui.TodoListViewModel
 import com.aenadgrleey.todolist.ui.model.UiAction
 import javax.inject.Inject

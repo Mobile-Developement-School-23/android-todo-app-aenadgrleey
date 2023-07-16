@@ -1,6 +1,6 @@
 package com.aenadgrleey.todolist.ui.ioc
 
-import com.aenadgrleey.di.ViewScope
+import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.todolist.domain.TodoListNavigator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.aenadgrleey.local
+package com.aenadgrleey.tododomain.local
 
 import com.aenadgrleey.core.domain.models.TodoItemData
 import kotlinx.coroutines.flow.Flow

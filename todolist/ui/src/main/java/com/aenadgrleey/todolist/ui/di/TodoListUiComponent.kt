@@ -1,6 +1,6 @@
 package com.aenadgrleey.todolist.ui.di
 
-import com.aenadgrleey.di.FeatureScope
+import com.aenadgrleey.core.di.FeatureScope
 import com.aenadgrleey.todolist.ui.TodoListViewModel
 import com.aenadgrleey.todolist.ui.TodosListFragment
 import com.aenadgrleey.todolist.ui.di.view_component.TodoListViewComponent

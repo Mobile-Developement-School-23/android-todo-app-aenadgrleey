@@ -1,7 +1,7 @@
 package com.aenadgrleey.tododata.local.db
 
 import androidx.room.TypeConverter
-import com.aenadgrleey.data.utils.DateConverter
+import com.aenadgrleey.core.data.remote.utils.DateConverter
 import java.util.Date
 
 /*

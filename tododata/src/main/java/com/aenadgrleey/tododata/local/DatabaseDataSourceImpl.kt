@@ -1,12 +1,12 @@
 package com.aenadgrleey.tododata.local
 
 import android.content.Context
+import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.core.domain.models.TodoItemData
-import com.aenadgrleey.di.AppContext
-import com.aenadgrleey.local.TodoItemsLocalDataSource
 import com.aenadgrleey.tododata.local.db.LocalDatabase
 import com.aenadgrleey.tododata.local.models.TodoItemDataDb
 import com.aenadgrleey.tododata.local.utils.TodoItemDataToTodoItemDataDbMapper
+import com.aenadgrleey.tododomain.local.TodoItemsLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

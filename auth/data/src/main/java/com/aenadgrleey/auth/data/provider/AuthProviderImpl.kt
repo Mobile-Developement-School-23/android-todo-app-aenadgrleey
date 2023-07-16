@@ -6,7 +6,7 @@ import com.aenadgrleey.auth.data.provider.datastore.AuthDataStore
 import com.aenadgrleey.auth.data.provider.datastore.authDataStore
 import com.aenadgrleey.auth.domain.MutableAuthProvider
 import com.aenadgrleey.auth.domain.model.AuthInfo
-import com.aenadgrleey.di.AppContext
+import com.aenadgrleey.core.di.AppContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

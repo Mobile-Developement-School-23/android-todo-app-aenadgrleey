@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = ProjectConfig.namespace("todorefactor.domain")
+    namespace = ProjectConfig.namespace("todo.domain")
 }

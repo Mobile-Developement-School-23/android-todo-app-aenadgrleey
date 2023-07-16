@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = ProjectConfig.namespace("data")
+    namespace = ProjectConfig.namespace("todo.domain")
 }
 
 dependencies {

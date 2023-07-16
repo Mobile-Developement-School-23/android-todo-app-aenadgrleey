@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = ProjectConfig.namespace("di")
+    namespace = ProjectConfig.namespace("core.di")
 }
 
 dependencies {

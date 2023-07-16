@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.aenadgrleey.di.holder.scopedComponent
+import com.aenadgrleey.core.di.holder.scopedComponent
 import com.aenadgrleey.todorefactor.domain.TodoItemId
 import com.aenadgrleey.todorefactor.domain.TodoRefactorNavigator
 import com.aenadgrleey.todorefactor.ui.composables.RefactorScreen

@@ -2,7 +2,7 @@ package com.aenadgrleey.tododata.local
 
 import android.content.Context
 import com.aenadgrleey.core.domain.models.TodoItemData
-import com.aenadgrleey.local.TodoItemsLocalDataSource
+import com.aenadgrleey.tododomain.local.TodoItemsLocalDataSource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow

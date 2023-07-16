@@ -2,16 +2,16 @@ package com.aenadgrleey.tododata.remote
 
 import com.aenadgrleey.auth.domain.AuthProvider
 import com.aenadgrleey.auth.domain.model.AuthInfo
-import com.aenadgrleey.data.remote.exceptions.DifferentRevisionsException
-import com.aenadgrleey.data.remote.exceptions.NoSuchElementOnServerException
-import com.aenadgrleey.data.remote.exceptions.ServerErrorException
-import com.aenadgrleey.data.remote.exceptions.WrongAuthorizationException
-import com.aenadgrleey.remote.TodoItemsRemoteDataSource
+import com.aenadgrleey.core.data.remote.exceptions.DifferentRevisionsException
+import com.aenadgrleey.core.data.remote.exceptions.NoSuchElementOnServerException
+import com.aenadgrleey.core.data.remote.exceptions.ServerErrorException
+import com.aenadgrleey.core.data.remote.exceptions.WrongAuthorizationException
 import com.aenadgrleey.tododata.remote.network.RetrofitClient
 import com.aenadgrleey.tododata.remote.network.TodoItemDataJsonAdapter
 import com.aenadgrleey.tododata.remote.network.URLs
 import com.aenadgrleey.tododata.remote.network.requests.TodoItemRequest
 import com.aenadgrleey.tododata.remote.network.requests.TodoItemsListRequest
+import com.aenadgrleey.tododomain.remote.TodoItemsRemoteDataSource
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

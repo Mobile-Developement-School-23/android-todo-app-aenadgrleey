@@ -6,9 +6,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.aenadgrleey.di.FragmentContext
-import com.aenadgrleey.di.ViewLifecycleOwner
-import com.aenadgrleey.di.ViewScope
+import com.aenadgrleey.core.di.FragmentContext
+import com.aenadgrleey.core.di.ViewLifecycleOwner
+import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.resources.R
 import com.aenadgrleey.todolist.ui.TodoListViewModel
 import com.aenadgrleey.todolist.ui.databinding.ExpendableToolbarBinding

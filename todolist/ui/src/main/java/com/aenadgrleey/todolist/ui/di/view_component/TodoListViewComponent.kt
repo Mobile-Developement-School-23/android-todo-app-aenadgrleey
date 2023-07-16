@@ -5,9 +5,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.aenadgrleey.di.FragmentContext
-import com.aenadgrleey.di.ViewLifecycleOwner
-import com.aenadgrleey.di.ViewScope
+import com.aenadgrleey.core.di.FragmentContext
+import com.aenadgrleey.core.di.ViewLifecycleOwner
+import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.todolist.ui.TodoListViewModel
 import com.aenadgrleey.todolist.ui.databinding.ExpendableToolbarBinding
 import com.aenadgrleey.todolist.ui.ioc.TodoListBootstrapper

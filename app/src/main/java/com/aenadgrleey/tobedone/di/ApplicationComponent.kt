@@ -2,8 +2,8 @@ package com.aenadgrleey.tobedone.di
 
 import android.content.Context
 import com.aenadgrleey.auth.data.di.AuthProviderScope
-import com.aenadgrleey.di.AppContext
-import com.aenadgrleey.di.AppScope
+import com.aenadgrleey.core.di.AppContext
+import com.aenadgrleey.core.di.AppScope
 import com.aenadgrleey.tobedone.ToBeDone
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
 import dagger.BindsInstance

@@ -13,7 +13,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.aenadgrleey.di.AppContext
+import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.work.SyncWorker
 import com.aenadgrleey.work.WorkersTags
 import kotlinx.coroutines.launch

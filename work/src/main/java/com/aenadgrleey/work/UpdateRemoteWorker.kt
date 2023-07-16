@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.aenadgrleey.data.remote.exceptions.DifferentRevisionsException
-import com.aenadgrleey.data.remote.exceptions.NoSuchElementOnServerException
-import com.aenadgrleey.data.remote.exceptions.ServerErrorException
-import com.aenadgrleey.data.remote.exceptions.WrongAuthorizationException
+import com.aenadgrleey.core.data.remote.exceptions.DifferentRevisionsException
+import com.aenadgrleey.core.data.remote.exceptions.NoSuchElementOnServerException
+import com.aenadgrleey.core.data.remote.exceptions.ServerErrorException
+import com.aenadgrleey.core.data.remote.exceptions.WrongAuthorizationException
+import com.aenadgrleey.tododomain.local.TodoItemsLocalDataSource
+import com.aenadgrleey.tododomain.remote.TodoItemsRemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
@@ -21,8 +23,8 @@ class UpdateRemoteWorker
 constructor(
     context: Context,
     params: WorkerParameters,
-    private val localDataSource: com.aenadgrleey.local.TodoItemsLocalDataSource,
-    private val remoteDataSource: com.aenadgrleey.remote.TodoItemsRemoteDataSource,
+    private val localDataSource: TodoItemsLocalDataSource,
+    private val remoteDataSource: TodoItemsRemoteDataSource,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
@@ -43,8 +45,8 @@ constructor(
     }
 
     class Factory @Inject constructor(
-        private val local: Provider<com.aenadgrleey.local.TodoItemsLocalDataSource>,
-        private val remote: Provider<com.aenadgrleey.remote.TodoItemsRemoteDataSource>,
+        private val local: Provider<TodoItemsLocalDataSource>,
+        private val remote: Provider<TodoItemsRemoteDataSource>,
     ) : ChildWorkerFactory {
         override fun create(appContext: Context, params: WorkerParameters): ListenableWorker {
             return UpdateRemoteWorker(appContext, params, local.get(), remote.get())

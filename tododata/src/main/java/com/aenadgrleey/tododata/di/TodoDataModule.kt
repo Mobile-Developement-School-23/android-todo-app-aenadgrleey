@@ -1,11 +1,11 @@
 package com.aenadgrleey.tododata.di
 
-import com.aenadgrleey.di.AppScope
-import com.aenadgrleey.local.TodoItemsLocalDataSource
-import com.aenadgrleey.remote.TodoItemsRemoteDataSource
+import com.aenadgrleey.core.di.AppScope
 import com.aenadgrleey.tododata.local.DatabaseDataSourceImpl
 import com.aenadgrleey.tododata.remote.NetworkDataSourceImpl
 import com.aenadgrleey.tododata.repository.TodoItemsRepositoryImpl
+import com.aenadgrleey.tododomain.local.TodoItemsLocalDataSource
+import com.aenadgrleey.tododomain.remote.TodoItemsRemoteDataSource
 import com.aenadgrleey.tododomain.repository.TodoItemRepository
 import dagger.Binds
 import dagger.Module

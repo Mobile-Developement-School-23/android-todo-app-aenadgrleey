@@ -8,9 +8,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.aenadgrleey.di.FragmentContext
-import com.aenadgrleey.di.ViewLifecycleOwner
-import com.aenadgrleey.di.ViewScope
+import com.aenadgrleey.core.di.FragmentContext
+import com.aenadgrleey.core.di.ViewLifecycleOwner
+import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.todolist.ui.TodoListViewModel
 import com.aenadgrleey.todolist.ui.model.UiAction
 import com.aenadgrleey.todolist.ui.model.UiEvent

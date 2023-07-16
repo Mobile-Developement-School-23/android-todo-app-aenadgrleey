@@ -2,7 +2,7 @@ package com.aenadgrleey.auth.ui.di
 
 import com.aenadgrleey.auth.ui.AuthFragment
 import com.aenadgrleey.auth.ui.AuthFragmentViewModel
-import com.aenadgrleey.di.FeatureScope
+import com.aenadgrleey.core.di.FeatureScope
 import dagger.Subcomponent
 
 @FeatureScope

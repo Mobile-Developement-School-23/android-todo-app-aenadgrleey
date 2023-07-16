@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import com.aenadgrleey.auth.domain.AuthNavigator
 import com.aenadgrleey.auth.ui.composables.AuthScreen
 import com.aenadgrleey.auth.ui.di.AuthUiComponentProvider
-import com.aenadgrleey.di.holder.scopedComponent
+import com.aenadgrleey.core.di.holder.scopedComponent
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.transition.MaterialSharedAxis
 import javax.inject.Inject

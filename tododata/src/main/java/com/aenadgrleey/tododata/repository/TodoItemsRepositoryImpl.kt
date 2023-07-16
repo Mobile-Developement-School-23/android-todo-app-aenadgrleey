@@ -2,14 +2,14 @@ package com.aenadgrleey.tododata.repository
 
 import android.util.Log
 import com.aenadgrleey.auth.domain.AuthProvider
+import com.aenadgrleey.core.data.remote.exceptions.DifferentRevisionsException
+import com.aenadgrleey.core.data.remote.exceptions.NoSuchElementOnServerException
+import com.aenadgrleey.core.data.remote.exceptions.ServerErrorException
+import com.aenadgrleey.core.data.remote.exceptions.WrongAuthorizationException
 import com.aenadgrleey.core.domain.NetworkStatus
 import com.aenadgrleey.core.domain.models.TodoItemData
-import com.aenadgrleey.data.remote.exceptions.DifferentRevisionsException
-import com.aenadgrleey.data.remote.exceptions.NoSuchElementOnServerException
-import com.aenadgrleey.data.remote.exceptions.ServerErrorException
-import com.aenadgrleey.data.remote.exceptions.WrongAuthorizationException
-import com.aenadgrleey.local.TodoItemsLocalDataSource
-import com.aenadgrleey.remote.TodoItemsRemoteDataSource
+import com.aenadgrleey.tododomain.local.TodoItemsLocalDataSource
+import com.aenadgrleey.tododomain.remote.TodoItemsRemoteDataSource
 import com.aenadgrleey.tododomain.repository.TodoItemRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
