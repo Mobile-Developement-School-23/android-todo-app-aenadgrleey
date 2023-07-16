@@ -5,6 +5,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.aenadgrleey.auth.ui.di.AuthUiComponent
 import com.aenadgrleey.auth.ui.di.AuthUiModule
+import com.aenadgrleey.settings.ui.di.SettingUiComponent
+import com.aenadgrleey.settings.ui.di.SettingsUiModule
 import com.aenadgrleey.tobedone.ioc.TodoActivityBootstrapper
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
 import com.aenadgrleey.todolist.ui.di.TodoListUiModule
@@ -20,6 +22,7 @@ import dagger.Subcomponent
         AuthUiModule::class,
         TodoListUiModule::class,
         TodoRefactorUiModule::class,
+        SettingsUiModule::class
     ]
 )
 interface TodoActivityComponent {
@@ -32,6 +35,8 @@ interface TodoActivityComponent {
     fun todoListUiComponent(): TodoListUiComponent.Factory
 
     fun todoRefactorUiComponent(): TodoRefactorUiComponent.Factory
+
+    fun settingsUiComponent(): SettingUiComponent.Factory
 
     @Subcomponent.Factory
     interface Factory {

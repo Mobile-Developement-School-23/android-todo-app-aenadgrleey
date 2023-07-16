@@ -4,10 +4,12 @@ import javax.inject.Inject
 
 class TodoActivityBootstrapper @Inject constructor(
     navigationController: NavigationController,
+    themeController: ThemeController,
     workerController: WorkerController,
 ) {
     init {
-        navigationController.setUpNavigation()
+        navigationController.setUpNavigationControl()
+        themeController.setUpThemeControl()
 //        workerController.setUpWorkers()
     }
 }

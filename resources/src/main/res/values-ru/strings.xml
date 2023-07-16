@@ -19,4 +19,9 @@
     <string name="noInternetError">Нет интеренета! Все изминения сохраняться на устройстве</string>
     <string name="synced">Обновлено!</string>
     <string name="serverError">Внутренняя ошибка на сервере. Извините(</string>
+    <string name="lightTheme">Светлая</string>
+    <string name="darkTheme">Темная</string>
+    <string name="systemTheme">Системная</string>
+    <string name="selectTheme">Выберете тему</string>
+    <string name="authorization">Авторизация</string>
 </resources>

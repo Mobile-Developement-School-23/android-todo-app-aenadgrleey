@@ -14,6 +14,8 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.aenadgrleey.auth.ui.di.AuthUiComponent
 import com.aenadgrleey.auth.ui.di.AuthUiComponentProvider
+import com.aenadgrleey.settings.ui.di.SettingUiComponent
+import com.aenadgrleey.settings.ui.di.SettingUiComponentProvider
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponentProvider
@@ -27,6 +29,7 @@ import java.util.concurrent.TimeUnit
 
 class TodoActivity : AppCompatActivity(),
     AuthUiComponentProvider,
+    SettingUiComponentProvider,
     TodoListUiComponentProvider,
     TodoRefactorUiComponentProvider {
 
@@ -59,6 +62,10 @@ class TodoActivity : AppCompatActivity(),
 
     override fun provideTodoRefactorUiComponent(): TodoRefactorUiComponent {
         return activityComponent.todoRefactorUiComponent().create()
+    }
+
+    override fun provideSettingsUiComponentProvider(): SettingUiComponent {
+        return activityComponent.settingsUiComponent().create()
     }
 
     fun setUpWorkers() {

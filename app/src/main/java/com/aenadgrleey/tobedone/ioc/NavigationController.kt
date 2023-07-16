@@ -2,6 +2,7 @@ package com.aenadgrleey.tobedone.ioc
 
 import android.os.Bundle
 import androidx.fragment.R
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
@@ -12,6 +13,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.aenadgrleey.auth.domain.AuthNavigator
 import com.aenadgrleey.auth.domain.AuthProvider
 import com.aenadgrleey.auth.ui.AuthFragment
+import com.aenadgrleey.settings.domain.SettingsNavigator
+import com.aenadgrleey.settings.ui.SettingDialogFragment
 import com.aenadgrleey.tobedone.di.view_component.ActivityScope
 import com.aenadgrleey.todolist.domain.TodoListNavigator
 import com.aenadgrleey.todolist.ui.TodosListFragment
@@ -28,19 +31,18 @@ class NavigationController
     private val authProvider: AuthProvider,
     private val supportFragmentManager: FragmentManager,
     private val lifecycleOwner: LifecycleOwner,
-) : AuthNavigator, TodoListNavigator, TodoRefactorNavigator {
+) : AuthNavigator, TodoListNavigator, TodoRefactorNavigator, SettingsNavigator {
 
     val refactoredTodoItemId get() = mRefactoredTodoItemId
     private var mRefactoredTodoItemId: String? = null
 
-    fun setUpNavigation() {
+    fun setUpNavigationControl() {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authProvider.authInfoFlow().collectLatest {
                     if (it.authToken == null || it.deviceId == null)
                         supportFragmentManager.commit {
-                            val aim = AuthFragment()
-                            replace(R.id.fragment_container_view_tag, aim, "tag")
+                            add<AuthFragment>(R.id.fragment_container_view_tag, "todolist")
                             setReorderingAllowed(true)
                         }
                 }
@@ -48,31 +50,39 @@ class NavigationController
         }
         if (supportFragmentManager.fragments.isEmpty())
             supportFragmentManager.commit {
-                add<TodosListFragment>(R.id.fragment_container_view_tag, "tag")
+                add<TodosListFragment>(R.id.fragment_container_view_tag, "todolist")
                 setReorderingAllowed(true)
             }
     }
 
     override fun onSuccessAuth() {
         supportFragmentManager.commit {
-            add<TodosListFragment>(R.id.fragment_container_view_tag, "tag")
+            add<TodosListFragment>(R.id.fragment_container_view_tag, "todolist")
             setReorderingAllowed(true)
         }
+    }
+
+    override fun navigateToSettings() {
+        SettingDialogFragment().show(supportFragmentManager, "settings")
     }
 
     override fun navigateToRefactorFragment(todoItemId: String?) {
         supportFragmentManager.commit {
             mRefactoredTodoItemId = todoItemId
-            val argument = Bundle()
-            argument.putString(TodoItemId.TAG, todoItemId)
-            val aim = TodoRefactorFragment().apply { arguments = argument }
-            replace(R.id.fragment_container_view_tag, aim, "tag")
+            val arguments = Bundle()
+            arguments.putString(TodoItemId.TAG, todoItemId)
+            add<TodoRefactorFragment>(R.id.fragment_container_view_tag, "todorefactor", arguments)
             setReorderingAllowed(true)
-            addToBackStack(null)
+            addToBackStack("todoRefactor")
+
         }
     }
 
     override fun exitRefactor() {
         supportFragmentManager.popBackStack()
+    }
+
+    override fun exitSettings() {
+        (supportFragmentManager.findFragmentByTag("settings") as DialogFragment).dismiss()
     }
 }

@@ -54,6 +54,10 @@ dependencies {
     implementation(project(":auth:domain"))
     implementation(project(":auth:data"))
 
+    implementation(project(":settings:ui"))
+    implementation(project(":settings:domain"))
+    implementation(project(":settings:data"))
+
     implementation(project(":tododata"))
     implementation(project(":tododomain"))
 

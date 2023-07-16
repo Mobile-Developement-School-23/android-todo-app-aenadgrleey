@@ -1,6 +1,7 @@
 package com.aenadgrleey.tobedone.di.view_component
 
 import com.aenadgrleey.auth.domain.AuthNavigator
+import com.aenadgrleey.settings.domain.SettingsNavigator
 import com.aenadgrleey.tobedone.ioc.NavigationController
 import com.aenadgrleey.todolist.domain.TodoListNavigator
 import com.aenadgrleey.todorefactor.domain.TodoRefactorNavigator
@@ -20,5 +21,9 @@ abstract class NavigationModule {
     @ActivityScope
     @Binds
     abstract fun bindsTodoRefactorNavigator(controller: NavigationController): TodoRefactorNavigator
+
+    @ActivityScope
+    @Binds
+    abstract fun bindsSettingsNavigator(controller: NavigationController): SettingsNavigator
 
 }

@@ -19,6 +19,11 @@
     <string name="noInternetError">No internet! All changes will be saved locally</string>
     <string name="synced">Synced with remote server</string>
     <string name="serverError">Internal server error. Sorry(</string>
+    <string name="lightTheme">Light</string>
+    <string name="darkTheme">Dark</string>
+    <string name="systemTheme">System</string>
+    <string name="selectTheme">Select theme</string>
+    <string name="authorization">Authorization</string>
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

@@ -29,6 +29,10 @@ class TodoListViewModel @Inject constructor(
     private val repository: TodoItemRepository,
 ) : ViewModel() {
 
+    init {
+        println("TodoListViewModel init")
+    }
+
     private val dataPresenterMapper = TodoItemDataToTodoItem()
     private val presenterDataMapper = TodoItemToTodoItemData()
 
