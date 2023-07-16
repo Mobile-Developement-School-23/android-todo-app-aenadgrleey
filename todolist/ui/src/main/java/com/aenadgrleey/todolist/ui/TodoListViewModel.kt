@@ -94,7 +94,7 @@ class TodoListViewModel @Inject constructor(
 
 
     fun onUiAction(uiAction: UiAction) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             when (uiAction) {
                 UiAction.ScrollUpRequest -> mRecyclerEvents.send(UiEvent.RecyclerEvent.ScrollUp)
                 is UiAction.AddTodoItem -> repository.addTodoItem(presenterDataMapper.map(uiAction.todoItem))
