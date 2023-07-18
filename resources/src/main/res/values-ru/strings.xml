@@ -24,4 +24,6 @@
     <string name="systemTheme">Системная</string>
     <string name="selectTheme">Выберете тему</string>
     <string name="authorization">Авторизация</string>
+    <string name="deadlineNotificationTitle">Тук-тук, это дедлайн</string>
+    <string name="deadlineNotificationText">Дело: </string>
 </resources>

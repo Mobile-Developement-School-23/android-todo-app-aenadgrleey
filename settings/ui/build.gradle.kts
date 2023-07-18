@@ -13,7 +13,6 @@ dependencies {
 
     implementation(project(":core:di"))
     implementation(project(":core:data"))
-    implementation(project(":core:domain"))
 
     implementation(project(":settings:domain"))
     implementation(project(":auth:domain"))

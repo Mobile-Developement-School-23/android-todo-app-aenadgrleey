@@ -48,7 +48,6 @@ dependencies {
 
     implementation(project(":core:di"))
     implementation(project(":core:data"))
-    implementation(project(":core:domain"))
 
     implementation(project(":auth:ui"))
     implementation(project(":auth:domain"))
@@ -57,20 +56,19 @@ dependencies {
     implementation(project(":settings:ui"))
     implementation(project(":settings:domain"))
     implementation(project(":settings:data"))
+    implementation(project(":todo:data"))
+    implementation(project(":todo:domain"))
 
-    implementation(project(":tododata"))
-    implementation(project(":tododomain"))
+    implementation(project(":todo:list:ui"))
+    implementation(project(":todo:list:domain"))
 
-    implementation(project(":todolist:ui"))
-    implementation(project(":todolist:domain"))
+    implementation(project(":todo:refactor:ui"))
+    implementation(project(":todo:refactor:domain"))
 
-    implementation(project(":todorefactor:ui"))
-    implementation(project(":todorefactor:domain"))
+    implementation(project(":todo:notifications:ui"))
+    implementation(project(":todo:notifications:domain"))
 
-    implementation(project(":todonotify:ui"))
-    implementation(project(":todonotify:domain"))
-
-    implementation(project(":work"))
+    implementation(project(":todo:work"))
 
     implementation(Dependencies.Android.constraintLayout)
     implementation(Dependencies.Android.swiperefreshLayout)

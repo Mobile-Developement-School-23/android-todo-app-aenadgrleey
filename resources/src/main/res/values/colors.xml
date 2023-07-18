@@ -70,5 +70,6 @@
     <color name="green">#9BD31A</color>
     <color name="greenContainer">#D9F378</color>
     <color name="white">#FFFFFF</color>
+    <color name="icon_color">#d26451</color>
 
 </resources>
