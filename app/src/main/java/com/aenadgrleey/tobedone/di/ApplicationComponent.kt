@@ -9,22 +9,24 @@ import com.aenadgrleey.tobedone.ToBeDone
 import com.aenadgrleey.tobedone.TodoActivity
 import com.aenadgrleey.tobedone.di.broadcast.BroadcastReceiverModule
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
+import com.aenadgrleey.todonotify.ui.di.NotificatorComponent
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
 
 @AppScope
 @SettingsProviderScope
 @AuthProviderScope
 @Component(modules = [AppModule::class, BroadcastReceiverModule::class, AndroidInjectionModule::class])
-interface ApplicationComponent : AndroidInjector<ToBeDone> {
+interface ApplicationComponent {
 
     fun injectIntoApplication(application: ToBeDone)
 
     fun injectIntoActivity(activity: TodoActivity)
 
     fun todoActivityComponent(): TodoActivityComponent.Factory
+
+    fun todoNotificatorComponent(): NotificatorComponent.Factory
 
 
     @Component.Builder

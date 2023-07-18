@@ -24,7 +24,7 @@
     <string name="systemTheme">System</string>
     <string name="selectTheme">Select theme</string>
     <string name="authorization">Authorization</string>
-    <string name="deadlineNotificationTitle">Knock-knock,&#160;it\'s deadline</string>
+    <string name="deadlineNotificationTitle">Knock-knock, it\'s deadline</string>
     <string name="deadlineNotificationText">Task:&#160;</string>
     <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -63,6 +63,7 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="deadline">Deadline:</string>
+    <string name="urgentTodoWarning">Hurry! Important task\'s deadline is coming!</string>
 
 
 </resources>

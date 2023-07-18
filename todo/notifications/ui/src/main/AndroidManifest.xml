@@ -7,16 +7,21 @@
 
     <application>
         <receiver
-            android:name=".ui.notify.NotificationSender"
+            android:name="com.aenadgrleey.todonotify.ui.notify.TaskDeadlineNotificator"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.aenadgrleey.SEND_TODO" />
             </intent-filter>
         </receiver>
-        <service
-            android:name=".ui.trackers.TodoSessionTrackerImpl"
-            android:enabled="true" />
+        <receiver
+            android:name="com.aenadgrleey.todonotify.ui.notify.ImportantTaskDeadlineWarningNotificator"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.aenadgrleey.WARN_ABOUT_IMPORTANT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 

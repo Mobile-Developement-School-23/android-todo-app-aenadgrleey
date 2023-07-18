@@ -26,4 +26,5 @@
     <string name="authorization">Авторизация</string>
     <string name="deadlineNotificationTitle">Тук-тук, это дедлайн</string>
     <string name="deadlineNotificationText">Дело: </string>
+    <string name="urgentTodoWarning">Скоро дедлайн важного дела!</string>
 </resources>

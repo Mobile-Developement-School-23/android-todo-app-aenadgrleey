@@ -20,17 +20,17 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.aenadgrleey.auth.ui.di.AuthUiComponent
 import com.aenadgrleey.auth.ui.di.AuthUiComponentProvider
+import com.aenadgrleey.list.ui.di.TodoListUiComponent
+import com.aenadgrleey.list.ui.di.TodoListUiComponentProvider
 import com.aenadgrleey.settings.ui.di.SettingUiComponent
 import com.aenadgrleey.settings.ui.di.SettingUiComponentProvider
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
-import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
-import com.aenadgrleey.todolist.ui.di.TodoListUiComponentProvider
-import com.aenadgrleey.todonotify.ui.trackers.TodoSessionTrackerImpl
-import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponent
-import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponentProvider
-import com.aenadgrleey.work.SyncWorker
-import com.aenadgrleey.work.UpdateRemoteWorker
-import com.aenadgrleey.work.WorkersTags
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponent
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponentProvider
+import com.aenadgrleey.todo.work.SyncWorker
+import com.aenadgrleey.todo.work.UpdateRemoteWorker
+import com.aenadgrleey.todo.work.WorkersTags
+import com.aenadgrleey.todonotify.ui.TodoNotificationDispatcherImpl
 import java.util.concurrent.TimeUnit
 
 
@@ -57,7 +57,7 @@ class TodoActivity : AppCompatActivity(),
 
     override fun onStart() {
         super.onStart()
-        Intent(this, TodoSessionTrackerImpl::class.java).also { intent ->
+        Intent(this, TodoNotificationDispatcherImpl::class.java).also { intent ->
             bindService(intent, object : ServiceConnection {
                 override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                     println("connecting service")

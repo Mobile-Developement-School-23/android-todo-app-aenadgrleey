@@ -3,8 +3,8 @@ package com.aenadgrleey.tobedone.di.view_component
 import com.aenadgrleey.auth.domain.AuthNavigator
 import com.aenadgrleey.settings.domain.SettingsNavigator
 import com.aenadgrleey.tobedone.ioc.NavigationController
-import com.aenadgrleey.todolist.domain.TodoListNavigator
-import com.aenadgrleey.todorefactor.domain.TodoRefactorNavigator
+import com.aenadgrleey.todo.refactor.domain.TodoRefactorNavigator
+import com.aenadrgleey.todo.list.domain.TodoListNavigator
 import dagger.Binds
 import dagger.Module
 

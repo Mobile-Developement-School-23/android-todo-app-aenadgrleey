@@ -6,14 +6,14 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.aenadgrleey.auth.ui.di.AuthUiComponent
 import com.aenadgrleey.auth.ui.di.AuthUiModule
+import com.aenadgrleey.list.ui.di.TodoListUiComponent
+import com.aenadgrleey.list.ui.di.TodoListUiModule
 import com.aenadgrleey.settings.ui.di.SettingUiComponent
 import com.aenadgrleey.settings.ui.di.SettingsUiModule
 import com.aenadgrleey.tobedone.TodoActivity
 import com.aenadgrleey.tobedone.ioc.TodoActivityBootstrapper
-import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
-import com.aenadgrleey.todolist.ui.di.TodoListUiModule
-import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponent
-import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiModule
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponent
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiModule
 import dagger.BindsInstance
 import dagger.Subcomponent
 

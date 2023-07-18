@@ -3,9 +3,9 @@ package com.aenadgrleey.tobedone.di
 import com.aenadgrleey.auth.data.di.AuthModule
 import com.aenadgrleey.settings.data.di.SettingsModule
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityModule
-import com.aenadgrleey.tododata.di.TodoDataModule
-import com.aenadgrleey.todonotify.ui.di.TodoNotifyModule
-import com.aenadgrleey.work.di.WorkModule
+import com.aenadgrleey.todo.data.di.TodoDataModule
+import com.aenadgrleey.todo.work.di.WorkModule
+import com.aenadgrleey.todonotify.ui.di.TodoNotificationComponent
 import dagger.Module
 
 @Module(
@@ -15,7 +15,7 @@ import dagger.Module
         TodoActivityModule::class,
         WorkModule::class,
         SettingsModule::class,
-        TodoNotifyModule::class
+        TodoNotificationComponent::class
     ]
 )
 abstract class AppModule

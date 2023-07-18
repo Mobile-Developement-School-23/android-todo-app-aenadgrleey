@@ -14,8 +14,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.aenadgrleey.core.di.AppContext
-import com.aenadgrleey.work.SyncWorker
-import com.aenadgrleey.work.WorkersTags
+import com.aenadgrleey.todo.work.SyncWorker
+import com.aenadgrleey.todo.work.UpdateRemoteWorker
+import com.aenadgrleey.todo.work.WorkersTags
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -56,7 +57,7 @@ class WorkerController @Inject constructor(
             )
             .build()
 
-    private fun createRemoteUpdaterWorkerRequest() = OneTimeWorkRequestBuilder<com.aenadgrleey.work.UpdateRemoteWorker>()
+    private fun createRemoteUpdaterWorkerRequest() = OneTimeWorkRequestBuilder<UpdateRemoteWorker>()
         .setConstraints(
             Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
