@@ -71,7 +71,7 @@ fun RefactorScreenDeadlineSelector(enabled: Boolean, value: Date?, onDateChange:
                                         .setMinute(calendar.get(Calendar.MINUTE))
                                         .build()
                                     timePicker.addOnPositiveButtonClickListener {
-                                        calendar.time.time = date
+                                        calendar.time = Date(date)
                                         calendar.set(Calendar.HOUR_OF_DAY, timePicker.hour)
                                         calendar.set(Calendar.MINUTE, timePicker.minute)
                                         onDateChange(calendar.time)
