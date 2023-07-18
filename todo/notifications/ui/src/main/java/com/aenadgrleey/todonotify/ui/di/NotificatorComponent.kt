@@ -1,6 +1,6 @@
 package com.aenadgrleey.todonotify.ui.di
 
-import com.aenadgrleey.todonotify.ui.notify.Notificator
+import com.aenadgrleey.todonotify.ui.notification.notificator.Notificator
 import dagger.Subcomponent
 
 @Subcomponent

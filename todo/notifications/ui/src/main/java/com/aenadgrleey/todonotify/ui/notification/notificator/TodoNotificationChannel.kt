@@ -1,4 +1,4 @@
-package com.aenadgrleey.todonotify.ui.notify
+package com.aenadgrleey.todonotify.ui.notification.notificator
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

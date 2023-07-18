@@ -9,6 +9,7 @@ import com.aenadgrleey.tobedone.ToBeDone
 import com.aenadgrleey.tobedone.TodoActivity
 import com.aenadgrleey.tobedone.di.broadcast.BroadcastReceiverModule
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
+import com.aenadgrleey.todonotify.domain.NotificationNavigator
 import com.aenadgrleey.todonotify.ui.di.NotificatorComponent
 import dagger.BindsInstance
 import dagger.Component
@@ -33,6 +34,9 @@ interface ApplicationComponent {
     interface Builder {
         @BindsInstance
         fun applicationContext(@AppContext context: Context): Builder
+
+        @BindsInstance
+        fun notificationNavifator(navigator: NotificationNavigator): Builder
 
         fun build(): ApplicationComponent
     }

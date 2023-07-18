@@ -7,7 +7,7 @@
 
     <application>
         <receiver
-            android:name="com.aenadgrleey.todonotify.ui.notify.TaskDeadlineNotificator"
+            android:name="com.aenadgrleey.todonotify.ui.notification.TaskDeadlineNotificator"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -15,7 +15,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.aenadgrleey.todonotify.ui.notify.ImportantTaskDeadlineWarningNotificator"
+            android:name="com.aenadgrleey.todonotify.ui.notification.ImportantTaskDeadlineWarningNotificator"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

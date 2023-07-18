@@ -1,6 +1,6 @@
 package com.aenadgrleey.tobedone.di.broadcast
 
-import com.aenadgrleey.todonotify.ui.notify.TaskDeadlineNotificator
+import com.aenadgrleey.todonotify.ui.notification.TaskDeadlineNotificator
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

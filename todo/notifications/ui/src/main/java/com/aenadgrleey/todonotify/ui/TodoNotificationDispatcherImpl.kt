@@ -9,8 +9,8 @@ import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.domain.models.TodoItemData
 import com.aenadgrleey.todonotify.domain.TodoNotificationDispatcher
-import com.aenadgrleey.todonotify.ui.notify.ImportantTaskDeadlineWarningNotificator
-import com.aenadgrleey.todonotify.ui.notify.TaskDeadlineNotificator
+import com.aenadgrleey.todonotify.ui.notification.ImportantTaskDeadlineWarningNotificator
+import com.aenadgrleey.todonotify.ui.notification.TaskDeadlineNotificator
 import com.aenadgrleey.todonotify.ui.utils.TodoNotification
 import com.aenadgrleey.todonotify.ui.utils.withinNext24Hours
 import java.util.Calendar
@@ -26,8 +26,8 @@ class TodoNotificationDispatcherImpl @Inject constructor(
         if (!todoItemData.deadline!!.withinNext24Hours()) return
         val alarmManager = context.getSystemService(AlarmManager::class.java) as AlarmManager
         val notificationIntent = Intent(context, TaskDeadlineNotificator::class.java).apply {
-            action = TodoNotification.NotificationAction
-            putExtra(TodoNotification.TodoItemIdTag, todoItemData.id!!)
+            action = TodoNotification.notificationAction
+            putExtra(TodoNotification.todoItemIdTag, todoItemData.id!!)
         }
         Log.v(TAG, "postponed")
         alarmManager.setExactAndAllowWhileIdle(
@@ -42,25 +42,26 @@ class TodoNotificationDispatcherImpl @Inject constructor(
         )
         if (todoItemData.importance == Importance.High) {
             val warningIntent = Intent(context, ImportantTaskDeadlineWarningNotificator::class.java).apply {
-                action = TodoNotification.WarningAction
-                putExtra(TodoNotification.TodoItemIdTag, todoItemData.id!!)
+                action = TodoNotification.warningAction
+                putExtra(TodoNotification.todoItemIdTag, todoItemData.id!!)
             }
+            val warningTime = (todoItemData.deadline!!.time - TodoNotification.warningNotificationTimeBeforeDeadline)
+                .coerceAtLeast(Calendar.getInstance().timeInMillis + 1000)
+
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
-                todoItemData.deadline!!.time + hourMilliseconds,
+                warningTime,
                 PendingIntent.getBroadcast(
                     context,
-                    todoItemData.id!!.hashCode() + TodoNotification.WarningNotificationIdModifier,
+                    todoItemData.id!!.hashCode() + TodoNotification.warningNotificationIdModifier,
                     warningIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
         }
     }
 
     companion object {
-        const val dayMilliseconds = 24 * 60 * 60 * 1000
-        const val hourMilliseconds = 60 * 60 * 1000
         const val TAG = "TodoNotificationDispatcher"
     }
 }
