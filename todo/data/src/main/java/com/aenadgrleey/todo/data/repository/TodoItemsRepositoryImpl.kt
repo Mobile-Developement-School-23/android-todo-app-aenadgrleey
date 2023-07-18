@@ -64,7 +64,10 @@ class TodoItemsRepositoryImpl @Inject constructor(
             tryRemote {
                 remoteDataSource.getTodoItems().run {
                     localDataSource.clearDatabase()
-                    forEach { localDataSource.addTodoItem(it) }
+                    forEach {
+                        localDataSource.addTodoItem(it)
+                        notificationDispatcher.handleTodo(it)
+                    }
                 }
                 networkStatusChannel.send(NetworkStatus.SYNCED)
             }

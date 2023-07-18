@@ -8,8 +8,7 @@ import com.aenadgrleey.core.data.remote.exceptions.DifferentRevisionsException
 import com.aenadgrleey.core.data.remote.exceptions.NoSuchElementOnServerException
 import com.aenadgrleey.core.data.remote.exceptions.ServerErrorException
 import com.aenadgrleey.core.data.remote.exceptions.WrongAuthorizationException
-import com.aenadgrleey.todo.domain.local.TodoItemsLocalDataSource
-import com.aenadgrleey.todo.domain.remote.TodoItemsRemoteDataSource
+import com.aenadgrleey.todo.domain.repository.TodoItemRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -24,13 +23,11 @@ class SyncWorker
 @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val localDataSource: TodoItemsLocalDataSource,
-    private val remoteDataSource: TodoItemsRemoteDataSource,
+    private val repository: TodoItemRepository,
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
-            localDataSource.clearDatabase()
-            remoteDataSource.getTodoItems().forEach { localDataSource.addTodoItem(it) }
+            repository.fetchRemoteData()
             return@withContext Result.success()
         } catch (unknownHostException: java.net.UnknownHostException) {
             return@withContext Result.failure()
@@ -47,11 +44,10 @@ class SyncWorker
 
 
     class Factory @Inject constructor(
-        private val local: Provider<TodoItemsLocalDataSource>,
-        private val remote: Provider<TodoItemsRemoteDataSource>,
+        private val repository: Provider<TodoItemRepository>,
     ) : ChildWorkerFactory {
         override fun create(appContext: Context, params: WorkerParameters): ListenableWorker {
-            return SyncWorker(appContext, params, local.get(), remote.get())
+            return SyncWorker(appContext, params, repository.get())
         }
     }
 }

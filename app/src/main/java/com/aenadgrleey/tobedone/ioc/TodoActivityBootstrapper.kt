@@ -12,6 +12,6 @@ class TodoActivityBootstrapper @Inject constructor(
         navigationController.setUpNavigationControl()
         themeController.setUpThemeControl()
         permissionController.setUpPermissionControl()
-//        workerController.setUpWorkers()
+        workerController.setUpWorkers()
     }
 }
