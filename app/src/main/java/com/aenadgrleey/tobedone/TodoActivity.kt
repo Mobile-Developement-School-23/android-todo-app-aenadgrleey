@@ -1,6 +1,12 @@
 package com.aenadgrleey.tobedone
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.R
 import androidx.fragment.app.FragmentContainerView
@@ -19,6 +25,7 @@ import com.aenadgrleey.settings.ui.di.SettingUiComponentProvider
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponentProvider
+import com.aenadgrleey.todonotify.ui.trackers.TodoSessionTrackerImpl
 import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponent
 import com.aenadgrleey.todorefactor.ui.di.TodoRefactorUiComponentProvider
 import com.aenadgrleey.work.SyncWorker
@@ -38,12 +45,27 @@ class TodoActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(FragmentContainerView(this).apply { id = R.id.fragment_container_view_tag })
-        println("provided new fm")
+        val launcher = this.registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
         activityComponent = applicationComponent.todoActivityComponent().create(
+            permissionGrantLauncher = launcher,
+            activity = this,
             fragmentManager = supportFragmentManager,
             lifecycleOwner = this
         )
         activityComponent.boot()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Intent(this, TodoSessionTrackerImpl::class.java).also { intent ->
+            bindService(intent, object : ServiceConnection {
+                override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                    println("connecting service")
+                }
+
+                override fun onServiceDisconnected(name: ComponentName?) {}
+            }, Context.BIND_AUTO_CREATE)
+        }
     }
 
     override fun onStop() {

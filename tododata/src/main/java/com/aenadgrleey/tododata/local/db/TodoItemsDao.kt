@@ -23,7 +23,7 @@ internal interface TodoItemsDao {
     fun getTodoItems(): List<TodoItemDataDb>
 
     @Query("SELECT * FROM todo_items WHERE id=:id")
-    fun todoItem(id: String): TodoItemDataDb
+    fun todoItem(id: String): TodoItemDataDb?
 
     @Query("DELETE FROM todo_items")
     fun clearDatabase()

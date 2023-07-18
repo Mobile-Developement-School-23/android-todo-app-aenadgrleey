@@ -14,7 +14,7 @@
     <string name="lowImportance">⬇️Low</string>
     <string name="commonImportance">Common</string>
     <string name="completeBefore">Completer before:</string>
-    <string name="deadlineExample" translatable="false">12.12.12</string>
+    <string name="deadlineExample" translatable="false">00:00 12.12.12</string>
     <string name="noText">No text inserted!</string>
     <string name="noInternetError">No internet! All changes will be saved locally</string>
     <string name="synced">Synced with remote server</string>

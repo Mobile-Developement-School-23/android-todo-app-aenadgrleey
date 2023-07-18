@@ -67,6 +67,9 @@ dependencies {
     implementation(project(":todorefactor:ui"))
     implementation(project(":todorefactor:domain"))
 
+    implementation(project(":todonotify:ui"))
+    implementation(project(":todonotify:domain"))
+
     implementation(project(":work"))
 
     implementation(Dependencies.Android.constraintLayout)
@@ -77,12 +80,14 @@ dependencies {
     implementation(Dependencies.Other.workManager)
     implementation(Dependencies.Android.material)
     implementation(Dependencies.Dagger.dependency)
+    implementation(Dependencies.Dagger.android)
 
     testImplementation(Dependencies.Testing.junit4)
     androidTestImplementation(Dependencies.Testing.junitAndroidExt)
     androidTestImplementation(Dependencies.Testing.espressoCore)
 
     kapt(Dependencies.Dagger.compiler)
+    kapt(Dependencies.Dagger.androidCompiler)
 
 }
 

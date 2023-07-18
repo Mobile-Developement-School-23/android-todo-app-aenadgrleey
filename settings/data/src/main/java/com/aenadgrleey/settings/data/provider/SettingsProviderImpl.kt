@@ -1,6 +1,9 @@
 package com.aenadgrleey.settings.data.provider
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.datastore.preferences.core.edit
 import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.settings.data.provider.datastore.SettingsDataStore
@@ -19,7 +22,11 @@ class SettingsProviderImpl @Inject constructor(@AppContext private val context: 
             "Light" -> AppTheme.Light
             else -> AppTheme.System
         }
-        AppSettings(theme)
+        val notificationPermissionGranted =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.checkCallingOrSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+            } else true
+        AppSettings(theme, notificationPermissionGranted)
     }
 
     override suspend fun updateAppSettings(appSettings: AppSettings?) {

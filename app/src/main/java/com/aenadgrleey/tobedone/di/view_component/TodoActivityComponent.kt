@@ -1,12 +1,14 @@
 package com.aenadgrleey.tobedone.di.view_component
 
-import android.app.Activity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.aenadgrleey.auth.ui.di.AuthUiComponent
 import com.aenadgrleey.auth.ui.di.AuthUiModule
 import com.aenadgrleey.settings.ui.di.SettingUiComponent
 import com.aenadgrleey.settings.ui.di.SettingsUiModule
+import com.aenadgrleey.tobedone.TodoActivity
 import com.aenadgrleey.tobedone.ioc.TodoActivityBootstrapper
 import com.aenadgrleey.todolist.ui.di.TodoListUiComponent
 import com.aenadgrleey.todolist.ui.di.TodoListUiModule
@@ -28,7 +30,7 @@ import dagger.Subcomponent
 interface TodoActivityComponent {
     fun boot(): TodoActivityBootstrapper
 
-    fun inject(activity: Activity)
+    fun inject(activity: TodoActivity)
 
     fun authUiComponent(): AuthUiComponent.Factory
 
@@ -41,6 +43,8 @@ interface TodoActivityComponent {
     @Subcomponent.Factory
     interface Factory {
         fun create(
+            @BindsInstance permissionGrantLauncher: ActivityResultLauncher<String>,
+            @BindsInstance activity: AppCompatActivity,
             @BindsInstance fragmentManager: FragmentManager,
             @BindsInstance lifecycleOwner: LifecycleOwner,
         ): TodoActivityComponent

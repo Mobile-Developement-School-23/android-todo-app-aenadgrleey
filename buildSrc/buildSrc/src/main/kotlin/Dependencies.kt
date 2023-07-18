@@ -40,6 +40,8 @@ object Dependencies {
 
         const val dependency = "com.google.dagger:dagger:$version"
         const val compiler = "com.google.dagger:dagger-compiler:$version" //kapt
+        const val android = "com.google.dagger:dagger-android:$version"
+        const val androidCompiler = "com.google.dagger:dagger-android-processor:$version"
     }
 
     object Compose {

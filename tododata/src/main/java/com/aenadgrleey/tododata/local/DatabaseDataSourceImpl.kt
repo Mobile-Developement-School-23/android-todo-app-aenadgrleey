@@ -27,7 +27,7 @@ class DatabaseDataSourceImpl @Inject constructor(
         dao.getTodoItems(excludeCompleted).map { it.map(TodoItemDataDb::toTodoItemData) }
 
     override fun getTodoItems(): List<TodoItemData> = dao.getTodoItems().map(TodoItemDataDb::toTodoItemData)
-    override suspend fun todoItem(id: String): TodoItemData = dao.todoItem(id).toTodoItemData()
+    override suspend fun todoItem(id: String): TodoItemData? = dao.todoItem(id)?.toTodoItemData()
 
     override fun clearDatabase() {
         dao.clearDatabase()
