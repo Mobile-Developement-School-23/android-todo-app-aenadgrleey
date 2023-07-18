@@ -16,23 +16,23 @@ data class UiState(
     val created: Date?,
     val lastModifiedBy: String?,
 ) {
-    fun copy(
-        body: String? = this.text,
-        completeness: Boolean = this.completeness,
-        importance: Importance = this.importance,
-        deadlineEnabled: Boolean = this.deadlineEnabled,
-        deadline: Date? = this.deadline,
-        color: String? = this.color,
-    ): UiState = UiState(
-        text = body,
-        completeness = completeness,
-        importance = importance,
-        deadlineEnabled = deadlineEnabled,
-        deadline = deadline,
-        color = color,
-        id = this.id,
-        lastModified = this.lastModified,
-        created = this.created,
-        lastModifiedBy = this.lastModifiedBy
-    )
+//    fun copy(
+//        body: String? = this.text,
+//        completeness: Boolean = this.completeness,
+//        importance: Importance = this.importance,
+//        deadlineEnabled: Boolean = this.deadlineEnabled,
+//        deadline: Date? = this.deadline,
+//        color: String? = this.color,
+//    ): UiState = UiState(
+//        text = body,
+//        completeness = completeness,
+//        importance = importance,
+//        deadlineEnabled = deadlineEnabled,
+//        deadline = deadline,
+//        color = color,
+//        id = this.id,
+//        lastModified = this.lastModified,
+//        created = this.created,
+//        lastModifiedBy = this.lastModifiedBy
+//    )
 }

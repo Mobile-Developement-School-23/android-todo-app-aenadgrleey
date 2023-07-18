@@ -70,7 +70,7 @@ class TodoRefactorViewModel @Inject constructor(
     }
 
     private fun changeText(text: String) {
-        mUiState.value = mUiState.value!!.copy(body = text)
+        mUiState.value = mUiState.value!!.copy(text = text, textError = false)
     }
 
     private fun changeImportance(importance: Importance) {
@@ -82,15 +82,18 @@ class TodoRefactorViewModel @Inject constructor(
     }
 
     private fun changeDeadline(enabled: Boolean, deadline: Date?) {
-        println("$enabled $deadline")
         mUiState.value = mUiState.value!!.copy(deadlineEnabled = enabled, deadline = deadline)
     }
 
     private fun saveTodoItem() {
         mUiState.value?.let {
             viewModelScope.launch {
-                repository.addTodoItem(uiStateDataMapper.map(it))
+                if (it.text.isNullOrBlank()) {
+                    mUiState.value = it.copy(textError = true)
+                    return@launch
+                }
                 mUiEvents.send(UiEvent.ExitRequest)
+                repository.addTodoItem(uiStateDataMapper.map(it))
             }
         }
     }

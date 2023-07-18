@@ -28,7 +28,7 @@ class UiStateToTodoItemData : Mapper<UiState, TodoItemData> {
             body = text,
             completed = completeness,
             importance = importance,
-            deadline = deadline,
+            deadline = if (deadlineEnabled) deadline else null,
             created = created,
             lastModified = lastModified,
             color = color,

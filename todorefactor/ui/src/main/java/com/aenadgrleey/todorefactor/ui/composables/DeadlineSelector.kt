@@ -30,6 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aenadgrleey.resources.R.string
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK
+import com.google.android.material.timepicker.TimeFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -44,20 +48,39 @@ fun RefactorScreenDeadlineSelector(enabled: Boolean, value: Date?, onDateChange:
     ) {
         Text(text = LocalContext.current.resources.getString(string.deadline), style = MaterialTheme.typography.titleMedium)
         val activity = LocalContext.current
-        val dateTimeFormat by remember { mutableStateOf(SimpleDateFormat("dd.MM.yy ", Locale("eng"))) }
+        val dateTimeFormat by remember { mutableStateOf(SimpleDateFormat("HH:mm  // dd.MM.yy", Locale("eng"))) }
         val valueStr = value?.let { dateTimeFormat.format(it).toString() } ?: activity.resources.getString(string.deadlineExample)
-        val interactionSource = remember {
-            MutableInteractionSource()
-        }
+        val interactionSource = remember { MutableInteractionSource() }
         Row(
             Modifier
                 .clickable(interactionSource, indication = null) {
-                    if (activity !is PreviewActivity && enabled)
+                    if (activity !is PreviewActivity && enabled) {
+                        val calendar = Calendar.getInstance()
+                        if (value != null) calendar.time = value
                         MaterialDatePicker.Builder
                             .datePicker()
+                            .setSelection(calendar.timeInMillis)
                             .build()
-                            .apply { addOnPositiveButtonClickListener { onDateChange(Date(it)) } }
+                            .apply {
+                                addOnPositiveButtonClickListener { date ->
+                                    val timePicker = MaterialTimePicker
+                                        .Builder()
+                                        .setTimeFormat(TimeFormat.CLOCK_24H)
+                                        .setInputMode(INPUT_MODE_CLOCK)
+                                        .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                                        .setMinute(calendar.get(Calendar.MINUTE))
+                                        .build()
+                                    timePicker.addOnPositiveButtonClickListener {
+                                        calendar.time.time = date
+                                        calendar.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+                                        calendar.set(Calendar.MINUTE, timePicker.minute)
+                                        onDateChange(calendar.time)
+                                    }
+                                    timePicker.show((activity as AppCompatActivity).supportFragmentManager, "timePicker")
+                                }
+                            }
                             .show((activity as AppCompatActivity).supportFragmentManager, "datePicker")
+                    }
                 }
                 .padding(horizontal = 16.dp)
                 .weight(1f)
