@@ -21,12 +21,7 @@ class AuthProviderImpl
         )
     }
 
-    override suspend fun authInfo() = context.authDataStore.data.map {
-        AuthInfo(
-            it[AuthDataStore.token],
-            it[AuthDataStore.deviceId]
-        )
-    }.first()
+    override suspend fun authInfo() = authInfoFlow().first()
 
     override suspend fun clearAuthInfo() {
         context.authDataStore.edit {
