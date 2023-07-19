@@ -11,6 +11,7 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.todo.work.WorkersConstants
+import com.aenadgrleey.todo.work.di.NotificationWorkerRequest
 import com.aenadgrleey.todo.work.di.SyncWorkerRequest
 import com.aenadgrleey.todo.work.di.UpdateWorkerRequest
 import javax.inject.Inject
@@ -19,6 +20,7 @@ class WorkerController @Inject constructor(
     @AppContext private val context: Context,
     @SyncWorkerRequest private val syncWorkRequest: PeriodicWorkRequest,
     @UpdateWorkerRequest private val updateWorkerRequest: OneTimeWorkRequest,
+    @NotificationWorkerRequest private val notificationWorkerRequest: PeriodicWorkRequest,
     private val lifecycleOwner: LifecycleOwner,
 ) {
     fun setUpWorkers() {
@@ -36,6 +38,11 @@ class WorkerController @Inject constructor(
                             ExistingWorkPolicy.KEEP,
                             updateWorkerRequest
                         ).enqueue()
+                        this.enqueueUniquePeriodicWork(
+                            WorkersConstants.NOTIFICATION_WORKER,
+                            ExistingPeriodicWorkPolicy.KEEP,
+                            notificationWorkerRequest
+                        )
                     }
             }
         })

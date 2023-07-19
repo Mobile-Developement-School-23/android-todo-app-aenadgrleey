@@ -8,6 +8,7 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkerFactory
 import com.aenadgrleey.todo.work.ChildWorkerFactory
+import com.aenadgrleey.todo.work.NotificationWorker
 import com.aenadgrleey.todo.work.SampleWorkerFactory
 import com.aenadgrleey.todo.work.SyncWorker
 import com.aenadgrleey.todo.work.UpdateRemoteWorker
@@ -55,6 +56,19 @@ abstract class WorkModule {
             OneTimeWorkRequestBuilder<UpdateRemoteWorker>()
                 .setConstraints(WorkersConstants.networkConstraint)
                 .build()
+
+        @Provides
+        @NotificationWorkerRequest
+        fun providesNotificationWorkerRequest(): PeriodicWorkRequest =
+            PeriodicWorkRequestBuilder<NotificationWorker>(
+                WorkersConstants.notificationWorkerRepeatPeriod.interval,
+                WorkersConstants.notificationWorkerRepeatPeriod.timeUnit,
+                WorkersConstants.notificationWorkerFlexInterval.interval,
+                WorkersConstants.notificationWorkerFlexInterval.timeUnit
+            )
+                .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.MINUTES)
+                .build()
+
     }
 
 }
