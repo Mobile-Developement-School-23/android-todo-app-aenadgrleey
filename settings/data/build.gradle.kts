@@ -9,5 +9,6 @@ android {
 dependencies {
     implementation(project(":core:di"))
     implementation(project(":settings:domain"))
+    implementation(project(":auth:domain"))
     implementation(Dependencies.Other.datastore)
 }
