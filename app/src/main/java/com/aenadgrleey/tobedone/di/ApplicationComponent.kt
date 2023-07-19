@@ -7,18 +7,17 @@ import com.aenadgrleey.core.di.AppScope
 import com.aenadgrleey.settings.data.di.SettingsProviderScope
 import com.aenadgrleey.tobedone.ToBeDone
 import com.aenadgrleey.tobedone.TodoActivity
-import com.aenadgrleey.tobedone.di.broadcast.BroadcastReceiverModule
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
-import com.aenadgrleey.todonotify.domain.NotificationNavigator
-import com.aenadgrleey.todonotify.ui.di.NotificatorComponent
+import com.aenadgrleey.todonotify.domain.TodoNotificationNavigator
+import com.aenadgrleey.todonotify.ui.di.TodoNotificationActionReceiverComponent
+import com.aenadgrleey.todonotify.ui.di.TodoNotificatorComponent
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjectionModule
 
 @AppScope
 @SettingsProviderScope
 @AuthProviderScope
-@Component(modules = [AppModule::class, BroadcastReceiverModule::class, AndroidInjectionModule::class])
+@Component(modules = [AppModule::class])
 interface ApplicationComponent {
 
     fun injectIntoApplication(application: ToBeDone)
@@ -27,7 +26,9 @@ interface ApplicationComponent {
 
     fun todoActivityComponent(): TodoActivityComponent.Factory
 
-    fun todoNotificatorComponent(): NotificatorComponent.Factory
+    fun todoNotificatorComponent(): TodoNotificatorComponent.Factory
+
+    fun todoNotificationActionReceiverComponent(): TodoNotificationActionReceiverComponent.Factory
 
 
     @Component.Builder
@@ -36,7 +37,7 @@ interface ApplicationComponent {
         fun applicationContext(@AppContext context: Context): Builder
 
         @BindsInstance
-        fun notificationNavifator(navigator: NotificationNavigator): Builder
+        fun notificationNavigator(navigator: TodoNotificationNavigator): Builder
 
         fun build(): ApplicationComponent
     }

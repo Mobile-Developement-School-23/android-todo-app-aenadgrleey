@@ -8,28 +8,28 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
-import com.aenadgrleey.resources.R
+import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.domain.models.TodoItemData
-import com.aenadgrleey.todonotify.ui.di.NotificatorComponentProvider
-import com.aenadgrleey.todonotify.ui.notification.notificator.Notificator
+import com.aenadgrleey.todonotify.ui.di.TodoNotificatorComponentProvider
+import com.aenadgrleey.todonotify.ui.notification.notificator.TodoNotificator
 import com.aenadgrleey.todonotify.ui.utils.TodoNotification
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import com.aenadgrleey.resources.R as CommonR
 
-class ImportantTaskDeadlineWarningNotificator : Notificator() {
+
+class TodoDeadlineNotificator : TodoNotificator() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(context: Context?, intent: Intent?) {
 
         context ?: return
-        val todoItemId = intent?.extras?.getString(TodoNotification.todoItemIdTag) ?: return
+        val todoItemId = intent?.extras?.getString("TodoItemId") ?: return
 
-        val component = (context.applicationContext as NotificatorComponentProvider).provideNotificatorComponent()
+        val component = (context.applicationContext as TodoNotificatorComponentProvider).provideNotificatorComponent()
         component.inject(this)
-
-        Log.v(TAG, "aaaa")
 
         GlobalScope.launch(Dispatchers.IO) {
             val todoItem = repository.todoItem(todoItemId)
@@ -39,21 +39,30 @@ class ImportantTaskDeadlineWarningNotificator : Notificator() {
                 notificationManager = NotificationManagerCompat.from(context)
                 createNotificationChannel()
 
+                val importanceMarker = when (todoItem!!.importance) {
+                    Importance.Low -> "⬇️"
+                    Importance.High -> "‼️"
+                    else -> ""
+                }
+
+
                 val notification = notificationBuilderWithApi(context).setOngoing(true)
-                    .setSmallIcon(R.drawable.tobedone_small_urgent_icon)
-                    .setColor(context.getColor(R.color.icon_color))
-                    .setContentTitle(context.getText(R.string.urgentTodoWarning))
-                    .setContentText(context.getString(R.string.deadlineNotificationText) + "‼️" + "${todoItem!!.body}")
-                    .setCategory(Notification.CATEGORY_SERVICE)
+                    .setSmallIcon(CommonR.drawable.tobedone_small_icon)
+                    .setColor(context.getColor(CommonR.color.icon_color))
+                    .setContentTitle(context.getText(CommonR.string.deadlineNotificationTitle))
+                    .setContentText(context.getString(CommonR.string.deadlineNotificationText) + importanceMarker + "${todoItem.body}")
+                    .setCategory(Notification.CATEGORY_ALARM)
                     .setContentIntent(pendingIntentFromNavigatorToActivity(context))
                     .setAutoCancel(true)
                     .setOngoing(false)
+                    .addAction(createPostponeAction(context, todoItemId))
+                    .addAction(createMarkAsDoneAction(context, todoItemId))
                     .build()
 
 
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return@launch
-                notificationManager.notify(todoItemId.hashCode() + TodoNotification.warningNotificationIdModifier, notification)
-                Log.v(TAG, "sent warning")
+                notificationManager.notify(todoItemId.hashCode(), notification)
+                Log.v(TAG, "sent notification")
             }
         }
     }

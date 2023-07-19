@@ -9,8 +9,8 @@ import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.domain.models.TodoItemData
 import com.aenadgrleey.todonotify.domain.TodoNotificationDispatcher
-import com.aenadgrleey.todonotify.ui.notification.ImportantTaskDeadlineWarningNotificator
-import com.aenadgrleey.todonotify.ui.notification.TaskDeadlineNotificator
+import com.aenadgrleey.todonotify.ui.notification.ImportantTodoDeadlineWarningNotificator
+import com.aenadgrleey.todonotify.ui.notification.TodoDeadlineNotificator
 import com.aenadgrleey.todonotify.ui.utils.TodoNotification
 import com.aenadgrleey.todonotify.ui.utils.withinNext24Hours
 import java.util.Calendar
@@ -25,7 +25,7 @@ class TodoNotificationDispatcherImpl @Inject constructor(
         if (todoItemData.deadline!!.time < Calendar.getInstance().time.time) return
         if (!todoItemData.deadline!!.withinNext24Hours()) return
         val alarmManager = context.getSystemService(AlarmManager::class.java) as AlarmManager
-        val notificationIntent = Intent(context, TaskDeadlineNotificator::class.java).apply {
+        val notificationIntent = Intent(context, TodoDeadlineNotificator::class.java).apply {
             action = TodoNotification.notificationAction
             putExtra(TodoNotification.todoItemIdTag, todoItemData.id!!)
         }
@@ -41,7 +41,7 @@ class TodoNotificationDispatcherImpl @Inject constructor(
             )
         )
         if (todoItemData.importance == Importance.High) {
-            val warningIntent = Intent(context, ImportantTaskDeadlineWarningNotificator::class.java).apply {
+            val warningIntent = Intent(context, ImportantTodoDeadlineWarningNotificator::class.java).apply {
                 action = TodoNotification.warningAction
                 putExtra(TodoNotification.todoItemIdTag, todoItemData.id!!)
             }

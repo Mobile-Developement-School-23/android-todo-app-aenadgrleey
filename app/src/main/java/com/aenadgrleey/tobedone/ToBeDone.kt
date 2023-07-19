@@ -7,15 +7,18 @@ import androidx.work.Configuration
 import androidx.work.WorkerFactory
 import com.aenadgrleey.tobedone.di.ApplicationComponent
 import com.aenadgrleey.tobedone.di.DaggerApplicationComponent
-import com.aenadgrleey.todonotify.domain.NotificationNavigator
-import com.aenadgrleey.todonotify.ui.di.NotificatorComponent
-import com.aenadgrleey.todonotify.ui.di.NotificatorComponentProvider
+import com.aenadgrleey.todonotify.domain.TodoNotificationNavigator
+import com.aenadgrleey.todonotify.ui.di.TodoNotificationActionReceiverComponent
+import com.aenadgrleey.todonotify.ui.di.TodoNotificationActionReceiverComponentProvider
+import com.aenadgrleey.todonotify.ui.di.TodoNotificatorComponent
+import com.aenadgrleey.todonotify.ui.di.TodoNotificatorComponentProvider
 import com.aenadgrleey.todonotify.ui.utils.TodoNotification
 import com.google.android.material.color.DynamicColors
 import javax.inject.Inject
 
 
-class ToBeDone : Application(), Configuration.Provider, NotificatorComponentProvider {
+class ToBeDone : Application(), Configuration.Provider, TodoNotificatorComponentProvider,
+    TodoNotificationActionReceiverComponentProvider {
 
     lateinit var applicationComponent: ApplicationComponent
 
@@ -27,7 +30,7 @@ class ToBeDone : Application(), Configuration.Provider, NotificatorComponentProv
         DynamicColors.applyToActivitiesIfAvailable(this)
         applicationComponent = DaggerApplicationComponent.builder()
             .applicationContext(this)
-            .notificationNavifator(object : NotificationNavigator {
+            .notificationNavigator(object : TodoNotificationNavigator {
                 override val intentFromNotificationToActivity: Intent
                     get() = Intent(applicationContext, TodoActivity::class.java).apply {
                         action = TodoNotification.launchAppFromNotificationAction
@@ -44,8 +47,11 @@ class ToBeDone : Application(), Configuration.Provider, NotificatorComponentProv
             .setWorkerFactory(workerFactory)
             .build()
 
-    override fun provideNotificatorComponent(): NotificatorComponent =
+    override fun provideNotificatorComponent(): TodoNotificatorComponent =
         applicationComponent.todoNotificatorComponent().create()
+
+    override fun provideTodoNotificationActionReceiverComponent(): TodoNotificationActionReceiverComponent =
+        applicationComponent.todoNotificationActionReceiverComponent().create()
 
 
 }

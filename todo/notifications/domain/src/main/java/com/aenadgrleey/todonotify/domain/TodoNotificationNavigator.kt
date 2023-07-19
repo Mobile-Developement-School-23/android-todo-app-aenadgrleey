@@ -2,6 +2,6 @@ package com.aenadgrleey.todonotify.domain
 
 import android.content.Intent
 
-interface NotificationNavigator {
+interface TodoNotificationNavigator {
     val intentFromNotificationToActivity: Intent
 }

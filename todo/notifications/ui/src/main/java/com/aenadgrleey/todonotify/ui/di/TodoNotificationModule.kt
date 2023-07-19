@@ -6,8 +6,8 @@ import com.aenadgrleey.todonotify.ui.TodoNotificationDispatcherImpl
 import dagger.Binds
 import dagger.Module
 
-@Module(subcomponents = [NotificatorComponent::class])
-abstract class TodoNotificationComponent {
+@Module(subcomponents = [TodoNotificatorComponent::class])
+abstract class TodoNotificationModule {
     @Binds
     @AppScope
     abstract fun bindsNotifyDispatcher(todoDeadlineTrackerImpl: TodoNotificationDispatcherImpl): TodoNotificationDispatcher

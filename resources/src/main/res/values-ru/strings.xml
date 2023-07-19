@@ -27,4 +27,6 @@
     <string name="deadlineNotificationTitle">Тук-тук, это дедлайн</string>
     <string name="deadlineNotificationText">Дело: </string>
     <string name="urgentTodoWarning">Скоро дедлайн важного дела!</string>
+    <string name="markAsDoneAction">Сделано</string>
+    <string name="postponeAction">Отложить</string>
 </resources>

@@ -78,15 +78,12 @@ dependencies {
     implementation(Dependencies.Other.workManager)
     implementation(Dependencies.Android.material)
     implementation(Dependencies.Dagger.dependency)
-    implementation(Dependencies.Dagger.android)
 
     testImplementation(Dependencies.Testing.junit4)
     androidTestImplementation(Dependencies.Testing.junitAndroidExt)
     androidTestImplementation(Dependencies.Testing.espressoCore)
 
     kapt(Dependencies.Dagger.compiler)
-    kapt(Dependencies.Dagger.androidCompiler)
-
 }
 
 kapt { correctErrorTypes = true }

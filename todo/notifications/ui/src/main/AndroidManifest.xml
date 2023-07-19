@@ -7,7 +7,7 @@
 
     <application>
         <receiver
-            android:name="com.aenadgrleey.todonotify.ui.notification.TaskDeadlineNotificator"
+            android:name="com.aenadgrleey.todonotify.ui.notification.TodoDeadlineNotificator"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -15,11 +15,20 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.aenadgrleey.todonotify.ui.notification.ImportantTaskDeadlineWarningNotificator"
+            android:name="com.aenadgrleey.todonotify.ui.notification.ImportantTodoDeadlineWarningNotificator"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.aenadgrleey.WARN_ABOUT_IMPORTANT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.aenadgrleey.todonotify.ui.notification.notificator.TodoNotificationActionReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.aenadgrleey.MARK_TODO_AS_DONE" />
+                <action android:name="android.aenadgrleey.POSTPONE_TODO" />
             </intent-filter>
         </receiver>
     </application>
