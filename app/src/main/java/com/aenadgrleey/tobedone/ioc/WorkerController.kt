@@ -30,17 +30,17 @@ class WorkerController @Inject constructor(
                     WorkManager.getInstance(context).run {
                         this.enqueueUniquePeriodicWork(
                             WorkersConstants.PERIODIC_SYNC_WORKER,
-                            ExistingPeriodicWorkPolicy.KEEP,
+                            ExistingPeriodicWorkPolicy.UPDATE,
                             syncWorkRequest
                         )
                         this.beginUniqueWork(
                             WorkersConstants.UPDATE_REMOTE_WORKER,
-                            ExistingWorkPolicy.KEEP,
+                            ExistingWorkPolicy.REPLACE,
                             updateWorkerRequest
                         ).enqueue()
                         this.enqueueUniquePeriodicWork(
                             WorkersConstants.NOTIFICATION_WORKER,
-                            ExistingPeriodicWorkPolicy.KEEP,
+                            ExistingPeriodicWorkPolicy.UPDATE,
                             notificationWorkerRequest
                         )
                     }
