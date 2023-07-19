@@ -6,15 +6,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,20 +30,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aenadgrleey.auth.domain.AuthNavigator
+import com.aenadgrleey.auth.ui.models.UiAction
 import com.aenadgrleey.auth.ui.models.UiEvent
-import com.aenadgrleey.resources.R
 import com.yandex.authsdk.YandexAuthLoginOptions
 import com.yandex.authsdk.YandexAuthOptions
 import com.yandex.authsdk.YandexAuthSdk
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import com.aenadgrleey.resources.R as CommonR
 
 @Composable
 fun AuthScreen(
     uiEvents: Flow<UiEvent>,
-    onAuthRequest: () -> Unit,
-    onAuthResponse: (String) -> Unit,
-    onSuccess: () -> Unit,
+    onUiAction: (UiAction) -> Unit,
+    navigator: AuthNavigator,
 ) {
     val context = LocalContext.current
 
@@ -54,75 +56,61 @@ fun AuthScreen(
         authSdk.createLoginIntent(loginOptionsBuilder.build())
     }
 
-    val authLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+    val authLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
         val yandexAuthToken = try {
-            authSdk.extractToken(it.resultCode, it.data)
+            authSdk.extractToken(result.resultCode, result.data)
         } catch (_: Exception) {
             null
         }
-        yandexAuthToken?.let { it1 -> onAuthResponse(it1.value) }
+        yandexAuthToken?.let { it1 -> onUiAction(UiAction.OnSignIn(it1.value)) }
     }
 
     LaunchedEffect(Unit) {
         uiEvents.collectLatest {
             when (it) {
-                UiEvent.AuthSuccess -> onSuccess()
+                UiEvent.AuthSuccess -> navigator.onSuccessAuth()
                 UiEvent.AuthRequest -> authLauncher.launch(authIntent)
             }
         }
     }
-    AuthScreen(onAuthRequest)
+    AuthScreen(onUiAction)
 }
 
 @Composable
 fun AuthScreen(
-    onAuthRequest: () -> Unit,
+    onUiAction: (UiAction) -> Unit,
 ) {
     if (LocalConfiguration.current.run { screenWidthDp < screenHeightDp })
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
-            verticalArrangement = Arrangement.Center,
         ) {
-            Image(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.FillWidth,
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = null
-            )
-            Text(
-                text = "ToBeDone",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 0.dp, bottom = 48.dp),
-                style = MaterialTheme.typography.displayMedium,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            OutlinedButton(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = onAuthRequest,
-                shape = RoundedCornerShape(10.dp),
+            Column(
+                Modifier
+                    .padding(horizontal = 48.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
             ) {
-                Row {
-                    Image(
-                        modifier = Modifier
-                            .padding(start = 0.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
-                            .size(36.dp),
-                        painter = painterResource(R.drawable.yandex_logo),
-                        contentDescription = null
-                    )
-                    Text(
-                        text = "Login with Yandex",
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(24.dp)
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth,
+                    painter = painterResource(id = CommonR.drawable.app_icon),
+                    contentDescription = null
+                )
+                Text(
+                    text = LocalContext.current.resources.getString(CommonR.string.app_name),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 0.dp, bottom = 48.dp),
+                    style = MaterialTheme.typography.displayMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                AuthScreenSignInButton(Modifier, onUiAction)
             }
         }
     else
@@ -135,47 +123,31 @@ fun AuthScreen(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .weight(1f)
+                    .padding(48.dp)
                     .fillMaxHeight(),
                 contentScale = ContentScale.Crop,
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                painter = painterResource(id = CommonR.drawable.app_icon),
                 contentDescription = null
             )
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
+                    .weight(1f)
+                    .width(IntrinsicSize.Max)
                     .padding(horizontal = 48.dp),
-                verticalArrangement = Arrangement.SpaceAround
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "ToBeDone",
+                    text = LocalContext.current.resources.getString(CommonR.string.app_name),
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                OutlinedButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = { /*TODO*/ },
-                    shape = RoundedCornerShape(10.dp),
-                ) {
-                    Row {
-                        Image(
-                            modifier = Modifier
-                                .padding(start = 0.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
-                                .size(36.dp),
-                            painter = painterResource(R.drawable.yandex_logo),
-                            contentDescription = null
-                        )
-                        Text(
-                            text = "Login with Yandex",
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
+
+                Spacer(modifier = Modifier.height(36.dp))
+                AuthScreenSignInButton(Modifier, onUiAction)
             }
         }
 }

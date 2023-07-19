@@ -66,6 +66,7 @@
     <string name="urgentTodoWarning">Hurry! Important task\'s deadline is coming!</string>
     <string name="markAsDoneAction">Done</string>
     <string name="postponeAction">Postpone</string>
+    <string name="signInTitle">Sign in</string>
 
 
 </resources>

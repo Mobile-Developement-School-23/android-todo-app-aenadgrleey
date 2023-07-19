@@ -11,10 +11,10 @@ import com.aenadgrleey.settings.ui.model.UiEvent
 import com.aenadgrleey.settings.ui.model.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,12 +30,17 @@ class SettingsViewModel @Inject constructor(
     val uiEvents: Flow<UiEvent> get() = mUiEvents.receiveAsFlow()
     private val mUiEvents = Channel<UiEvent>()
 
+    init {
+        viewModelScope.launch {
+            mUiState.value = UiState(settingsRepository.settingFlow().first().appTheme)
+        }
+    }
+
     fun onUiAction(uiAction: UiAction) {
         viewModelScope.launch(Dispatchers.IO) {
             when (uiAction) {
-                UiAction.OnSignOut -> {
+                UiAction.OnSignOutButtonClick -> {
                     mUiEvents.send(UiEvent.ExitRequest)
-                    delay(500)
                     authRepository.signOut()
                 }
 

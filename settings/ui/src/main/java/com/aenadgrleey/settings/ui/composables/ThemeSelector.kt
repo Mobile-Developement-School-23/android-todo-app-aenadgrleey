@@ -25,10 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.aenadgrleey.settings.domain.model.AppTheme
+import com.aenadgrleey.settings.ui.model.UiAction
 import com.aenadgrleey.resources.R as CommonR
 
 @Composable
-fun SettingScreenThemeSelector(currentTheme: AppTheme, onSelect: (AppTheme) -> Unit) {
+fun SettingScreenThemeSelector(currentTheme: AppTheme, onUiAction: (UiAction) -> Unit) {
     val themes = remember { listOf(AppTheme.Light, AppTheme.Dark, AppTheme.System) }
     val cornerRadius = 8.dp
     Row(
@@ -38,7 +39,7 @@ fun SettingScreenThemeSelector(currentTheme: AppTheme, onSelect: (AppTheme) -> U
     ) {
         themes.forEachIndexed { index, theme ->
             OutlinedButton(
-                onClick = { onSelect(theme) },
+                onClick = { onUiAction(UiAction.OnThemeSelect(theme)) },
                 shape = when (index) {
                     // left outer button
                     0 -> RoundedCornerShape(topStart = cornerRadius, topEnd = 0.dp, bottomStart = cornerRadius, bottomEnd = 0.dp)
@@ -92,7 +93,7 @@ fun ThemeSelectorPreview() {
             .padding(10.dp)
     ) {
         Column {
-            SettingScreenThemeSelector(currentTheme = current, onSelect = { appTheme -> current = appTheme })
+            SettingScreenThemeSelector(currentTheme = current) {}
         }
     }
 }

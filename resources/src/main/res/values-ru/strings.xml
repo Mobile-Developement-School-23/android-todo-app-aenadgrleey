@@ -29,4 +29,5 @@
     <string name="urgentTodoWarning">Скоро дедлайн важного дела!</string>
     <string name="markAsDoneAction">Сделано</string>
     <string name="postponeAction">Отложить</string>
+    <string name="signInTitle">Войти</string>
 </resources>

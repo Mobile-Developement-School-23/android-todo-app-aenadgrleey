@@ -46,7 +46,7 @@ class SettingDialogFragment : BottomSheetDialogFragment() {
                                     width = 64.dp
                                 )
 
-                                SettingsScreen(viewModel, navigator, this@SettingDialogFragment)
+                                SettingsScreen(viewModel::onUiAction, viewModel.uiEvents, viewModel.uiState, navigator, this@SettingDialogFragment)
 
                                 Spacer(
                                     modifier = Modifier

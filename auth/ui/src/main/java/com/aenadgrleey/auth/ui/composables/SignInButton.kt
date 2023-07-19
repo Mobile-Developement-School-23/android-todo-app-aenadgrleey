@@ -1,8 +1,6 @@
-package com.aenadgrleey.settings.ui.composables
+package com.aenadgrleey.auth.ui.composables
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,20 +19,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aenadgrleey.settings.ui.model.UiAction
+import com.aenadgrleey.auth.ui.models.UiAction
 import com.aenadgrleey.resources.R as CommonR
 
+
 @Composable
-fun SignOutButton(onUiAction: (UiAction) -> Unit) {
+fun AuthScreenSignInButton(modifier: Modifier = Modifier, onUiAction: (UiAction) -> Unit) {
     OutlinedButton(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Max),
-        onClick = { onUiAction(UiAction.OnSignOutButtonClick) },
+        onClick = { onUiAction(UiAction.OnSignInButtonClick) },
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = Color.Red.copy(0.3f)
@@ -56,7 +55,7 @@ fun SignOutButton(onUiAction: (UiAction) -> Unit) {
             color = MaterialTheme.colorScheme.outline
         )
         Text(
-            text = "Sign out",
+            text = LocalContext.current.resources.getString(CommonR.string.signInTitle),
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(10.dp)
@@ -65,17 +64,5 @@ fun SignOutButton(onUiAction: (UiAction) -> Unit) {
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignOutButtonPreview() {
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .padding(10.dp)
-    ) {
-        SignOutButton {}
     }
 }

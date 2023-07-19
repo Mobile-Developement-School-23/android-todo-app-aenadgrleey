@@ -21,21 +21,24 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aenadgrleey.settings.domain.SettingsNavigator
 import com.aenadgrleey.settings.domain.model.AppTheme
-import com.aenadgrleey.settings.ui.SettingsViewModel
 import com.aenadgrleey.settings.ui.model.UiAction
 import com.aenadgrleey.settings.ui.model.UiEvent
 import com.aenadgrleey.settings.ui.model.UiState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import com.aenadgrleey.resources.R as CommonR
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel,
+    onUiAction: (UiAction) -> Unit,
+    uiEventsFlow: Flow<UiEvent>,
+    uiStateFlow: StateFlow<UiState>,
     navigator: SettingsNavigator,
     lifecycleOwner: LifecycleOwner,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner, Lifecycle.State.STARTED)
+    val uiState by uiStateFlow.collectAsStateWithLifecycle(lifecycleOwner, Lifecycle.State.RESUMED)
     LaunchedEffect(key1 = Unit) {
-        viewModel.uiEvents.collect {
+        uiEventsFlow.collect {
             when (it) {
                 UiEvent.ExitRequest -> navigator.exitSettings()
             }
@@ -43,24 +46,23 @@ fun SettingsScreen(
     }
     SettingsScreen(
         uiState = uiState,
-        onThemeSelect = { viewModel.onUiAction(UiAction.OnThemeSelect(it)) },
-        onSignOutButtonClick = { viewModel.onUiAction((UiAction.OnSignOut)) }
+        onUiAction = onUiAction
     )
 }
 
 @Composable
-fun SettingsScreen(uiState: UiState, onThemeSelect: (AppTheme) -> Unit, onSignOutButtonClick: () -> Unit) {
-    Column(Modifier.padding(horizontal = 10.dp)) {
+fun SettingsScreen(uiState: UiState, onUiAction: (UiAction) -> Unit) {
+    Column(Modifier.padding(horizontal = 16.dp)) {
         Text(
             text = LocalContext.current.resources.getString(CommonR.string.selectTheme),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.headlineMedium
         )
         Spacer(
             modifier = Modifier
                 .height(8.dp)
                 .fillMaxWidth()
         )
-        SettingScreenThemeSelector(currentTheme = uiState.appTheme, onSelect = onThemeSelect)
+        SettingScreenThemeSelector(currentTheme = uiState.appTheme, onUiAction = onUiAction)
         Spacer(
             modifier = Modifier
                 .height(16.dp)
@@ -68,14 +70,14 @@ fun SettingsScreen(uiState: UiState, onThemeSelect: (AppTheme) -> Unit, onSignOu
         )
         Text(
             text = LocalContext.current.resources.getString(CommonR.string.authorization),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.headlineMedium
         )
         Spacer(
             modifier = Modifier
                 .height(8.dp)
                 .fillMaxWidth()
         )
-        SignOutButton(onClick = onSignOutButtonClick)
+        SignOutButton(onUiAction = onUiAction)
     }
 }
 
@@ -87,7 +89,7 @@ fun SettingsScreenPreview() {
             .background(MaterialTheme.colorScheme.surface)
             .padding(10.dp)
     ) {
-        SettingsScreen(uiState = UiState(AppTheme.Dark), onThemeSelect = {}) {
+        SettingsScreen(uiState = UiState(AppTheme.Dark)) {
 
         }
     }

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class SettingsRepositoryImpl @Inject constructor(private val settingsProvider: SettingsProvider) : SettingsRepository {
-    override suspend fun settingFlow(): Flow<AppSettings> = settingsProvider.settingsFlow()
+    override fun settingFlow(): Flow<AppSettings> = settingsProvider.settingsFlow()
 
     override suspend fun updateTheme(appTheme: AppTheme) {
         settingsProvider.updateAppSettings(settingsProvider.settingsFlow().first().copy(appTheme))

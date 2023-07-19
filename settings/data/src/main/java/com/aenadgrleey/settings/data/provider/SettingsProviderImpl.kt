@@ -20,7 +20,7 @@ class SettingsProviderImpl @Inject constructor(
     @AppContext private val context: Context,
     private val authProvider: AuthProvider,
 ) : SettingsProvider {
-    override suspend fun settingsFlow(): Flow<AppSettings> =
+    override fun settingsFlow(): Flow<AppSettings> =
         context.settingDataStore.data.combine(authProvider.authInfoFlow()) { datastore, authInfo ->
             val theme = when (datastore[SettingsDataStore.appTheme]) {
                 "Dark" -> AppTheme.Dark

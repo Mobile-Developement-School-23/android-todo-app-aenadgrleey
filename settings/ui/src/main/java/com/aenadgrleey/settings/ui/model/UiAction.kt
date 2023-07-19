@@ -4,5 +4,5 @@ import com.aenadgrleey.settings.domain.model.AppTheme
 
 sealed class UiAction {
     data class OnThemeSelect(val theme: AppTheme) : UiAction()
-    object OnSignOut : UiAction()
+    object OnSignOutButtonClick : UiAction()
 }

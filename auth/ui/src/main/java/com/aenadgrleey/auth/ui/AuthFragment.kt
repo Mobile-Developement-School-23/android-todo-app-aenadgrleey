@@ -2,6 +2,7 @@ package com.aenadgrleey.auth.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
@@ -29,24 +30,27 @@ class AuthFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        authUiComponent.inject(this)
         val animDuration = resources
             .getInteger(com.google.android.material.R.integer.m3_sys_motion_duration_long4).toLong()
         exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
             .apply { duration = animDuration }
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+            .apply { duration = animDuration }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        ComposeView(context = requireContext()).apply {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        authUiComponent.inject(this)
+
+        return ComposeView(context = requireContext()).apply {
             setContent {
                 Mdc3Theme {
                     AuthScreen(
                         uiEvents = viewModel.uiEvents,
-                        onAuthRequest = viewModel::onAuthRequest,
-                        onAuthResponse = viewModel::onAuthResponse,
-                        onSuccess = navigator::onSuccessAuth
+                        onUiAction = viewModel::onUiAction,
+                        navigator = navigator
                     )
                 }
             }
         }
+    }
 }
