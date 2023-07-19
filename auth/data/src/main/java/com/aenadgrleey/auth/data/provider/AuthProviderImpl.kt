@@ -2,6 +2,7 @@ package com.aenadgrleey.auth.data.provider
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
+import com.aenadgrleey.auth.BuildConfig
 import com.aenadgrleey.auth.data.provider.datastore.AuthDataStore
 import com.aenadgrleey.auth.data.provider.datastore.authDataStore
 import com.aenadgrleey.auth.domain.MutableAuthProvider
@@ -15,8 +16,8 @@ class AuthProviderImpl
 @Inject constructor(@AppContext private val context: Context) : MutableAuthProvider {
     override fun authInfoFlow() = context.authDataStore.data.map {
         AuthInfo(
-            it[AuthDataStore.token],
-            it[AuthDataStore.deviceId]
+            if (BuildConfig.DEBUG) "Bearer durry" else "OAuth " + it[AuthDataStore.token],
+            if (BuildConfig.DEBUG) "debug device" else it[AuthDataStore.deviceId]
         )
     }
 

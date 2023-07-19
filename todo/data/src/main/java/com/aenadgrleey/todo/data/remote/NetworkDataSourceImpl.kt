@@ -45,7 +45,7 @@ class NetworkDataSourceImpl
     private val httpClient: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor { chain ->
             val newRequest: Request = chain.request().newBuilder()
-                .addHeader("Authorization", ("OAuth " + authInfo.value.authToken))
+                .addHeader("Authorization", (authInfo.value.authToken))
                 .addHeader("X-Generate-Fails", "0")
                 .build()
             chain.proceed(newRequest)

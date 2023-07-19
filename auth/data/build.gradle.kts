@@ -4,6 +4,10 @@ plugins {
 
 android {
     namespace = ProjectConfig.namespace("auth")
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
