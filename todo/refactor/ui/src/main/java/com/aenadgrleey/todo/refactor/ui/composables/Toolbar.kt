@@ -27,15 +27,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aenadgrleey.resources.R
+import com.aenadgrleey.todo.refactor.ui.model.UiAction
 
 
 @Composable
 fun RefactorScreenToolbar(
     dependentScrollState: ScrollState,
     completeness: Boolean,
-    onNavIconClick: () -> Unit,
-    onCompletenessIconClick: () -> Unit,
-    onSaveIconClick: () -> Unit,
+    onUiAction: (UiAction) -> Unit,
 ) {
     val elevation by animateIntAsState(targetValue = if (dependentScrollState.value != 0) 10 else 0, label = "elevation")
     Surface(
@@ -47,8 +46,10 @@ fun RefactorScreenToolbar(
     ) {
         Row {
             IconButton(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                onClick = onNavIconClick
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(start = 8.dp),
+                onClick = { onUiAction(UiAction.OnExitRequest) }
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Close,
@@ -72,7 +73,7 @@ fun RefactorScreenToolbar(
             val completeColor = Color(LocalContext.current.getColor(R.color.green))
             IconButton(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                onClick = onCompletenessIconClick
+                onClick = { onUiAction(UiAction.OnCompletenessChange(!completeness)) }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.round_check_circle_outline_24),
@@ -83,8 +84,10 @@ fun RefactorScreenToolbar(
                 )
             }
             IconButton(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                onClick = onSaveIconClick
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(end = 8.dp),
+                onClick = { onUiAction(UiAction.OnSaveRequest) }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.round_save_24),
@@ -100,4 +103,4 @@ fun RefactorScreenToolbar(
 
 @Preview
 @Composable
-fun ToolbarPreview() = RefactorScreenToolbar(rememberScrollState(), true, onNavIconClick = { /*TODO*/ }, onCompletenessIconClick = { /*TODO*/ }) {}
+fun ToolbarPreview() = RefactorScreenToolbar(rememberScrollState(), true) {}

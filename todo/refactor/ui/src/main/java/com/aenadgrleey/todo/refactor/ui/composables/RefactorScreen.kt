@@ -22,38 +22,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aenadgrleey.resources.R.string
 import com.aenadgrleey.todo.domain.models.Importance
-import com.aenadgrleey.todo.domain.models.NetworkStatus
-import com.aenadgrleey.todo.domain.models.TodoItemData
-import com.aenadgrleey.todo.domain.repository.TodoItemRepository
 import com.aenadgrleey.todo.refactor.domain.TodoRefactorNavigator
-import com.aenadgrleey.todo.refactor.ui.TodoRefactorViewModel
 import com.aenadgrleey.todo.refactor.ui.model.UiAction
 import com.aenadgrleey.todo.refactor.ui.model.UiEvent
 import com.aenadgrleey.todo.refactor.ui.model.UiState
 import com.aenadgrleey.todo.refactor.ui.utils.Res
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.util.Date
 
 @Composable
 fun RefactorScreen(
-    lifecycle: Lifecycle,
+    lifecycleOwner: LifecycleOwner,
+    uiEvents: Flow<UiEvent>,
+    onUiAction: (UiAction) -> Unit,
+    uiStateFlow: StateFlow<UiState>,
     navigator: TodoRefactorNavigator,
-    viewModel: TodoRefactorViewModel,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val snackBarScope = rememberCoroutineScope()
     var snackBarJob: Job = remember { Job() }
     val savedTitle = Res().getString(string.saved)
     LaunchedEffect(key1 = Unit) {
-        viewModel.uiEvents.collectLatest {
+        uiEvents.collectLatest {
             when (it) {
                 UiEvent.TodoItemSaved -> {
                     snackBarJob.cancel()
@@ -61,14 +59,14 @@ fun RefactorScreen(
                 }
 
                 UiEvent.ExitRequest -> {
-                    viewModel.onUiAction(UiAction.ResetTodoItem)
+                    onUiAction(UiAction.ResetTodoItem)
                     navigator.exitRefactor()
                 }
             }
         }
     }
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycle)
-    if (uiState != null) RefactorScreen(uiState = uiState!!, viewModel = viewModel, snackbarHostState)
+    val uiState by uiStateFlow.collectAsStateWithLifecycle(lifecycleOwner)
+    RefactorScreen(uiState = uiState, onUiAction = onUiAction, snackbarHostState)
 //    else
 //  here should be some loading screen???
 
@@ -77,7 +75,7 @@ fun RefactorScreen(
 @Composable
 fun RefactorScreen(
     uiState: UiState,
-    viewModel: TodoRefactorViewModel,
+    onUiAction: (UiAction) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
     val scrollState = rememberScrollState()
@@ -88,9 +86,7 @@ fun RefactorScreen(
             RefactorScreenToolbar(
                 dependentScrollState = scrollState,
                 completeness = uiState.completeness,
-                onNavIconClick = { viewModel.onUiAction(UiAction.OnExitRequest) },
-                onCompletenessIconClick = { viewModel.onUiAction(UiAction.OnCompletenessChange(!uiState.completeness)) },
-                onSaveIconClick = { viewModel.onUiAction(UiAction.OnSaveRequest) }
+                onUiAction
             )
         },
     ) {
@@ -105,36 +101,26 @@ fun RefactorScreen(
             RefactorScreenTextField(
                 text = uiState.text ?: "",
                 error = uiState.textError,
-                onValueChange = { value -> viewModel.onUiAction(UiAction.OnTextChange(value)) }
+                onUiAction = onUiAction
             )
 
-            RefactorScreenImportanceChooser(
+            RefactorScreenImportanceSelector(
                 selected = uiState.importance,
-                onChoose = { importance -> viewModel.onUiAction(UiAction.OnImportanceChange(importance)) }
+                onUiAction = onUiAction
             )
 
-            Divider(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
+            Divider(Modifier.fillMaxWidth())
 
             RefactorScreenDeadlineSelector(
                 enabled = uiState.deadlineEnabled,
-                value = uiState.deadline,
-                onDateChange = { deadline -> viewModel.onUiAction(UiAction.OnDeadlineChange(enabled = uiState.deadlineEnabled, deadline = deadline)) },
-                onToggle = { deadlineEnabled -> viewModel.onUiAction(UiAction.OnDeadlineChange(enabled = deadlineEnabled, deadline = uiState.deadline)) }
+                date = uiState.deadline,
+                onUiAction = onUiAction
             )
 
-            Divider(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
+            Divider(Modifier.fillMaxWidth())
 
-            RefactorScreenDeleteButton(
-                onClick = { viewModel.onUiAction(UiAction.OnDeleteRequest) }
-            )
+            RefactorScreenDeleteButton(onUiAction = onUiAction)
+
             Spacer(
                 Modifier
                     .fillMaxWidth()
@@ -149,20 +135,14 @@ fun RefactorScreen(
 fun RefactorPreview() {
     RefactorScreen(
         uiState = UiState(
-            text = LocalContext.current.resources.getString(string.lorem_ipsum), created = Date(), id = "aaaa", importance = Importance.Common, lastModified = Date(), lastModifiedBy = "aaa"
+            text = LocalContext.current.resources.getString(string.lorem_ipsum),
+            created = Date(),
+            id = "aaaa",
+            importance = Importance.Common,
+            lastModified = Date(),
+            lastModifiedBy = "aaa"
         ),
-        viewModel = TodoRefactorViewModel(
-            object : TodoItemRepository {
-                override fun todoItems(includeCompleted: Boolean) = flowOf<List<TodoItemData>>()
-                override suspend fun todoItem(id: String) = TodoItemData("aaa")
-                override fun completedItemsCount(): Flow<Int> = flowOf(5)
-                override val networkStatus: Flow<NetworkStatus> get() = flowOf(NetworkStatus.SYNCED)
-                override suspend fun addTodoItem(todoItem: TodoItemData) {}
-                override suspend fun deleteTodoItem(todoItem: TodoItemData) {}
-                override suspend fun fetchRemoteData() {}
-
-            },
-        ),
-        remember { SnackbarHostState() }
+        onUiAction = {},
+        snackbarHostState = SnackbarHostState()
     )
 }

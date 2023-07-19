@@ -21,13 +21,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aenadgrleey.resources.R
+import com.aenadgrleey.todo.refactor.ui.model.UiAction
 
 
 @Composable
 fun RefactorScreenTextField(
     error: Boolean,
     text: String,
-    onValueChange: (String) -> Unit,
+    onUiAction: (UiAction) -> Unit,
 ) {
     var value by remember { mutableStateOf(text) }
     val hintText = LocalContext.current.resources.getString(R.string.insertTask)
@@ -35,7 +36,7 @@ fun RefactorScreenTextField(
         value = value,
         onValueChange = {
             value = it
-            onValueChange(it)
+            onUiAction(UiAction.OnTextChange(it))
         },
         isError = error,
         modifier = Modifier
@@ -56,7 +57,7 @@ fun RefactorScreenTextField(
     )
 }
 
-@Preview()
+@Preview
 @Composable
 fun TextFieldPreview() {
     Box(
@@ -64,6 +65,6 @@ fun TextFieldPreview() {
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
-        RefactorScreenTextField(error = false, text = "aaa", onValueChange = {})
+        RefactorScreenTextField(error = false, text = "aaa", onUiAction = {})
     }
 }

@@ -1,6 +1,7 @@
 package com.aenadgrleey.todo.refactor.ui.composables
 
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,9 +18,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,13 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.aenadgrleey.resources.R.string
 import com.aenadgrleey.todo.domain.models.Importance
+import com.aenadgrleey.todo.refactor.ui.model.UiAction
 
 @Composable
-fun RefactorScreenImportanceChooser(selected: Importance, onChoose: (Importance) -> Unit) {
-    val cornerRadius = 8.dp
+fun RefactorScreenImportanceSelector(selected: Importance, onUiAction: (UiAction) -> Unit) {
+    val cornerRadius = remember { 8.dp }
     val color = remember { Animatable(Color.Red.copy(0.5f)) }
-    if (selected == Importance.High) BlinkingColor(color = color)
-    Column {
+    Column(Modifier.padding(8.dp)) {
         Text(
             text = LocalContext.current.resources.getString(string.importance),
             style = MaterialTheme.typography.titleMedium,
@@ -46,16 +49,15 @@ fun RefactorScreenImportanceChooser(selected: Importance, onChoose: (Importance)
                 .fillMaxWidth()
                 .height(48.dp)
         ) {
-            val items = listOf(Importance.High, Importance.Common, Importance.Low)
+
+            val items = remember { listOf(Importance.High, Importance.Common, Importance.Low) }
+
             items.forEachIndexed { index, importance ->
                 OutlinedButton(
-                    onClick = { onChoose(importance) },
+                    onClick = { onUiAction(UiAction.OnImportanceChange(importance)) },
                     shape = when (index) {
-                        // left outer button
                         0 -> RoundedCornerShape(topStart = cornerRadius, topEnd = 0.dp, bottomStart = cornerRadius, bottomEnd = 0.dp)
-                        // right outer button
                         items.lastIndex -> RoundedCornerShape(topStart = 0.dp, topEnd = cornerRadius, bottomStart = 0.dp, bottomEnd = cornerRadius)
-                        // middle button
                         else -> RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 0.dp, bottomEnd = 0.dp)
                     },
                     modifier = when (index) {
@@ -74,7 +76,7 @@ fun RefactorScreenImportanceChooser(selected: Importance, onChoose: (Importance)
                         containerColor =
                         if (selected == importance)
                             if (importance == Importance.High) color.value
-                            else MaterialTheme.colorScheme.surfaceVariant
+                            else MaterialTheme.colorScheme.secondaryContainer
                         else Color.Transparent
                     )
                 ) {
@@ -90,6 +92,22 @@ fun RefactorScreenImportanceChooser(selected: Importance, onChoose: (Importance)
                     )
                 }
             }
+            var internalState by rememberSaveable { mutableStateOf(selected) }
+            LaunchedEffect(selected) {
+                if (internalState == selected) {
+                    internalState = selected
+                    return@LaunchedEffect
+                }
+                internalState = selected
+                if (selected != Importance.High) return@LaunchedEffect
+                val initColor = color.value
+                val duration = 150
+                color.animateTo(initColor.copy(0.8f), animationSpec = tween(duration))
+                color.animateTo(initColor.copy(0.5f), animationSpec = tween(duration))
+                color.animateTo(initColor.copy(0.8f), animationSpec = tween(duration))
+                color.animateTo(initColor, animationSpec = tween(duration))
+            }
+
             Spacer(modifier = Modifier.weight(1f))
         }
     }
@@ -106,8 +124,6 @@ fun ImportancePreview() {
             .background(MaterialTheme.colorScheme.surface)
             .padding(12.dp)
     ) {
-        RefactorScreenImportanceChooser(selected = selected, onChoose = {
-            selected = it
-        })
+        RefactorScreenImportanceSelector(selected = selected, onUiAction = {})
     }
 }

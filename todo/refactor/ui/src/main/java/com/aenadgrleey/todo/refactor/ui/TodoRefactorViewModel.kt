@@ -11,7 +11,6 @@ import com.aenadgrleey.todo.refactor.ui.model.UiEvent
 import com.aenadgrleey.todo.refactor.ui.model.UiState
 import com.aenadgrleey.todo.refactor.ui.model.UiStateToTodoItemData
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +21,6 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Provider
 
-@OptIn(FlowPreview::class)
 class TodoRefactorViewModel @Inject constructor(
     private val repository: TodoItemRepository,
 ) : ViewModel() {
@@ -33,8 +31,8 @@ class TodoRefactorViewModel @Inject constructor(
     val uiEvents: Flow<UiEvent> get() = mUiEvents.receiveAsFlow()
     private var mUiEvents = Channel<UiEvent>()
 
-    val uiState: StateFlow<UiState?> get() = mUiState
-    private var mUiState = MutableStateFlow<UiState?>(null)
+    val uiState: StateFlow<UiState> get() = mUiState
+    private var mUiState = MutableStateFlow(emptyState)
     private var mTodoItemIsSet = false
 
     fun onUiAction(uiAction: UiAction) {
@@ -59,34 +57,31 @@ class TodoRefactorViewModel @Inject constructor(
                 if (todoItemId != null) {
                     mTodoItemIsSet = true
                     mUiState.value = dataUiStateMapper.map(repository.todoItem(todoItemId))
-                } else
-                    mUiState.value = UiState(
-                        id = null,
-                        lastModifiedBy = null,
-                        created = null,
-                        lastModified = null
-                    )
+                } else {
+                    mTodoItemIsSet = true
+                    mUiState.value = emptyState
+                }
         }
     }
 
     private fun changeText(text: String) {
-        mUiState.value = mUiState.value!!.copy(text = text, textError = false)
+        mUiState.value = mUiState.value.copy(text = text, textError = false)
     }
 
     private fun changeImportance(importance: Importance) {
-        mUiState.value = mUiState.value!!.copy(importance = importance)
+        mUiState.value = mUiState.value.copy(importance = importance)
     }
 
     private fun changeCompleteness(completeness: Boolean) {
-        mUiState.value = mUiState.value!!.copy(completeness = completeness)
+        mUiState.value = mUiState.value.copy(completeness = completeness)
     }
 
     private fun changeDeadline(enabled: Boolean, deadline: Date?) {
-        mUiState.value = mUiState.value!!.copy(deadlineEnabled = enabled, deadline = deadline)
+        mUiState.value = mUiState.value.copy(deadlineEnabled = enabled, deadline = deadline)
     }
 
     private fun saveTodoItem() {
-        mUiState.value?.let {
+        mUiState.value.let {
             viewModelScope.launch {
                 if (it.text.isNullOrBlank()) {
                     mUiState.value = it.copy(textError = true)
@@ -99,12 +94,21 @@ class TodoRefactorViewModel @Inject constructor(
     }
 
     private fun deleteTodoItem() {
-        mUiState.value?.let {
+        mUiState.value.let {
             viewModelScope.launch {
                 repository.deleteTodoItem(uiStateDataMapper.map(it))
                 mUiEvents.send(UiEvent.ExitRequest)
             }
         }
+    }
+
+    companion object {
+        val emptyState = UiState(
+            id = null,
+            lastModifiedBy = null,
+            created = null,
+            lastModified = null
+        )
     }
 
 

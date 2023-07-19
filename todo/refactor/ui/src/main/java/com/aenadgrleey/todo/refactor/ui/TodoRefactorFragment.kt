@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.aenadgrleey.core.di.holder.scopedComponent
 import com.aenadgrleey.todo.refactor.domain.TodoItemId
 import com.aenadgrleey.todo.refactor.domain.TodoRefactorNavigator
 import com.aenadgrleey.todo.refactor.ui.composables.RefactorScreen
@@ -19,7 +18,7 @@ import javax.inject.Inject
 
 class TodoRefactorFragment : Fragment() {
 
-    private val todoRefactorUiComponent by scopedComponent {
+    private val todoRefactorUiComponent by lazy {
         (requireActivity() as TodoRefactorUiComponentProvider).provideTodoRefactorUiComponent()
     }
 
@@ -52,9 +51,11 @@ class TodoRefactorFragment : Fragment() {
             setContent {
                 Mdc3Theme {
                     RefactorScreen(
-                        lifecycle = viewLifecycleOwner.lifecycle,
-                        navigator = navigator,
-                        viewModel = viewModel
+                        lifecycleOwner = viewLifecycleOwner,
+                        uiEvents = viewModel.uiEvents,
+                        onUiAction = viewModel::onUiAction,
+                        uiStateFlow = viewModel.uiState,
+                        navigator = navigator
                     )
                 }
             }
