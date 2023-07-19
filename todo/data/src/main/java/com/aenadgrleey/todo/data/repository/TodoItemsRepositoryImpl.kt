@@ -90,7 +90,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
         networkStatusChannel.send(NetworkStatus.SERVER_ERROR)
     } catch (unsynchronizedDataException: DifferentRevisionsException) {
         Log.e("NetworkError", unsynchronizedDataException.toString())
-        fetchRemoteData()
+        remoteDataSource.addTodoItems(localDataSource.getTodoItems())
         block.invoke()
     }
 }

@@ -9,7 +9,7 @@ Local todos storage interface
 interface TodoItemsLocalDataSource {
     fun getTodoItems(excludeCompleted: Boolean): Flow<List<TodoItemData>>
 
-    fun getTodoItems(): List<TodoItemData>
+    suspend fun getTodoItems(): List<TodoItemData>
 
     suspend fun todoItem(id: String): TodoItemData?
 

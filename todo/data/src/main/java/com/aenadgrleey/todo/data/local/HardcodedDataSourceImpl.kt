@@ -75,7 +75,7 @@ class HardcodedDataSourceImpl(private val context: Context) : TodoItemsLocalData
         }
     }
 
-    override fun getTodoItems(): List<TodoItemData> {
+    override suspend fun getTodoItems(): List<TodoItemData> {
         return items
     }
 
