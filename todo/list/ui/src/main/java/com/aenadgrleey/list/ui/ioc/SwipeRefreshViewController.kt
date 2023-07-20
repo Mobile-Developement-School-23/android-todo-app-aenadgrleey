@@ -12,6 +12,7 @@ import com.aenadgrleey.list.ui.model.UiAction
 import com.aenadgrleey.list.ui.model.UiEvent
 import com.aenadgrleey.list.ui.utils.toPx
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,13 +25,9 @@ class SwipeRefreshViewController @Inject constructor(
 ) {
     fun setUpSwipeRefreshLayout() {
         lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.swipeRefreshEvents.collect {
-                    if (it == UiEvent.ConnectionError
-                        || it == UiEvent.BadServerResponse
-                        || it == UiEvent.SyncedWithServer
-                        || it == null
-                    ) swipeRefreshLayout.isRefreshing = false
+            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.swipeRefreshEvents.collectLatest {
+                    swipeRefreshLayout.isRefreshing = it == UiEvent.SyncingWithServer
                 }
             }
         }

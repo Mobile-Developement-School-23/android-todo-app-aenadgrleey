@@ -10,49 +10,52 @@ import com.aenadgrleey.list.ui.model.UiAction
 import com.aenadgrleey.list.ui.model.UiEvent
 import com.aenadgrleey.todo.domain.models.NetworkStatus
 import com.aenadgrleey.todo.domain.repository.TodoItemRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import javax.inject.Inject
-import javax.inject.Provider
 
-@OptIn(FlowPreview::class)
+@OptIn(FlowPreview::class, DelicateCoroutinesApi::class)
 class TodoListViewModel @Inject constructor(
     private val repository: TodoItemRepository,
 ) : ViewModel() {
 
-    init {
-        println("TodoListViewModel init")
-    }
 
     private val dataPresenterMapper = TodoItemDataToTodoItem()
     private val presenterDataMapper = TodoItemToTodoItemData()
+
+    private val mutex = Mutex()
 
     val todoItems get() = mTodoItems
     private val mTodoItems = MutableStateFlow<List<TodoItem>>(listOf())
 
     val isShowingCompleted: StateFlow<Boolean> get() = mShowCompleted.asStateFlow()
     private var mShowCompleted = MutableStateFlow(false)
-    val swipeRefreshEvents: Flow<UiEvent?> get() = mSwipeRefreshEvents.receiveAsFlow()
+    val swipeRefreshEvents get() = mSwipeRefreshEvents.receiveAsFlow().onEach { println(it) }
     private val mSwipeRefreshEvents = Channel<UiEvent>()
-    val coordinatorEvents: Flow<UiEvent?> get() = mCoordinatorEvents.receiveAsFlow()
+    val coordinatorEvents get() = mCoordinatorEvents.receiveAsFlow()
     private val mCoordinatorEvents = Channel<UiEvent>()
-    val recyclerEvents: Flow<UiEvent.RecyclerEvent> get() = mRecyclerEvents.receiveAsFlow()
+    val recyclerEvents get() = mRecyclerEvents.receiveAsFlow()
     private val mRecyclerEvents = Channel<UiEvent.RecyclerEvent>()
 
 
-    val completedCount = repository.completedItemsCount().debounce(100)
+    val completedCount: StateFlow<Int> get() = mCompletedCount
+    private val mCompletedCount = MutableStateFlow(0)
 
 
     init {
+        println("TodoListViewModel init")
+
         viewModelScope.launch {
             mShowCompleted.collectLatest {
                 repository.todoItems(mShowCompleted.value).debounce(100).collectLatest {
@@ -60,8 +63,14 @@ class TodoListViewModel @Inject constructor(
                 }
             }
         }
+
+        viewModelScope.launch {
+            repository.completedItemsCount().debounce(0).collectLatest {
+                mCompletedCount.value = it
+            }
+        }
         viewModelScope.launch(Dispatchers.Main) {
-            repository.networkStatus.collect {
+            repository.networkStatus.collectLatest {
                 when (it) {
                     NetworkStatus.SYNCED -> {
                         mSwipeRefreshEvents.send(UiEvent.SyncedWithServer)
@@ -88,6 +97,7 @@ class TodoListViewModel @Inject constructor(
                         mCoordinatorEvents.send(UiEvent.SyncingWithServer)
                     }
                 }
+
             }
         }
     }
@@ -105,17 +115,21 @@ class TodoListViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        println("clear vm")
+    }
+
+    @Suppress("UNCHECKED_CAST")
     class ViewModelFactory @Inject constructor(
-        sharedViewModelProvider: Provider<TodoListViewModel>,
+        private val repository: TodoItemRepository,
     ) : ViewModelProvider.Factory {
-
-        private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
-            TodoListViewModel::class.java to sharedViewModelProvider
-        )
-
-        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return providers[modelClass]!!.get() as T
+            return if (modelClass.isAssignableFrom(TodoListViewModel::class.java)) {
+                TodoListViewModel(repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
         }
     }
 }

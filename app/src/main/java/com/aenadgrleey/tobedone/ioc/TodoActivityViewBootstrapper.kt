@@ -2,7 +2,7 @@ package com.aenadgrleey.tobedone.ioc
 
 import javax.inject.Inject
 
-class TodoActivityBootstrapper @Inject constructor(
+class TodoActivityViewBootstrapper @Inject constructor(
     navigationController: NavigationController,
     themeController: ThemeController,
     permissionController: PermissionController,

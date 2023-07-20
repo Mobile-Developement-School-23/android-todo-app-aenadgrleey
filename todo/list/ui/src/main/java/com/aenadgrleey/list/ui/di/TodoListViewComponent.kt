@@ -1,4 +1,4 @@
-package com.aenadgrleey.list.ui.di.view_component
+package com.aenadgrleey.list.ui.di
 
 import android.content.Context
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -36,4 +36,18 @@ interface TodoListViewComponent {
 
             ): TodoListViewComponent
     }
+}
+
+interface TodoListViewComponentProvider {
+    fun provideTodoListViewComponent(
+        fragmentContext: Context,
+        viewModel: TodoListViewModel,
+        coordinatorLayout: CoordinatorLayout,
+        appBarLayout: AppBarLayout,
+        toolbarBinding: ExpendableToolbarBinding,
+        swipeRefreshLayout: SwipeRefreshLayout,
+        recyclerView: RecyclerView,
+        fab: FloatingActionButton,
+        lifecycleOwner: LifecycleOwner,
+    ): TodoListViewComponent
 }

@@ -11,6 +11,8 @@ import com.aenadgrleey.todo.refactor.domain.TodoItemId
 import com.aenadgrleey.todo.refactor.domain.TodoRefactorNavigator
 import com.aenadgrleey.todo.refactor.ui.composables.RefactorScreen
 import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponentProvider
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorViewComponent
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorViewComponentProvider
 import com.aenadgrleey.todo.refactor.ui.model.UiAction
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.transition.platform.MaterialSharedAxis
@@ -19,15 +21,17 @@ import javax.inject.Inject
 class TodoRefactorFragment : Fragment() {
 
     private val todoRefactorUiComponent by lazy {
-        (requireActivity() as TodoRefactorUiComponentProvider).provideTodoRefactorUiComponent()
+        (requireContext().applicationContext as TodoRefactorUiComponentProvider).provideTodoRefactorUiComponent()
     }
+
+    private var todoRefactorViewComponent: TodoRefactorViewComponent? = null
 
     private val viewModel: TodoRefactorViewModel by activityViewModels {
         todoRefactorUiComponent.viewModelFactory()
     }
 
-    @Inject
-    lateinit var navigator: TodoRefactorNavigator
+    var navigator: TodoRefactorNavigator? = null
+        @Inject set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +48,13 @@ class TodoRefactorFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+
         val id = requireArguments().getString(TodoItemId.TAG)
         viewModel.onUiAction(UiAction.InitTodoItem(id))
-        todoRefactorUiComponent.inject(this)
+
+        todoRefactorViewComponent = (requireActivity() as TodoRefactorViewComponentProvider).todoRefactorViewComponentProvider()
+
+        todoRefactorViewComponent!!.inject(this)
         return ComposeView(requireContext()).apply {
             setContent {
                 Mdc3Theme {
@@ -55,10 +63,16 @@ class TodoRefactorFragment : Fragment() {
                         uiEvents = viewModel.uiEvents,
                         onUiAction = viewModel::onUiAction,
                         uiStateFlow = viewModel.uiState,
-                        navigator = navigator
+                        navigator = navigator!!
                     )
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        todoRefactorViewComponent = null
+        navigator = null
     }
 }

@@ -1,6 +1,5 @@
-package com.aenadgrleey.list.ui.di.view_component
+package com.aenadgrleey.list.ui.di
 
-import com.aenadgrleey.core.di.FeatureScope
 import com.aenadgrleey.list.ui.TodoListViewModel
 import com.aenadgrleey.list.ui.model.UiAction
 import com.aenadgrleey.list.ui.utils.TodoItemsRecyclerViewAdapter
@@ -8,9 +7,8 @@ import com.aenadrgleey.todo.list.domain.TodoListNavigator
 import dagger.Module
 import dagger.Provides
 
-@Module
+@Module(subcomponents = [])
 object TodoListViewModule {
-    @FeatureScope
     @Provides
     fun providesTodoItemsAdapter(navigator: TodoListNavigator, viewModel: TodoListViewModel): TodoItemsRecyclerViewAdapter {
         return TodoItemsRecyclerViewAdapter(

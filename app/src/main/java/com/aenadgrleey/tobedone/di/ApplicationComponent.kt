@@ -2,12 +2,15 @@ package com.aenadgrleey.tobedone.di
 
 import android.content.Context
 import com.aenadgrleey.auth.data.di.AuthProviderScope
+import com.aenadgrleey.auth.ui.di.AuthUiComponent
 import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.core.di.AppScope
+import com.aenadgrleey.list.ui.di.TodoListUiComponent
 import com.aenadgrleey.settings.data.di.SettingsProviderScope
+import com.aenadgrleey.settings.ui.di.SettingUiComponent
 import com.aenadgrleey.tobedone.ToBeDone
-import com.aenadgrleey.tobedone.TodoActivity
-import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
+import com.aenadgrleey.tobedone.di.view_component.TodoActivityViewComponent
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponent
 import com.aenadgrleey.todonotify.domain.TodoNotificationNavigator
 import com.aenadgrleey.todonotify.ui.di.TodoNotificationActionReceiverComponent
 import com.aenadgrleey.todonotify.ui.di.TodoNotificatorComponent
@@ -22,9 +25,15 @@ interface ApplicationComponent {
 
     fun injectIntoApplication(application: ToBeDone)
 
-    fun injectIntoActivity(activity: TodoActivity)
+    fun todoActivityComponent(): TodoActivityViewComponent.Factory
 
-    fun todoActivityComponent(): TodoActivityComponent.Factory
+    fun authUiComponent(): AuthUiComponent.Factory
+
+    fun todoListUiComponent(): TodoListUiComponent.Factory
+
+    fun todoRefactorUiComponent(): TodoRefactorUiComponent.Factory
+
+    fun settingsUiComponent(): SettingUiComponent.Factory
 
     fun todoNotificatorComponent(): TodoNotificatorComponent.Factory
 

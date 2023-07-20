@@ -1,28 +1,37 @@
 package com.aenadgrleey.tobedone
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.R
 import androidx.fragment.app.FragmentContainerView
-import com.aenadgrleey.auth.ui.di.AuthUiComponent
-import com.aenadgrleey.auth.ui.di.AuthUiComponentProvider
-import com.aenadgrleey.list.ui.di.TodoListUiComponent
-import com.aenadgrleey.list.ui.di.TodoListUiComponentProvider
-import com.aenadgrleey.settings.ui.di.SettingUiComponent
-import com.aenadgrleey.settings.ui.di.SettingUiComponentProvider
-import com.aenadgrleey.tobedone.di.view_component.TodoActivityComponent
-import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponent
-import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponentProvider
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.aenadgrleey.auth.ui.di.AuthViewComponent
+import com.aenadgrleey.auth.ui.di.AuthViewComponentProvider
+import com.aenadgrleey.list.ui.TodoListViewModel
+import com.aenadgrleey.list.ui.di.TodoListViewComponent
+import com.aenadgrleey.list.ui.di.TodoListViewComponentProvider
+import com.aenadgrleey.settings.ui.di.SettingsViewComponent
+import com.aenadgrleey.settings.ui.di.SettingsViewComponentProvider
+import com.aenadgrleey.tobedone.di.view_component.TodoActivityViewComponent
+import com.aenadgrleey.todo.list.ui.databinding.ExpendableToolbarBinding
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorViewComponent
+import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorViewComponentProvider
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class TodoActivity : AppCompatActivity(),
-    AuthUiComponentProvider,
-    SettingUiComponentProvider,
-    TodoListUiComponentProvider,
-    TodoRefactorUiComponentProvider {
+    AuthViewComponentProvider,
+    SettingsViewComponentProvider,
+    TodoListViewComponentProvider,
+    TodoRefactorViewComponentProvider {
 
-    private lateinit var activityComponent: TodoActivityComponent
+    private lateinit var activityComponent: TodoActivityViewComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,20 +46,37 @@ class TodoActivity : AppCompatActivity(),
         activityComponent.boot()
     }
 
-    override fun provideAuthComponentProvider(): AuthUiComponent {
-        return activityComponent.authUiComponent().create()
-    }
+    override fun provideAuthViewComponent(): AuthViewComponent =
+        activityComponent.authViewComponent().create()
 
-    override fun provideTodoListUiComponent(): TodoListUiComponent {
-        return activityComponent.todoListUiComponent().create()
-    }
+    override fun provideSettingsViewComponent(): SettingsViewComponent =
+        activityComponent.settingsViewComponent().create()
 
-    override fun provideTodoRefactorUiComponent(): TodoRefactorUiComponent {
-        return activityComponent.todoRefactorUiComponent().create()
-    }
+    override fun provideTodoListViewComponent(
+        fragmentContext: Context,
+        viewModel: TodoListViewModel,
+        coordinatorLayout: CoordinatorLayout,
+        appBarLayout: AppBarLayout,
+        toolbarBinding: ExpendableToolbarBinding,
+        swipeRefreshLayout: SwipeRefreshLayout,
+        recyclerView: RecyclerView,
+        fab: FloatingActionButton,
+        lifecycleOwner: LifecycleOwner,
+    ): TodoListViewComponent =
+        activityComponent.todoListViewComponent().create(
+            fragmentContext,
+            viewModel,
+            coordinatorLayout,
+            appBarLayout,
+            toolbarBinding,
+            swipeRefreshLayout,
+            recyclerView,
+            fab,
+            lifecycleOwner
+        )
 
-    override fun provideSettingsUiComponentProvider(): SettingUiComponent {
-        return activityComponent.settingsUiComponent().create()
-    }
+    override fun todoRefactorViewComponentProvider(): TodoRefactorViewComponent =
+        activityComponent.todoRefactorViewComponent().create()
+
 
 }

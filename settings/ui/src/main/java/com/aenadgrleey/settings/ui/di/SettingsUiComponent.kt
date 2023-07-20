@@ -1,7 +1,6 @@
 package com.aenadgrleey.settings.ui.di
 
 import com.aenadgrleey.core.di.FeatureScope
-import com.aenadgrleey.settings.ui.SettingDialogFragment
 import com.aenadgrleey.settings.ui.SettingsViewModel
 import dagger.Subcomponent
 
@@ -16,7 +15,6 @@ interface SettingUiComponent {
 
     fun viewModelFactory(): SettingsViewModel.ViewModelFactory
 
-    fun inject(fragment: SettingDialogFragment)
 }
 
 interface SettingUiComponentProvider {

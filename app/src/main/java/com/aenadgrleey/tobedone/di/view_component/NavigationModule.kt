@@ -10,19 +10,19 @@ import dagger.Module
 
 @Module
 abstract class NavigationModule {
-    @ActivityScope
+    @ActivityViewScope
     @Binds
     abstract fun bindsAuthNavigator(controller: NavigationController): AuthNavigator
 
-    @ActivityScope
+    @ActivityViewScope
     @Binds
     abstract fun bindsTodoListNavigator(controller: NavigationController): TodoListNavigator
 
-    @ActivityScope
+    @ActivityViewScope
     @Binds
     abstract fun bindsTodoRefactorNavigator(controller: NavigationController): TodoRefactorNavigator
 
-    @ActivityScope
+    @ActivityViewScope
     @Binds
     abstract fun bindsSettingsNavigator(controller: NavigationController): SettingsNavigator
 

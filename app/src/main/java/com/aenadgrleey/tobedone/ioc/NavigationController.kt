@@ -16,7 +16,7 @@ import com.aenadgrleey.auth.ui.AuthFragment
 import com.aenadgrleey.list.ui.TodosListFragment
 import com.aenadgrleey.settings.domain.SettingsNavigator
 import com.aenadgrleey.settings.ui.SettingDialogFragment
-import com.aenadgrleey.tobedone.di.view_component.ActivityScope
+import com.aenadgrleey.tobedone.di.view_component.ActivityViewScope
 import com.aenadgrleey.todo.refactor.domain.TodoItemId
 import com.aenadgrleey.todo.refactor.domain.TodoRefactorNavigator
 import com.aenadgrleey.todo.refactor.ui.TodoRefactorFragment
@@ -25,24 +25,23 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ActivityScope
+@ActivityViewScope
 class NavigationController
 @Inject constructor(
     private val authProvider: AuthProvider,
     private val supportFragmentManager: FragmentManager,
     private val lifecycleOwner: LifecycleOwner,
-) : AuthNavigator, TodoListNavigator, TodoRefactorNavigator, SettingsNavigator {
-
-    val refactoredTodoItemId get() = mRefactoredTodoItemId
-    private var mRefactoredTodoItemId: String? = null
-
+) : AuthNavigator,
+    TodoListNavigator,
+    TodoRefactorNavigator,
+    SettingsNavigator {
     fun setUpNavigationControl() {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authProvider.authInfoFlow().collectLatest {
                     if (it.authToken == null || it.deviceId == null)
                         supportFragmentManager.commit {
-                            add<AuthFragment>(R.id.fragment_container_view_tag, "todolist")
+                            add<AuthFragment>(R.id.fragment_container_view_tag, "auth")
                             setReorderingAllowed(true)
                         }
                 }
@@ -68,7 +67,6 @@ class NavigationController
 
     override fun navigateToRefactorFragment(todoItemId: String?) {
         supportFragmentManager.commit {
-            mRefactoredTodoItemId = todoItemId
             val arguments = Bundle()
             arguments.putString(TodoItemId.TAG, todoItemId)
             add<TodoRefactorFragment>(R.id.fragment_container_view_tag, "todorefactor", arguments)

@@ -13,28 +13,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.activityViewModels
+import com.aenadgrleey.core.di.holder.scopedComponent
 import com.aenadgrleey.settings.domain.SettingsNavigator
 import com.aenadgrleey.settings.ui.composables.SettingsScreen
 import com.aenadgrleey.settings.ui.di.SettingUiComponentProvider
+import com.aenadgrleey.settings.ui.di.SettingsViewComponent
+import com.aenadgrleey.settings.ui.di.SettingsViewComponentProvider
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Inject
 
 class SettingDialogFragment : BottomSheetDialogFragment() {
-    private val settingUiComponent by lazy {
-        (requireActivity() as SettingUiComponentProvider).provideSettingsUiComponentProvider()
+
+    private val settingUiComponent by scopedComponent {
+        (requireContext().applicationContext as SettingUiComponentProvider).provideSettingsUiComponentProvider()
     }
+
+    private var settingsViewComponent: SettingsViewComponent? = null
+
     private val viewModel by activityViewModels<SettingsViewModel> {
         settingUiComponent.viewModelFactory()
     }
 
-    @Inject
-    lateinit var navigator: SettingsNavigator
+    var navigator: SettingsNavigator? = null
+        @Inject set
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        settingUiComponent.inject(this)
+
+        settingsViewComponent = (requireActivity() as SettingsViewComponentProvider).provideSettingsViewComponent()
+
+        settingsViewComponent!!.inject(this)
+
         return super.onCreateDialog(savedInstanceState).apply {
             (this as BottomSheetDialog).setContentView(
                 ComposeView(requireContext()).apply {
@@ -46,7 +57,13 @@ class SettingDialogFragment : BottomSheetDialogFragment() {
                                     width = 64.dp
                                 )
 
-                                SettingsScreen(viewModel::onUiAction, viewModel.uiEvents, viewModel.uiState, navigator, this@SettingDialogFragment)
+                                SettingsScreen(
+                                    onUiAction = viewModel::onUiAction,
+                                    uiEventsFlow = viewModel.uiEvents,
+                                    uiStateFlow = viewModel.uiState,
+                                    navigator = navigator!!,
+                                    lifecycleOwner = this@SettingDialogFragment
+                                )
 
                                 Spacer(
                                     modifier = Modifier
@@ -59,6 +76,11 @@ class SettingDialogFragment : BottomSheetDialogFragment() {
                 }
             )
         }
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        settingsViewComponent = null
+        navigator = null
     }
 }

@@ -7,23 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.aenadgrleey.core.di.holder.scopedComponent
 import com.aenadgrleey.list.ui.di.TodoListUiComponent
 import com.aenadgrleey.list.ui.di.TodoListUiComponentProvider
-import com.aenadgrleey.list.ui.di.view_component.TodoListViewComponent
+import com.aenadgrleey.list.ui.di.TodoListViewComponent
+import com.aenadgrleey.list.ui.di.TodoListViewComponentProvider
 import com.aenadgrleey.todo.list.ui.databinding.TodosListFragmentBinding
 import com.google.android.material.transition.platform.MaterialSharedAxis
 
 class TodosListFragment : Fragment() {
 
-    private val todoListUiComponent: TodoListUiComponent by lazy {
-        (requireActivity() as TodoListUiComponentProvider).provideTodoListUiComponent()
+    private val todoListUiComponent: TodoListUiComponent by scopedComponent {
+        (requireContext().applicationContext as TodoListUiComponentProvider).provideTodoListUiComponent()
     }
 
-    private val viewModel: TodoListViewModel by activityViewModels {
-        todoListUiComponent.viewModelFactory()
-    }
+    private var todoListViewComponent: TodoListViewComponent? = null
 
-    private var viewComponent: TodoListViewComponent? = null
+    private val viewModel by activityViewModels<TodoListViewModel>(factoryProducer = { todoListUiComponent.viewModelFactory() })
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class TodosListFragment : Fragment() {
     ): View {
         val binding = TodosListFragmentBinding.inflate(layoutInflater)
 
-        viewComponent = todoListUiComponent.todoListViewComponent().create(
+        todoListViewComponent = (requireActivity() as TodoListViewComponentProvider).provideTodoListViewComponent(
             fragmentContext = requireContext(),
             viewModel = viewModel,
             coordinatorLayout = binding.coordinatorLayout,
@@ -58,7 +58,8 @@ class TodosListFragment : Fragment() {
             fab = binding.fab,
             lifecycleOwner = viewLifecycleOwner
         )
-        viewComponent!!.boot()
+
+        todoListViewComponent!!.boot()
 
         return binding.root
     }
@@ -66,7 +67,7 @@ class TodosListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewComponent = null
+        todoListViewComponent = null
     }
 
 

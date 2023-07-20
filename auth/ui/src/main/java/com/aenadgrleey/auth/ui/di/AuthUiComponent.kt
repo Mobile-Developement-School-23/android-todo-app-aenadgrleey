@@ -1,12 +1,11 @@
 package com.aenadgrleey.auth.ui.di
 
-import com.aenadgrleey.auth.ui.AuthFragment
 import com.aenadgrleey.auth.ui.AuthFragmentViewModel
 import com.aenadgrleey.core.di.FeatureScope
 import dagger.Subcomponent
 
 @FeatureScope
-@Subcomponent()
+@Subcomponent
 interface AuthUiComponent {
 
     @Subcomponent.Factory
@@ -16,7 +15,6 @@ interface AuthUiComponent {
 
     fun viewModelFactory(): AuthFragmentViewModel.ViewModelFactory
 
-    fun inject(fragment: AuthFragment)
 }
 
 interface AuthUiComponentProvider {

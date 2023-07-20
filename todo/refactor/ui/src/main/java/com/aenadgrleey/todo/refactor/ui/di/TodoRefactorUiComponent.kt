@@ -1,7 +1,6 @@
 package com.aenadgrleey.todo.refactor.ui.di
 
 import com.aenadgrleey.core.di.FeatureScope
-import com.aenadgrleey.todo.refactor.ui.TodoRefactorFragment
 import com.aenadgrleey.todo.refactor.ui.TodoRefactorViewModel
 import dagger.Subcomponent
 
@@ -14,8 +13,6 @@ interface TodoRefactorUiComponent {
     }
 
     fun viewModelFactory(): TodoRefactorViewModel.ViewModelFactory
-
-    fun inject(fragment: TodoRefactorFragment)
 
 }
 
