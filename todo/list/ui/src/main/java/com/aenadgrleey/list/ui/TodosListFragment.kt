@@ -23,7 +23,7 @@ class TodosListFragment : Fragment() {
 
     private var todoListViewComponent: TodoListViewComponent? = null
 
-    private val viewModel by activityViewModels<TodoListViewModel>(factoryProducer = { todoListUiComponent.viewModelFactory() })
+    private val viewModel by activityViewModels<TodoListViewModel> { todoListUiComponent.viewModelFactory() }
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
