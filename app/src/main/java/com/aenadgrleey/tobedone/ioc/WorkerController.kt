@@ -35,7 +35,7 @@ class WorkerController @Inject constructor(
                         )
                         this.beginUniqueWork(
                             WorkersConstants.UPDATE_REMOTE_WORKER,
-                            ExistingWorkPolicy.REPLACE,
+                            ExistingWorkPolicy.KEEP,
                             updateWorkerRequest
                         ).enqueue()
                         this.enqueueUniquePeriodicWork(

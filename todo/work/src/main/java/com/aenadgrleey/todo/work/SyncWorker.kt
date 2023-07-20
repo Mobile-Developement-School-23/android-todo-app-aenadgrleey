@@ -4,10 +4,6 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.aenadgrleey.core.data.remote.exceptions.DifferentRevisionsException
-import com.aenadgrleey.core.data.remote.exceptions.NoSuchElementOnServerException
-import com.aenadgrleey.core.data.remote.exceptions.ServerErrorException
-import com.aenadgrleey.core.data.remote.exceptions.WrongAuthorizationException
 import com.aenadgrleey.todo.domain.repository.TodoItemRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -26,20 +22,8 @@ class SyncWorker
     private val repository: TodoItemRepository,
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        try {
-            repository.fetchRemoteData()
-            return@withContext Result.success()
-        } catch (unknownHostException: java.net.UnknownHostException) {
-            return@withContext Result.failure()
-        } catch (serverErrorException: ServerErrorException) {
-            return@withContext Result.failure()
-        } catch (wrongAuthorization: WrongAuthorizationException) {
-            return@withContext Result.failure()
-        } catch (noSuchElementException: NoSuchElementOnServerException) {
-            return@withContext Result.failure()
-        } catch (unsynchronizedDataException: DifferentRevisionsException) {
-            return@withContext Result.retry()
-        }
+        repository.fetchRemoteData()
+        Result.success()
     }
 
 
