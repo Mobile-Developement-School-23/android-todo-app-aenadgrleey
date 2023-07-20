@@ -34,6 +34,11 @@ abstract class WorkModule {
     abstract fun bindSyncWorker(factory: SyncWorker.Factory): ChildWorkerFactory
 
     @Binds
+    @IntoMap
+    @WorkerKey(NotificationWorker::class)
+    abstract fun bindsNotificationWorker(factory: NotificationWorker.Factory): ChildWorkerFactory
+
+    @Binds
     abstract fun bindWorkerFactory(factory: SampleWorkerFactory): WorkerFactory
 
     companion object {
