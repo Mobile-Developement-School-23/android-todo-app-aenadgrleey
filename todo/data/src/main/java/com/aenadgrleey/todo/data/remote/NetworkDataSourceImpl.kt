@@ -18,6 +18,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Response
@@ -34,6 +36,8 @@ class NetworkDataSourceImpl
 
     private var items: List<TodoItemData> = listOf()
     private var lastKnownRevision: Int = 0
+
+    private val mutex = Mutex()
 
     private val authInfo = authProvider.authInfoFlow()
         .stateIn(
@@ -70,48 +74,56 @@ class NetworkDataSourceImpl
 
 
     override suspend fun getTodoItems(): List<TodoItemData> {
-        retrofitClient.getTodoItems().run {
-            checkResponseCode()
-            body()!!.let {
+        mutex.withLock(lastKnownRevision) {
+            retrofitClient.getTodoItems().run {
                 checkResponseCode()
-                items = it.todoItemsList
-                lastKnownRevision = it.revision
+                body()!!.let {
+                    checkResponseCode()
+                    items = it.todoItemsList
+                    lastKnownRevision = it.revision
+                }
             }
+            return items
         }
-        return items
     }
 
     override suspend fun addTodoItems(items: List<TodoItemData>): List<TodoItemData> {
-        retrofitClient.sendTodoItems(lastKnownRevision, TodoItemsListRequest(items)).run {
-            checkResponseCode()
-            lastKnownRevision = body()!!.revision
-            return body()!!.todoItemsList
+        mutex.withLock(lastKnownRevision) {
+            retrofitClient.sendTodoItems(lastKnownRevision, TodoItemsListRequest(items)).run {
+                checkResponseCode()
+                lastKnownRevision = body()!!.revision
+                return body()!!.todoItemsList
+            }
         }
     }
 
     override suspend fun addTodoItem(item: TodoItemData): TodoItemData {
-        try {
-            retrofitClient.getTodoItem(item.id!!).run {
-                checkResponseCode()
-                retrofitClient.updateTodoItem(body()!!.revision, TodoItemRequest(item)).run {
+        mutex.withLock(lastKnownRevision) {
+            try {
+                retrofitClient.getTodoItem(item.id!!).run {
+                    checkResponseCode()
+                    retrofitClient.updateTodoItem(body()!!.revision, TodoItemRequest(item)).run {
+                        checkResponseCode()
+                        lastKnownRevision = body()!!.revision
+                        return body()!!.item
+                    }
+                }
+            } catch (noSuchElementOnServer: NoSuchElementOnServerException) {
+                retrofitClient.addTodoItem(lastKnownRevision, TodoItemRequest(item)).run {
                     checkResponseCode()
                     lastKnownRevision = body()!!.revision
                     return body()!!.item
                 }
             }
-        } catch (noSuchElementOnServer: NoSuchElementOnServerException) {
-            retrofitClient.addTodoItem(lastKnownRevision, TodoItemRequest(item)).run {
-                checkResponseCode()
-                lastKnownRevision = body()!!.revision
-                return body()!!.item
-            }
         }
     }
 
     override suspend fun deleteTodoItem(item: TodoItemData) {
-        retrofitClient.deleteTodoItem(lastKnownRevision, item.id!!).run {
-            checkResponseCode()
-            lastKnownRevision = body()!!.revision
+        mutex.withLock(lastKnownRevision) {
+            retrofitClient.deleteTodoItem(lastKnownRevision, item.id!!).run {
+                checkResponseCode()
+                lastKnownRevision = body()!!.revision
+            }
         }
     }
 

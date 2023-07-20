@@ -74,7 +74,7 @@ class TodoItemsRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun tryRemote(block: suspend () -> Unit) = try {
+    private suspend fun tryRemote(block: suspend () -> Unit): Unit = try {
         block.invoke()
     } catch (unknownHostException: java.net.UnknownHostException) {
         Log.e("NetworkError", unknownHostException.toString())
@@ -90,7 +90,9 @@ class TodoItemsRepositoryImpl @Inject constructor(
         networkStatusChannel.send(NetworkStatus.SERVER_ERROR)
     } catch (unsynchronizedDataException: DifferentRevisionsException) {
         Log.e("NetworkError", unsynchronizedDataException.toString())
-        remoteDataSource.addTodoItems(localDataSource.getTodoItems())
-        block.invoke()
+        tryRemote {
+            fetchRemoteData()
+            block.invoke()
+        }
     }
 }
