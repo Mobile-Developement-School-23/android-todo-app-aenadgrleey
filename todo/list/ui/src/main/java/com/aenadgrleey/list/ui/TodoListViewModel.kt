@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import javax.inject.Inject
+import javax.inject.Provider
 
 @OptIn(FlowPreview::class, DelicateCoroutinesApi::class)
 class TodoListViewModel @Inject constructor(
@@ -120,16 +121,17 @@ class TodoListViewModel @Inject constructor(
         println("clear vm")
     }
 
-    @Suppress("UNCHECKED_CAST")
     class ViewModelFactory @Inject constructor(
-        private val repository: TodoItemRepository,
+        viewModelProvider: Provider<TodoListViewModel>,
     ) : ViewModelProvider.Factory {
+
+        private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
+            TodoListViewModel::class.java to viewModelProvider
+        )
+
+        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(TodoListViewModel::class.java)) {
-                TodoListViewModel(repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
+            return providers[modelClass]!!.get() as T
         }
     }
 }
