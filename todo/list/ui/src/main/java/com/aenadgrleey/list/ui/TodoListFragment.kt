@@ -12,10 +12,10 @@ import com.aenadgrleey.list.ui.di.TodoListUiComponent
 import com.aenadgrleey.list.ui.di.TodoListUiComponentProvider
 import com.aenadgrleey.list.ui.di.TodoListViewComponent
 import com.aenadgrleey.list.ui.di.TodoListViewComponentProvider
-import com.aenadgrleey.todo.list.ui.databinding.TodosListFragmentBinding
+import com.aenadgrleey.todo.list.ui.databinding.TodoListFragmentBinding
 import com.google.android.material.transition.platform.MaterialSharedAxis
 
-class TodosListFragment : Fragment() {
+class TodoListFragment : Fragment() {
 
     private val todoListUiComponent: TodoListUiComponent by scopedComponent {
         (requireContext().applicationContext as TodoListUiComponentProvider).provideTodoListUiComponent()
@@ -45,7 +45,7 @@ class TodosListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val binding = TodosListFragmentBinding.inflate(layoutInflater)
+        val binding = TodoListFragmentBinding.inflate(layoutInflater)
 
         todoListViewComponent = (requireActivity() as TodoListViewComponentProvider).provideTodoListViewComponent(
             fragmentContext = requireContext(),

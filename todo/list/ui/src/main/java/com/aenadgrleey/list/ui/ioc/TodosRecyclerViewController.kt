@@ -17,6 +17,7 @@ import com.aenadgrleey.list.ui.model.UiEvent
 import com.aenadgrleey.list.ui.utils.TodoItemsRecyclerViewAdapter
 import com.aenadgrleey.list.ui.utils.TodoItemsSwipeCallback
 import com.aenadgrleey.list.ui.utils.toPx
+import com.aenadrgleey.todo.list.domain.TodoListNavigator
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -27,11 +28,20 @@ class TodosRecyclerViewController @Inject constructor(
     @FragmentContext
     private val context: Context,
     private val recyclerView: RecyclerView,
-    private val adapter: TodoItemsRecyclerViewAdapter,
     @ViewLifecycleOwner
     private val lifecycleOwner: LifecycleOwner,
     private val viewModel: TodoListViewModel,
+    private val navigator: TodoListNavigator,
 ) {
+    private val adapter = TodoItemsRecyclerViewAdapter(
+        scrollUp = { viewModel.onUiAction(UiAction.ScrollUpRequest) },
+        onTodoItemClick = { navigator.navigateToRefactorFragment(it.id) },
+        onLastItemClick = { navigator.navigateToRefactorFragment(null) },
+        onCompleteButtonClick = { viewModel.onUiAction(UiAction.AddTodoItem(it.copy(completed = !it.completed!!))) },
+        onEditButtonClick = { navigator.navigateToRefactorFragment(it.id) },
+        onDeleteButtonClick = { viewModel.onUiAction(UiAction.DeleteTodoItem(it)) }
+    )
+
     fun setUpRecycler() {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {

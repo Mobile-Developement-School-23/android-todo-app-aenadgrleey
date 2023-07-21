@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aenadgrleey.list.ui.model.TodoItem
 import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.list.ui.R
-import com.aenadgrleey.todo.list.ui.databinding.TodoLastListItemBinding
 import com.aenadgrleey.todo.list.ui.databinding.TodoListItemBinding
+import com.aenadgrleey.todo.list.ui.databinding.TodoListLastItemBinding
 import com.google.android.material.imageview.ShapeableImageView
 import com.aenadgrleey.resources.R as CommonR
 import com.google.android.material.R as MaterialR
@@ -56,7 +56,7 @@ class TodoItemsRecyclerViewAdapter(
         val moreButton: ShapeableImageView = binding.moreButton
     }
 
-    inner class LastItemViewHolder(binding: TodoLastListItemBinding) :
+    inner class LastItemViewHolder(binding: TodoListLastItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
@@ -69,7 +69,7 @@ class TodoItemsRecyclerViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             lastItemTag -> LastItemViewHolder(
-                TodoLastListItemBinding.inflate(
+                TodoListLastItemBinding.inflate(
                     LayoutInflater.from(parent.context)
                 )
             )

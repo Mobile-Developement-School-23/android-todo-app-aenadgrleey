@@ -10,9 +10,7 @@ import com.aenadgrleey.list.ui.model.UiAction
 import com.aenadgrleey.list.ui.model.UiEvent
 import com.aenadgrleey.todo.domain.models.NetworkStatus
 import com.aenadgrleey.todo.domain.repository.TodoItemRepository
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,11 +20,9 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
 import javax.inject.Inject
 import javax.inject.Provider
 
-@OptIn(FlowPreview::class, DelicateCoroutinesApi::class)
 class TodoListViewModel @Inject constructor(
     private val repository: TodoItemRepository,
 ) : ViewModel() {
@@ -34,8 +30,6 @@ class TodoListViewModel @Inject constructor(
 
     private val dataPresenterMapper = TodoItemDataToTodoItem()
     private val presenterDataMapper = TodoItemToTodoItemData()
-
-    private val mutex = Mutex()
 
     val todoItems get() = mTodoItems
     private val mTodoItems = MutableStateFlow<List<TodoItem>>(listOf())
@@ -55,7 +49,7 @@ class TodoListViewModel @Inject constructor(
 
 
     init {
-        println("TodoListViewModel init")
+        println("New TodoListViewModel")
 
         viewModelScope.launch {
             mShowCompleted.collectLatest {
@@ -116,14 +110,13 @@ class TodoListViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        println("clear vm")
-    }
-
     class ViewModelFactory @Inject constructor(
         viewModelProvider: Provider<TodoListViewModel>,
     ) : ViewModelProvider.Factory {
+
+        init {
+            println("New TodoListViewModel.Factory")
+        }
 
         private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
             TodoListViewModel::class.java to viewModelProvider

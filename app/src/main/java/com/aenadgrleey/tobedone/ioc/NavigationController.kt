@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.aenadgrleey.auth.domain.AuthNavigator
 import com.aenadgrleey.auth.domain.AuthProvider
 import com.aenadgrleey.auth.ui.AuthFragment
-import com.aenadgrleey.list.ui.TodosListFragment
+import com.aenadgrleey.list.ui.TodoListFragment
 import com.aenadgrleey.settings.domain.SettingsNavigator
 import com.aenadgrleey.settings.ui.SettingDialogFragment
 import com.aenadgrleey.tobedone.di.view_component.ActivityViewScope
@@ -49,14 +49,14 @@ class NavigationController
         }
         if (supportFragmentManager.fragments.isEmpty())
             supportFragmentManager.commit {
-                add<TodosListFragment>(R.id.fragment_container_view_tag, "todolist")
+                add<TodoListFragment>(R.id.fragment_container_view_tag, "todolist")
                 setReorderingAllowed(true)
             }
     }
 
     override fun onSuccessAuth() {
         supportFragmentManager.commit {
-            add<TodosListFragment>(R.id.fragment_container_view_tag, "todolist")
+            add<TodoListFragment>(R.id.fragment_container_view_tag, "todolist")
             setReorderingAllowed(true)
         }
     }
