@@ -11,18 +11,19 @@ import com.aenadgrleey.list.ui.model.UiEvent
 import com.aenadgrleey.todo.domain.models.NetworkStatus
 import com.aenadgrleey.todo.domain.repository.TodoItemRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
+@OptIn(FlowPreview::class)
 class TodoListViewModel @Inject constructor(
     private val repository: TodoItemRepository,
 ) : ViewModel() {
@@ -36,7 +37,7 @@ class TodoListViewModel @Inject constructor(
 
     val isShowingCompleted: StateFlow<Boolean> get() = mShowCompleted.asStateFlow()
     private var mShowCompleted = MutableStateFlow(false)
-    val swipeRefreshEvents get() = mSwipeRefreshEvents.receiveAsFlow().onEach { println(it) }
+    val swipeRefreshEvents get() = mSwipeRefreshEvents.receiveAsFlow()
     private val mSwipeRefreshEvents = Channel<UiEvent>()
     val coordinatorEvents get() = mCoordinatorEvents.receiveAsFlow()
     private val mCoordinatorEvents = Channel<UiEvent>()
@@ -49,8 +50,6 @@ class TodoListViewModel @Inject constructor(
 
 
     init {
-        println("New TodoListViewModel")
-
         viewModelScope.launch {
             mShowCompleted.collectLatest {
                 repository.todoItems(mShowCompleted.value).debounce(100).collectLatest {
@@ -60,7 +59,7 @@ class TodoListViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.completedItemsCount().debounce(0).collectLatest {
+            repository.completedItemsCount().debounce(100).collectLatest {
                 mCompletedCount.value = it
             }
         }

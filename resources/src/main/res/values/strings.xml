@@ -62,11 +62,13 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="deadline">Deadline:</string>
+    <string name="deadline">Deadline:&#160;%s</string>
     <string name="urgentTodoWarning">Hurry! Important task\'s deadline is coming!</string>
     <string name="markAsDoneAction">Done</string>
     <string name="postponeAction">Postpone</string>
     <string name="signInTitle">Sign in</string>
+    <string name="emptyStateTitle">No todos.....</string>
+    <string name="emptyStateBody">You have completed everything! \nIt\'s time to rest or create something new</string>
 
 
 </resources>

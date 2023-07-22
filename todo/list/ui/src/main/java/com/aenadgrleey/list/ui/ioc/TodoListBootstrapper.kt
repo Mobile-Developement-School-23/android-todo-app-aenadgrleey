@@ -22,5 +22,6 @@ class TodoListBootstrapper
         refreshViewController.setUpSwipeRefreshLayout()
         coordinatorViewController.setUpCoordinator()
         viewModel.onUiAction(UiAction.RefreshTodoItems)
+        viewModel.onUiAction(UiAction.ScrollUpRequest)
     }
 }

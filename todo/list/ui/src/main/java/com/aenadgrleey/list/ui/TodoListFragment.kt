@@ -54,6 +54,7 @@ class TodoListFragment : Fragment() {
             appBarLayout = binding.appBarLayout,
             toolbarBinding = binding.toolbar,
             swipeRefreshLayout = binding.swipeRefreshLayout,
+            nothingFoundBanner = binding.nothingFoundBanner,
             recyclerView = binding.recyclerView,
             fab = binding.fab,
             lifecycleOwner = viewLifecycleOwner

@@ -1,28 +1,14 @@
 package com.aenadgrleey.list.ui.utils
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.icu.text.SimpleDateFormat
-import android.text.SpannableString
-import android.text.style.StrikethroughSpan
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.get
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.aenadgrleey.list.ui.model.TodoItem
-import com.aenadgrleey.todo.domain.models.Importance
-import com.aenadgrleey.todo.list.ui.R
 import com.aenadgrleey.todo.list.ui.databinding.TodoListItemBinding
 import com.aenadgrleey.todo.list.ui.databinding.TodoListLastItemBinding
-import com.google.android.material.imageview.ShapeableImageView
-import com.aenadgrleey.resources.R as CommonR
-import com.google.android.material.R as MaterialR
+import kotlin.math.abs
 
 
 class TodoItemsRecyclerViewAdapter(
@@ -34,160 +20,54 @@ class TodoItemsRecyclerViewAdapter(
     private val onDeleteButtonClick: (TodoItem) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val todoItems get() = mTodoItems
-    private var mTodoItems = emptyList<TodoItem>()
+    private val mDiffer: AsyncListDiffer<TodoItem> =
+        AsyncListDiffer(this, TodoItemsDiffCallback())
 
-    fun setTodoItems(newItems: List<TodoItem>) {
-        val shouldScroll = mTodoItems.size - newItems.size != 1
-        val diffCallback = TodoItemsDiffCallback(mTodoItems, newItems)
-        mTodoItems = newItems
-        val diffCourses = DiffUtil.calculateDiff(diffCallback)
-        diffCourses.dispatchUpdatesTo(this)
-        if (shouldScroll) scrollUp()
+    val todoItems: List<TodoItem>
+        get() = mDiffer.currentList
+
+    init {
+        mDiffer.addListListener { previousList, currentList ->
+            if (abs(previousList.size - currentList.size) >= 1) scrollUp()
+        }
     }
 
-
-    inner class ViewHolder(binding: TodoListItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        val mainView: View = binding.root
-        val body: AppCompatTextView = binding.body
-        val deadline: AppCompatTextView = binding.deadline
-        val completeIndicator: ShapeableImageView = binding.completeIndicator
-        val moreButton: ShapeableImageView = binding.moreButton
+    fun setTodoItems(newItems: List<TodoItem>) {
+        mDiffer.submitList(newItems)
     }
 
     inner class LastItemViewHolder(binding: TodoListLastItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    override fun getItemViewType(position: Int): Int {
-        return when (position == mTodoItems.lastIndex + 1) {
-            false -> normalItemTag
-            true -> lastItemTag
-        }
-    }
+    override fun getItemViewType(position: Int): Int =
+        if (position == mDiffer.currentList.lastIndex + 1) lastItemTag else normalItemTag
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            lastItemTag -> LastItemViewHolder(
-                TodoListLastItemBinding.inflate(
-                    LayoutInflater.from(parent.context)
-                )
-            )
-
-            else -> ViewHolder(
-                TodoListItemBinding.inflate(
-                    LayoutInflater.from(parent.context)
-                )
-            )
+            lastItemTag -> LastItemViewHolder(TodoListLastItemBinding.inflate(LayoutInflater.from(parent.context)))
+            else -> TodoItemViewHolder(TodoListItemBinding.inflate(LayoutInflater.from(parent.context)))
         }
     }
 
-    override fun getItemCount() = mTodoItems.size + 1
+    //workaround for having excess item that will be handled manually
+    override fun getItemCount() = mDiffer.currentList.size + 1
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ViewHolder) {
-            val todoItem = mTodoItems[position]
-            val context = holder.mainView.context
-            val res = context.resources
-            holder.body.text =
-                SpannableString(
-                    when (todoItem.importance) {
-                        Importance.High -> "‼️"
-                        Importance.Low -> "⬇️"
-                        else -> ""
-                    } + todoItem.body
-                ).apply {
-                    if (todoItem.completed == true)
-                        setSpan(
-                            StrikethroughSpan(),
-                            1,
-                            this.length,
-                            SpannableString.SPAN_INCLUSIVE_INCLUSIVE
-                        )
-
-                }
-
-            holder.deadline.visibility =
-                if (todoItem.deadline == null) View.GONE
-                else View.VISIBLE
-            val dateFormat = SimpleDateFormat("dd LLL yy", res.configuration.locales[0])
-
-            todoItem.deadline?.let {
-                holder.deadline.text = res.getText(CommonR.string.deadline)
-                    .toString() + " " + dateFormat.format(it).toString()
-            }
-
-
-            val typedValue = TypedValue()
-            when (todoItem.completed) {
-
-                true -> {
-                    context.theme.resolveAttribute(MaterialR.attr.colorOutline, typedValue, true)
-                    val colorOutline = typedValue.data
-
-                    holder.body.run {
-                        setTextColor(colorOutline)
-                    }
-                    holder.completeIndicator.imageTintList =
-                        ColorStateList.valueOf(
-                            res.getColor(com.aenadgrleey.resources.R.color.green, context.theme)
-                        )
-                }
-
-                else -> {
-                    context.theme.resolveAttribute(MaterialR.attr.colorOnSurface, typedValue, true)
-                    val colorOnSurface = typedValue.data
-                    context.theme.resolveAttribute(MaterialR.attr.colorOutline, typedValue, true)
-                    val colorOutline = typedValue.data
-                    context.theme.resolveAttribute(MaterialR.attr.colorSurface, typedValue, true)
-
-                    holder.body.run {
-                        setTextColor(colorOnSurface)
-                    }
-
-                    holder.completeIndicator.imageTintList =
-                        ColorStateList.valueOf(colorOutline)
-
-                }
-            }
-
-            holder.completeIndicator.setOnClickListener { onCompleteButtonClick(todoItem) }
-
-            holder.itemView.setOnClickListener { onTodoItemClick(todoItem) }
-
-            holder.moreButton.setOnClickListener {
-                PopupMenu(
-                    holder.itemView.context,
-                    holder.moreButton,
-                    Gravity.END,
-                    0,
-                    com.aenadgrleey.resources.R.style.PopupMenuTodoItem
-                ).apply {
-                    menuInflater.inflate(R.menu.todo_item_menu, menu)
-                    setForceShowIcon(true)
-                    menu[0].icon!!.setTint(
-                        when (todoItem.completed) {
-                            true ->
-                                res.getColor(CommonR.color.green, context.theme)
-
-                            else -> {
-                                context.theme.resolveAttribute(MaterialR.attr.colorOutline, typedValue, true)
-                                typedValue.data
-                            }
-                        }
-                    )
-                    setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.complete_task -> onCompleteButtonClick(todoItem)
-                            R.id.edit_task -> onEditButtonClick(todoItem)
-                            R.id.delete_task -> onDeleteButtonClick(todoItem)
-                        }
-                        dismiss()
-                        true
-                    }
-                }.show()
-            }
+        if (holder is TodoItemViewHolder) {
+            val todoItem = todoItems[position]
+            holder.setUpItemView(onItemClick = { onTodoItemClick(todoItem) })
+            holder.setTextWithImportance(text = todoItem.body, importance = todoItem.importance)
+            holder.setDeadline(todoItem.deadline)
+            holder.setCompleted(
+                completed = todoItem.completed,
+                onCompleteButtonClick = { onCompleteButtonClick(todoItem) })
+            holder.setUpMenuButton(
+                completed = todoItem.completed,
+                onCompleteActionClick = { onCompleteButtonClick(todoItem) },
+                onEditActionClick = { onEditButtonClick(todoItem) },
+                onDeleteActionClick = { onDeleteButtonClick(todoItem) }
+            )
         }
         if (holder is LastItemViewHolder)
             holder.itemView.setOnClickListener { onLastItemClick() }

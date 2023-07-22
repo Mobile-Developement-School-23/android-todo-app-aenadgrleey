@@ -15,17 +15,26 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:fadeScrollbars="false"
-            android:nestedScrollingEnabled="true"
-            android:overScrollMode="never"
-            android:paddingBottom="64dp"
-            android:scrollbars="vertical"
-            tools:listitem="@layout/todo_list_item" />
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/nothing_found_banner"
+                layout="@layout/nothing_found_banner" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:fadeScrollbars="false"
+                android:nestedScrollingEnabled="true"
+                android:overScrollMode="never"
+                android:paddingBottom="64dp"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/todo_list_item" />
+        </FrameLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

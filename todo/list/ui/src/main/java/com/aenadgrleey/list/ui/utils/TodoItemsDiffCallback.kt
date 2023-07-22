@@ -3,26 +3,18 @@ package com.aenadgrleey.list.ui.utils
 import androidx.recyclerview.widget.DiffUtil
 import com.aenadgrleey.list.ui.model.TodoItem
 
-class TodoItemsDiffCallback(
-    private val oldItems: List<TodoItem>,
-    private val newItems: List<TodoItem>,
-) : DiffUtil.Callback() {
-    override fun getOldListSize(): Int = oldItems.size
+class TodoItemsDiffCallback : DiffUtil.ItemCallback<TodoItem>() {
+    override fun areItemsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
+        return newItem.id == oldItem.id
+    }
 
-    override fun getNewListSize(): Int = newItems.size
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        newItems[newItemPosition].id == oldItems[oldItemPosition].id
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val new = newItems[newItemPosition]
-        val old = oldItems[oldItemPosition]
-        return new.created == old.created
-                && new.completed == old.completed
-                && new.lastModified == old.lastModified
-                && new.body == old.body
-                && new.deadline == old.deadline
-                && new.importance == old.importance
+    override fun areContentsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
+        return newItem.created == oldItem.created
+                && newItem.completed == oldItem.completed
+                && newItem.lastModified == oldItem.lastModified
+                && newItem.body == oldItem.body
+                && newItem.deadline == oldItem.deadline
+                && newItem.importance == oldItem.importance
     }
 
 }

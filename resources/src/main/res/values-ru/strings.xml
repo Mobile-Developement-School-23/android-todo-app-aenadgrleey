@@ -4,7 +4,7 @@
     <string name="buy_something">Купить что-то</string>
     <string name="add_new">Добавить</string>
     <string name="saved">Сохранено!</string>
-    <string name="deadline">Дедлайн:</string>
+    <string name="deadline">Дедлайн:&#160;%s</string>
     <string name="tasksCompleted">Выполнено - </string>
     <string name="markCompleted">Выполнено</string>
     <string name="editTask">Изменить</string>
@@ -30,4 +30,6 @@
     <string name="markAsDoneAction">Сделано</string>
     <string name="postponeAction">Отложить</string>
     <string name="signInTitle">Войти</string>
+    <string name="emptyStateTitle">Все сделано....</string>
+    <string name="emptyStateBody">Вы все закончили! \n Время отдохнуть или придумать что-то новое</string>
 </resources>

@@ -44,3 +44,4 @@ include(":todo:notifications:domain")
 include(":todo:notifications:ui")
 
 include(":todo:work")
+include(":core:ui")

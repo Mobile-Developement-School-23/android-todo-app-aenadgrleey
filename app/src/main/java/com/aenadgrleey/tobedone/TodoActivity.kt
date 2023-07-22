@@ -19,6 +19,7 @@ import com.aenadgrleey.settings.ui.di.SettingsViewComponent
 import com.aenadgrleey.settings.ui.di.SettingsViewComponentProvider
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityViewComponent
 import com.aenadgrleey.todo.list.ui.databinding.ExpendableToolbarBinding
+import com.aenadgrleey.todo.list.ui.databinding.NothingFoundBannerBinding
 import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorViewComponent
 import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorViewComponentProvider
 import com.google.android.material.appbar.AppBarLayout
@@ -59,6 +60,7 @@ class TodoActivity : AppCompatActivity(),
         appBarLayout: AppBarLayout,
         toolbarBinding: ExpendableToolbarBinding,
         swipeRefreshLayout: SwipeRefreshLayout,
+        nothingFoundBanner: NothingFoundBannerBinding,
         recyclerView: RecyclerView,
         fab: FloatingActionButton,
         lifecycleOwner: LifecycleOwner,
@@ -70,6 +72,7 @@ class TodoActivity : AppCompatActivity(),
             appBarLayout,
             toolbarBinding,
             swipeRefreshLayout,
+            nothingFoundBanner,
             recyclerView,
             fab,
             lifecycleOwner

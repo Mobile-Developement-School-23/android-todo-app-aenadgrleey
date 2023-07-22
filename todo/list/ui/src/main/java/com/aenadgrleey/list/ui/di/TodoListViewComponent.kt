@@ -11,6 +11,7 @@ import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.list.ui.TodoListViewModel
 import com.aenadgrleey.list.ui.ioc.TodoListBootstrapper
 import com.aenadgrleey.todo.list.ui.databinding.ExpendableToolbarBinding
+import com.aenadgrleey.todo.list.ui.databinding.NothingFoundBannerBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.BindsInstance
@@ -30,6 +31,7 @@ interface TodoListViewComponent {
             @BindsInstance appBarLayout: AppBarLayout,
             @BindsInstance toolbarBinding: ExpendableToolbarBinding,
             @BindsInstance swipeRefreshLayout: SwipeRefreshLayout,
+            @BindsInstance nothingFoundBanner: NothingFoundBannerBinding,
             @BindsInstance recyclerView: RecyclerView,
             @BindsInstance fab: FloatingActionButton,
             @BindsInstance @ViewLifecycleOwner lifecycleOwner: LifecycleOwner,
@@ -46,6 +48,7 @@ interface TodoListViewComponentProvider {
         appBarLayout: AppBarLayout,
         toolbarBinding: ExpendableToolbarBinding,
         swipeRefreshLayout: SwipeRefreshLayout,
+        nothingFoundBanner: NothingFoundBannerBinding,
         recyclerView: RecyclerView,
         fab: FloatingActionButton,
         lifecycleOwner: LifecycleOwner,

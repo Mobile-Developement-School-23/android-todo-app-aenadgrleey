@@ -9,15 +9,17 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.aenadgrleey.core.di.FragmentContext
 import com.aenadgrleey.core.di.ViewLifecycleOwner
 import com.aenadgrleey.core.di.ViewScope
+import com.aenadgrleey.core.ui.resolveColorAttribute
 import com.aenadgrleey.list.ui.TodoListViewModel
 import com.aenadgrleey.list.ui.model.UiAction
-import com.aenadgrleey.resources.R
 import com.aenadgrleey.todo.list.ui.databinding.ExpendableToolbarBinding
 import com.aenadrgleey.todo.list.domain.TodoListNavigator
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.aenadgrleey.resources.R as CommonR
+import com.google.android.material.R as MaterialR
 
 @ViewScope
 class ExpendableToolbarViewController @Inject constructor(
@@ -34,8 +36,16 @@ class ExpendableToolbarViewController @Inject constructor(
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isShowingCompleted.collect { show ->
-                    if (show) toolbarBinding.visibilityIcon.setImageResource(R.drawable.visibility_48px)
-                    else toolbarBinding.visibilityIcon.setImageResource(R.drawable.visibility_off_48px)
+                    if (show) toolbarBinding.visibilityIcon.run {
+                        val color = context.resolveColorAttribute(MaterialR.attr.colorPrimary)
+                        setImageResource(CommonR.drawable.visibility_36px)
+                        setColorFilter(color)
+                    }
+                    else toolbarBinding.visibilityIcon.run {
+                        val color = context.resolveColorAttribute(MaterialR.attr.colorOnSurfaceVariant)
+                        setImageResource(CommonR.drawable.visibility_off_36px)
+                        setColorFilter(color)
+                    }
                 }
             }
         }
@@ -45,7 +55,7 @@ class ExpendableToolbarViewController @Inject constructor(
                 viewModel.completedCount.collectLatest {
                     @SuppressLint("SetTextI18n")
                     toolbarBinding.helperText.text =
-                        context.resources.getText(R.string.tasksCompleted).toString() + " " + it.toString()
+                        context.resources.getText(CommonR.string.tasksCompleted).toString() + " " + it.toString()
                 }
             }
         }
@@ -53,6 +63,8 @@ class ExpendableToolbarViewController @Inject constructor(
         toolbarBinding.visibilityIcon.setOnClickListener { viewModel.onUiAction(UiAction.ToggledCompletedMark) }
 
         toolbarBinding.settingsButton.setOnClickListener { navigator.navigateToSettings() }
+
+        toolbarBinding.mainText.setOnClickListener { viewModel.onUiAction(UiAction.ScrollUpRequest) }
 
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val seekPosition = -verticalOffset / appBarLayout.totalScrollRange.toFloat()
