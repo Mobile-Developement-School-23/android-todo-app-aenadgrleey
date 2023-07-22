@@ -1,6 +1,7 @@
 package com.aenadgrleey.todo.data.local
 
 import android.content.Context
+import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.todo.domain.local.TodoItemsLocalDataSource
 import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.domain.models.TodoItemData
@@ -8,12 +9,13 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import java.util.Calendar
+import javax.inject.Inject
 import com.aenadgrleey.resources.R as CommonR
 
 /*
 Implementation of local storage that is generating items for testing
  */
-class HardcodedDataSourceImpl(private val context: Context) : TodoItemsLocalDataSource {
+class HardcodedDataSourceImpl @Inject constructor(@AppContext private val context: Context) : TodoItemsLocalDataSource {
     var updateItemFlow: suspend () -> Unit = {}
     var updateCountFlow: suspend () -> Unit = {}
 
