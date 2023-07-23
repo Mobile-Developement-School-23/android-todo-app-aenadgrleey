@@ -27,7 +27,6 @@
         android:fontFamily="@font/roboto_medium"
         android:gravity="center_vertical"
         android:text="@string/main_label"
-        style="?borderlessButtonStyle"
         android:clickable="true"
         android:focusable="true"
         android:padding="0dp"
