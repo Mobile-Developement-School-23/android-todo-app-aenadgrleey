@@ -25,7 +25,7 @@ class UiStateToTodoItemData : Mapper<UiState, TodoItemData> {
     override fun map(input: UiState): TodoItemData = with(input) {
         TodoItemData(
             id = id,
-            body = text,
+            body = text!!,
             completed = completeness,
             importance = importance,
             deadline = if (deadlineEnabled) deadline else null,

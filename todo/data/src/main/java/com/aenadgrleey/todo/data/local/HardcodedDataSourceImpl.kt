@@ -5,19 +5,25 @@ import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.todo.domain.local.TodoItemsLocalDataSource
 import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.domain.models.TodoItemData
-import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 import com.aenadgrleey.resources.R as CommonR
 
 /*
 Implementation of local storage that is generating items for testing
+FOR DEBUG ONLY!!!!
+it doesn't support several data receivers
+on any function retuning Flow it won't create new Flow, but will return existing one
  */
 class HardcodedDataSourceImpl @Inject constructor(@AppContext private val context: Context) : TodoItemsLocalDataSource {
-    var updateItemFlow: suspend () -> Unit = {}
-    var updateCountFlow: suspend () -> Unit = {}
+
+    private val mTodoItemsChannel = Channel<List<TodoItemData>>()
+    private val mTodoItemsCompletedCountChannel = Channel<Int>()
 
     private var counter = 0
     private val items = mutableListOf<TodoItemData>().apply {
@@ -27,7 +33,8 @@ class HardcodedDataSourceImpl @Inject constructor(@AppContext private val contex
         )
         val completed = listOf(true, false)
         val importance = listOf(Importance.Common, Importance.High, Importance.Low)
-        val deadline = listOf(Calendar.getInstance().time, null)
+        val deadline = listOf(Date(Calendar.getInstance().timeInMillis + 24 * 60 * 60 * 1000), null)
+        val created = Calendar.getInstance().time
         for (importanceType in 0..2) {
             for (textType in 0..1) {
                 for (completenessType in 0..1) {
@@ -39,6 +46,9 @@ class HardcodedDataSourceImpl @Inject constructor(@AppContext private val contex
                                 completed = completed[completenessType],
                                 importance = importance[importanceType],
                                 deadline = deadline[deadlineExistence],
+                                created = created,
+                                lastModified = created,
+                                lastModifiedBy = "debug"
                             )
                         )
                         counter += 1
@@ -60,42 +70,30 @@ class HardcodedDataSourceImpl @Inject constructor(@AppContext private val contex
             todoItem.id = counter.toString()
             items.add(todoItem)
         }
+        mTodoItemsChannel.send(items)
+        mTodoItemsCompletedCountChannel.send(items.count(TodoItemData::completed))
 
-        updateItemFlow()
-        updateCountFlow()
     }
 
-    override fun getTodoItems(excludeCompleted: Boolean): Flow<List<TodoItemData>> {
-        return channelFlow {
-            updateItemFlow = {
-                send(items.filter {
-                    (!(excludeCompleted || it.completed == true)) || excludeCompleted
-                })
-            }
-            updateItemFlow()
-            awaitClose()
+    override fun getTodoItems(excludeCompleted: Boolean): Flow<List<TodoItemData>> = mTodoItemsChannel.receiveAsFlow()
+        .onStart {
+            mTodoItemsChannel.send(items)
+            mTodoItemsCompletedCountChannel.send(items.count(TodoItemData::completed))
         }
-    }
 
-    override suspend fun getTodoItems(): List<TodoItemData> {
-        return items
-    }
+    override suspend fun getTodoItems(): List<TodoItemData> = items
 
-    override suspend fun todoItem(id: String): TodoItemData? {
-        return items.find { it.id == id }
-    }
+    override suspend fun todoItem(id: String): TodoItemData? = items.find { it.id == id }
 
     override fun clearDatabase() {
-        return items.clear()
+        items.clear()
     }
 
-    override fun completedItemsCount(): Flow<Int> = channelFlow {
-        updateCountFlow = {
-            send(items.filter { it.completed == true }.size)
+    override fun completedItemsCount(): Flow<Int> = mTodoItemsCompletedCountChannel.receiveAsFlow()
+        .onStart {
+            mTodoItemsChannel.send(items)
+            mTodoItemsCompletedCountChannel.send(items.count(TodoItemData::completed))
         }
-        updateCountFlow()
-        awaitClose()
-    }
 
     override suspend fun deleteTodoItem(todoItem: TodoItemData) {
         for (index in 0..items.lastIndex) {
@@ -104,7 +102,7 @@ class HardcodedDataSourceImpl @Inject constructor(@AppContext private val contex
                 break
             }
         }
-        updateItemFlow()
-        updateCountFlow()
+        mTodoItemsChannel.send(items)
+        mTodoItemsCompletedCountChannel.send(items.count(TodoItemData::completed))
     }
 }

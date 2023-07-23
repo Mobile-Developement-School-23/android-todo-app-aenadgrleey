@@ -12,7 +12,6 @@ dependencies {
     implementation(project(":resources"))
 
     implementation(project(":core:di"))
-    implementation(project(":core:data"))
 
     implementation(project(":settings:domain"))
     implementation(project(":auth:domain"))

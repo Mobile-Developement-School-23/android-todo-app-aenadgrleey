@@ -1,5 +1,7 @@
 package com.aenadgrleey.todo.work.di
 
+import android.net.ConnectivityManager
+import android.net.Network
 import androidx.work.BackoffPolicy
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
@@ -7,6 +9,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkerFactory
+import com.aenadgrleey.todo.domain.repository.TodoItemRepository
 import com.aenadgrleey.todo.work.ChildWorkerFactory
 import com.aenadgrleey.todo.work.NotificationWorker
 import com.aenadgrleey.todo.work.SampleWorkerFactory
@@ -18,6 +21,10 @@ import dagger.MapKey
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -74,8 +81,17 @@ abstract class WorkModule {
                 .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.MINUTES)
                 .build()
 
+        @Provides
+        @NetworkTracker
+        fun providesNetworkTracker(repository: TodoItemRepository) =
+            object : ConnectivityManager.NetworkCallback() {
+                // network is available for use
+                override fun onAvailable(network: Network) {
+                    CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) { repository.fetchRemoteData() }
+                    super.onAvailable(network)
+                }
+            }
     }
-
 }
 
 @MapKey

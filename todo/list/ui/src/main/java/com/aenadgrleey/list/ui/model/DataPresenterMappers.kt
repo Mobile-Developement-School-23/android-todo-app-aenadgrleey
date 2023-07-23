@@ -5,7 +5,7 @@ import com.aenadgrleey.todo.domain.utils.Mapper
 
 class TodoItemDataToTodoItem : Mapper<TodoItemData, TodoItem> {
     override fun map(input: TodoItemData) = with(input) {
-        TodoItem(id!!, body!!, completed!!, importance!!, deadline, created!!, lastModified!!)
+        TodoItem(id!!, body, completed, importance, deadline, created!!, lastModified!!, lastModifiedBy!!)
     }
 }
 
@@ -19,6 +19,7 @@ class TodoItemToTodoItemData : Mapper<TodoItem, TodoItemData> {
             deadline = deadline,
             created = created,
             lastModified = lastModified,
+            lastModifiedBy = lastModifiedBy
         )
 
     }

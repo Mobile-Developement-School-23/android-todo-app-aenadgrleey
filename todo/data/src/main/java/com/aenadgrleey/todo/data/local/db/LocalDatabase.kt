@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.aenadgrleey.todo.data.local.models.TodoItemDataDb
+import com.aenadgrleey.todo.data.local.utils.DateConverter
 
-@TypeConverters(RoomConverters::class)
+@TypeConverters(DateConverter::class)
 @Database(
     entities = [TodoItemDataDb::class],
     version = 1,

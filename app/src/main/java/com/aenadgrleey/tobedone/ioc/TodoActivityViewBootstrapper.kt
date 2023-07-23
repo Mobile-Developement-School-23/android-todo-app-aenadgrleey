@@ -7,11 +7,13 @@ class TodoActivityViewBootstrapper @Inject constructor(
     themeController: ThemeController,
     permissionController: PermissionController,
     workerController: WorkerController,
+    networkController: NetworkController,
 ) {
     init {
         navigationController.setUpNavigationControl()
         themeController.setUpThemeControl()
         permissionController.setUpPermissionControl()
         workerController.setUpWorkers()
+        networkController.setUpNetworkControl()
     }
 }

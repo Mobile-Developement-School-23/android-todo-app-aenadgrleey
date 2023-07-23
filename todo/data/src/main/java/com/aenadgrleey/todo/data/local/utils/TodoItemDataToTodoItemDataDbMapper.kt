@@ -7,9 +7,9 @@ internal class TodoItemDataToTodoItemDataDbMapper {
     fun map(todoItemData: TodoItemData): TodoItemDataDb = with(todoItemData) {
         TodoItemDataDb(
             id!!,
-            body!!,
-            completed!!,
-            importance!!,
+            body,
+            completed,
+            importance,
             deadline,
             created!!,
             lastModified!!,

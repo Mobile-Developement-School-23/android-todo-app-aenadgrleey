@@ -1,6 +1,5 @@
 package com.aenadgrleey.todo.domain.repository
 
-import com.aenadgrleey.todo.domain.models.NetworkStatus
 import com.aenadgrleey.todo.domain.models.TodoItemData
 import kotlinx.coroutines.flow.Flow
 
@@ -13,8 +12,6 @@ interface TodoItemRepository {
     suspend fun todoItem(id: String): TodoItemData?
 
     fun completedItemsCount(): Flow<Int>
-
-    val networkStatus: Flow<NetworkStatus>
 
     suspend fun addTodoItem(todoItem: TodoItemData)
 

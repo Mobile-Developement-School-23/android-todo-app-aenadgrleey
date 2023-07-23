@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.aenadgrleey.core.data.remote.exceptions.DifferentRevisionsException
-import com.aenadgrleey.core.data.remote.exceptions.NoSuchElementOnServerException
-import com.aenadgrleey.core.data.remote.exceptions.ServerErrorException
-import com.aenadgrleey.core.data.remote.exceptions.WrongAuthorizationException
+import com.aenadgrleey.core.domain.exceptions.DifferentRevisionsException
+import com.aenadgrleey.core.domain.exceptions.NoSuchElementOnServerException
+import com.aenadgrleey.core.domain.exceptions.ServerErrorException
+import com.aenadgrleey.core.domain.exceptions.WrongAuthorizationException
 import com.aenadgrleey.todo.domain.local.TodoItemsLocalDataSource
 import com.aenadgrleey.todo.domain.remote.TodoItemsRemoteDataSource
 import kotlinx.coroutines.Dispatchers

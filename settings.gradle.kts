@@ -21,7 +21,6 @@ include(":app")
 include(":resources")
 
 include(":core:di")
-include(":core:data")
 
 include(":auth:data")
 include(":auth:ui")
@@ -45,3 +44,4 @@ include(":todo:notifications:ui")
 
 include(":todo:work")
 include(":core:ui")
+include(":core:domain")

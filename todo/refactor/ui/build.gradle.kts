@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation(project(":resources"))
     implementation(project(":core:di"))
+    implementation(project(":core:domain"))
     implementation(project(":todo:domain"))
     implementation(project(":todo:refactor:domain"))
 
