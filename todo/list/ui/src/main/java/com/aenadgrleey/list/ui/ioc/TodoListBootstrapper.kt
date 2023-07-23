@@ -11,7 +11,7 @@ class TodoListBootstrapper
     viewModel: TodoListViewModel,
     toolbarController: ExpendableToolbarViewController,
     fabController: FabViewController,
-    recyclerViewController: TodosRecyclerViewController,
+    recyclerViewController: RecyclerViewController,
     refreshViewController: SwipeRefreshViewController,
     coordinatorViewController: CoordinatorViewController,
 ) {
@@ -22,6 +22,6 @@ class TodoListBootstrapper
         refreshViewController.setUpSwipeRefreshLayout()
         coordinatorViewController.setUpCoordinator()
         viewModel.onUiAction(UiAction.RefreshTodoItems)
-        viewModel.onUiAction(UiAction.ScrollUpRequest)
+        viewModel.onUiAction(UiAction.SmoothScrollUpRequest)
     }
 }

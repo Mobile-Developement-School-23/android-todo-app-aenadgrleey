@@ -43,8 +43,6 @@ class TodoListViewModel @Inject constructor(
     private val mCoordinatorEvents = Channel<UiEvent>()
     val recyclerEvents get() = mRecyclerEvents.receiveAsFlow()
     private val mRecyclerEvents = Channel<UiEvent.RecyclerEvent>()
-
-
     val completedCount: StateFlow<Int> get() = mCompletedCount
     private val mCompletedCount = MutableStateFlow(0)
 
@@ -100,7 +98,8 @@ class TodoListViewModel @Inject constructor(
     fun onUiAction(uiAction: UiAction) {
         viewModelScope.launch(Dispatchers.IO) {
             when (uiAction) {
-                UiAction.ScrollUpRequest -> mRecyclerEvents.send(UiEvent.RecyclerEvent.ScrollUp)
+                UiAction.SmoothScrollUpRequest -> mRecyclerEvents.send(UiEvent.RecyclerEvent.ScrollUp)
+                UiAction.ImmediateScrollUpRequest -> mRecyclerEvents.send(UiEvent.RecyclerEvent.ImmediateScrollUp)
                 is UiAction.AddTodoItem -> repository.addTodoItem(presenterDataMapper.map(uiAction.todoItem))
                 is UiAction.DeleteTodoItem -> repository.deleteTodoItem(presenterDataMapper.map(uiAction.todoItem))
                 UiAction.RefreshTodoItems -> repository.fetchRemoteData()

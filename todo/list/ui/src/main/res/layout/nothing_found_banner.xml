@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/holder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:alpha="0"
-    android:background="?android:colorBackground"
-    tools:alpha="1">
+    android:fillViewport="true">
 
-    <androidx.constraintlayout.utils.widget.ImageFilterView
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:tint="?colorOutline"
-        app:layout_constraintBottom_toTopOf="@+id/appCompatTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/beach_line_svgrepo_com" />
-
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/appCompatTextView"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_medium"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="@string/emptyStateTitle"
-        android:textAlignment="center"
-        android:textAppearance="?attr/textAppearanceHeadlineMedium"
-        android:textColor="?colorOutline"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        android:background="?android:colorBackground"
+        android:isScrollContainer="true"
+        tools:alpha="1">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/emptyStateBody"
-        android:textAlignment="center"
-        android:textAppearance="?attr/textAppearanceBodyLarge"
-        android:textColor="?colorOutline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:tint="?colorOutline"
+            app:layout_constraintBottom_toTopOf="@+id/appCompatTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/beach_line_svgrepo_com" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/emptyStateTitle"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+            android:textColor="?colorOutline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/emptyStateBody"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?colorOutline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

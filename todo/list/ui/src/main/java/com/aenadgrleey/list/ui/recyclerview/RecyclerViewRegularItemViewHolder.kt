@@ -1,4 +1,4 @@
-package com.aenadgrleey.list.ui.utils
+package com.aenadgrleey.list.ui.recyclerview
 
 import android.content.res.ColorStateList
 import android.text.SpannableString
@@ -10,6 +10,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.aenadgrleey.core.ui.resolveColorAttribute
+import com.aenadgrleey.list.ui.model.TodoItem
 import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.list.ui.R
 import com.aenadgrleey.todo.list.ui.databinding.TodoListItemBinding
@@ -19,7 +20,7 @@ import java.util.Date
 import com.aenadgrleey.resources.R as CommonR
 import com.google.android.material.R as MaterialR
 
-class TodoItemViewHolder(binding: TodoListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class RecyclerViewRegularItemViewHolder(binding: TodoListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     private val mainView: View = binding.root
     private val body: AppCompatTextView = binding.body
     private val deadline: AppCompatTextView = binding.deadline
@@ -27,6 +28,27 @@ class TodoItemViewHolder(binding: TodoListItemBinding) : RecyclerView.ViewHolder
     private val moreButton: ShapeableImageView = binding.moreButton
     private val context = mainView.context
     private val res = context.resources
+
+    fun onBind(
+        todoItem: TodoItem,
+        onTodoItemClick: (TodoItem) -> Unit,
+        onCompleteButtonClick: (TodoItem) -> Unit,
+        onEditButtonClick: (TodoItem) -> Unit,
+        onDeleteButtonClick: (TodoItem) -> Unit,
+    ) {
+        this.setUpItemView(onItemClick = { onTodoItemClick(todoItem) })
+        this.setTextWithImportance(text = todoItem.body, importance = todoItem.importance)
+        this.setDeadline(todoItem.deadline)
+        this.setCompleted(
+            completed = todoItem.completed,
+            onCompleteButtonClick = { onCompleteButtonClick(todoItem) })
+        this.setUpMenuButton(
+            completed = todoItem.completed,
+            onCompleteActionClick = { onCompleteButtonClick(todoItem) },
+            onEditActionClick = { onEditButtonClick(todoItem) },
+            onDeleteActionClick = { onDeleteButtonClick(todoItem) }
+        )
+    }
 
     fun setUpItemView(onItemClick: () -> Unit) {
         mainView.setOnClickListener { onItemClick() }

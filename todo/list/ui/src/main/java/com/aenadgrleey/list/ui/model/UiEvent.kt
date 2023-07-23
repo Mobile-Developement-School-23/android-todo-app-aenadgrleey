@@ -4,6 +4,7 @@ sealed class UiEvent {
 
     sealed class RecyclerEvent {
         object ScrollUp : RecyclerEvent()
+        object ImmediateScrollUp : RecyclerEvent()
     }
 
     sealed class CoordinatorEvent {

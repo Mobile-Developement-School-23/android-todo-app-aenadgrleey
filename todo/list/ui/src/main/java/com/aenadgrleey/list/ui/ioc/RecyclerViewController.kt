@@ -14,8 +14,10 @@ import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.list.ui.TodoListViewModel
 import com.aenadgrleey.list.ui.model.UiAction
 import com.aenadgrleey.list.ui.model.UiEvent
-import com.aenadgrleey.list.ui.utils.TodoItemsRecyclerViewAdapter
-import com.aenadgrleey.list.ui.utils.TodoItemsSwipeCallback
+import com.aenadgrleey.list.ui.recyclerview.RecyclerViewAdapter
+import com.aenadgrleey.list.ui.recyclerview.RecyclerViewSwipeCallback
+import com.aenadgrleey.list.ui.utils.Visibility
+import com.aenadgrleey.list.ui.utils.animateVisibility
 import com.aenadgrleey.list.ui.utils.toPx
 import com.aenadgrleey.todo.list.ui.databinding.NothingFoundBannerBinding
 import com.aenadrgleey.todo.list.domain.TodoListNavigator
@@ -25,7 +27,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ViewScope
-class TodosRecyclerViewController @Inject constructor(
+class RecyclerViewController @Inject constructor(
     @FragmentContext
     private val context: Context,
     private val recyclerView: RecyclerView,
@@ -35,8 +37,8 @@ class TodosRecyclerViewController @Inject constructor(
     private val viewModel: TodoListViewModel,
     private val navigator: TodoListNavigator,
 ) {
-    private val adapter = TodoItemsRecyclerViewAdapter(
-        scrollUp = { viewModel.onUiAction(UiAction.ScrollUpRequest) },
+    private val adapter = RecyclerViewAdapter(
+        scrollUp = { viewModel.onUiAction(UiAction.ImmediateScrollUpRequest) },
         onTodoItemClick = { navigator.navigateToRefactorFragment(it.id) },
         onLastItemClick = { navigator.navigateToRefactorFragment(null) },
         onCompleteButtonClick = { viewModel.onUiAction(UiAction.AddTodoItem(it.copy(completed = !it.completed))) },
@@ -49,6 +51,7 @@ class TodosRecyclerViewController @Inject constructor(
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.recyclerEvents.collect {
                     if (it == UiEvent.RecyclerEvent.ScrollUp) recyclerView.smoothScrollToPosition(0)
+                    if (it == UiEvent.RecyclerEvent.ImmediateScrollUp) recyclerView.scrollToPosition(0)
                 }
             }
         }
@@ -57,11 +60,11 @@ class TodosRecyclerViewController @Inject constructor(
                 viewModel.todoItems.collectLatest {
                     adapter.setTodoItems(it)
                     if (it.isEmpty()) {
-                        recyclerView.alpha = 0f
-                        nothingFoundBanner.root.animate().alpha(1f).duration = 300L
+                        recyclerView.animateVisibility(visibility = Visibility.Invisible)
+                        nothingFoundBanner.root.animateVisibility(visibility = Visibility.Visible)
                     } else {
-                        recyclerView.alpha = 1f
-                        nothingFoundBanner.root.animate().alpha(0f).duration = 100L
+                        recyclerView.animateVisibility(visibility = Visibility.Visible)
+                        nothingFoundBanner.root.animateVisibility(visibility = Visibility.Invisible)
                     }
                 }
             }
@@ -78,7 +81,7 @@ class TodosRecyclerViewController @Inject constructor(
         )
 
         ItemTouchHelper(
-            TodoItemsSwipeCallback(
+            RecyclerViewSwipeCallback(
                 context = context,
                 onCompleteSwipe = { pos ->
                     adapter.todoItems[pos].let { viewModel.onUiAction(UiAction.AddTodoItem(it.copy(completed = !it.completed))) }
@@ -90,7 +93,7 @@ class TodosRecyclerViewController @Inject constructor(
 
         recyclerView.itemAnimator!!.apply {
             changeDuration = 300L
-            removeDuration = 150L
+            removeDuration = 300L
         }
     }
 }

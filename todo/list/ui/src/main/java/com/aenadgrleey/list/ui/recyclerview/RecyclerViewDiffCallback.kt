@@ -1,9 +1,9 @@
-package com.aenadgrleey.list.ui.utils
+package com.aenadgrleey.list.ui.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 import com.aenadgrleey.list.ui.model.TodoItem
 
-class TodoItemsDiffCallback : DiffUtil.ItemCallback<TodoItem>() {
+class RecyclerViewDiffCallback : DiffUtil.ItemCallback<TodoItem>() {
     override fun areItemsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
         return newItem.id == oldItem.id
     }

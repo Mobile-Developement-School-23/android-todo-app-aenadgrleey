@@ -32,7 +32,7 @@ class SwipeRefreshViewController @Inject constructor(
             }
         }
         swipeRefreshLayout.run {
-            setProgressViewOffset(false, (-48).toPx, 72.toPx)
+            setProgressViewOffset(false, (-128).toPx, 72.toPx)
             setOnRefreshListener { viewModel.onUiAction(UiAction.RefreshTodoItems) }
         }
     }

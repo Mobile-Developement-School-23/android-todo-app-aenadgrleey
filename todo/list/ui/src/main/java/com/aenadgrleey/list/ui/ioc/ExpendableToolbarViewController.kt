@@ -64,7 +64,7 @@ class ExpendableToolbarViewController @Inject constructor(
 
         toolbarBinding.settingsButton.setOnClickListener { navigator.navigateToSettings() }
 
-        toolbarBinding.mainText.setOnClickListener { viewModel.onUiAction(UiAction.ScrollUpRequest) }
+        toolbarBinding.mainText.setOnClickListener { viewModel.onUiAction(UiAction.SmoothScrollUpRequest) }
 
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val seekPosition = -verticalOffset / appBarLayout.totalScrollRange.toFloat()
