@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.aenadgrleey.core.di.holder.scopedComponent
 import com.aenadgrleey.todo.refactor.domain.TodoItemId
 import com.aenadgrleey.todo.refactor.domain.TodoRefactorNavigator
@@ -27,7 +27,7 @@ class TodoRefactorFragment : Fragment() {
 
     private var todoRefactorViewComponent: TodoRefactorViewComponent? = null
 
-    private val viewModel: TodoRefactorViewModel by activityViewModels {
+    private val viewModel: TodoRefactorViewModel by viewModels {
         todoRefactorUiComponent.viewModelFactory()
     }
 

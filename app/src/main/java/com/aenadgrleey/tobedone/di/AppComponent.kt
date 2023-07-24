@@ -20,7 +20,7 @@ import dagger.Component
 @SettingsProviderScope
 @AuthProviderScope
 @Component(modules = [AppModule::class])
-interface ApplicationComponent {
+interface AppComponent {
 
     fun injectIntoApplication(application: ToBeDone)
 
@@ -44,7 +44,7 @@ interface ApplicationComponent {
         @BindsInstance
         fun applicationContext(@AppContext context: Context): Builder
 
-        fun build(): ApplicationComponent
+        fun build(): AppComponent
     }
 
 }

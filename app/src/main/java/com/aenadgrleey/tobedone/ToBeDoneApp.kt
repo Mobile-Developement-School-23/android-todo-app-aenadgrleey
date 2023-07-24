@@ -11,8 +11,8 @@ import com.aenadgrleey.list.ui.di.TodoListUiComponent
 import com.aenadgrleey.list.ui.di.TodoListUiComponentProvider
 import com.aenadgrleey.settings.ui.di.SettingUiComponent
 import com.aenadgrleey.settings.ui.di.SettingUiComponentProvider
-import com.aenadgrleey.tobedone.di.ApplicationComponent
-import com.aenadgrleey.tobedone.di.DaggerApplicationComponent
+import com.aenadgrleey.tobedone.di.AppComponent
+import com.aenadgrleey.tobedone.di.DaggerAppComponent
 import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponent
 import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponentProvider
 import com.aenadgrleey.todonotify.domain.TodoNotificationNavigator
@@ -33,7 +33,7 @@ class ToBeDone : Application(), Configuration.Provider,
     TodoNotificatorComponentProvider,
     TodoNotificationActionReceiverComponentProvider {
 
-    lateinit var applicationComponent: ApplicationComponent
+    lateinit var appComponent: AppComponent
 
     @Inject
     lateinit var workerFactory: WorkerFactory
@@ -41,10 +41,10 @@ class ToBeDone : Application(), Configuration.Provider,
     override fun onCreate() {
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)
-        applicationComponent = DaggerApplicationComponent.builder()
+        appComponent = DaggerAppComponent.builder()
             .applicationContext(this)
             .build()
-        applicationComponent.injectIntoApplication(this)
+        appComponent.injectIntoApplication(this)
     }
 
     override fun getWorkManagerConfiguration(): Configuration =
@@ -53,23 +53,23 @@ class ToBeDone : Application(), Configuration.Provider,
             .build()
 
     override fun provideAuthComponentProvider(): AuthUiComponent {
-        return applicationComponent.authUiComponent().create()
+        return appComponent.authUiComponent().create()
     }
 
     override fun provideTodoListUiComponent(): TodoListUiComponent {
-        return applicationComponent.todoListUiComponent().create()
+        return appComponent.todoListUiComponent().create()
     }
 
     override fun provideTodoRefactorUiComponent(): TodoRefactorUiComponent {
-        return applicationComponent.todoRefactorUiComponent().create()
+        return appComponent.todoRefactorUiComponent().create()
     }
 
     override fun provideSettingsUiComponentProvider(): SettingUiComponent {
-        return applicationComponent.settingsUiComponent().create()
+        return appComponent.settingsUiComponent().create()
     }
 
     override fun provideNotificatorComponent(): TodoNotificatorComponent =
-        applicationComponent.todoNotificatorComponent().create(
+        appComponent.todoNotificatorComponent().create(
             object : TodoNotificationNavigator {
                 override val intentFromNotificationToActivity: Intent
                     get() = Intent(applicationContext, TodoActivity::class.java).apply {
@@ -81,13 +81,13 @@ class ToBeDone : Application(), Configuration.Provider,
         )
 
     override fun provideTodoNotificationActionReceiverComponent(): TodoNotificationActionReceiverComponent =
-        applicationComponent.todoNotificationActionReceiverComponent().create()
+        appComponent.todoNotificationActionReceiverComponent().create()
 
 
 }
 
-val Context.applicationComponent: ApplicationComponent
+val Context.appComponent: AppComponent
     get() = when (this) {
-        is ToBeDone -> this.applicationComponent
-        else -> this.applicationContext.applicationComponent
+        is ToBeDone -> this.appComponent
+        else -> this.applicationContext.appComponent
     }

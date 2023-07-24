@@ -7,12 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.aenadgrleey.core.domain.exceptions.ServerErrorException
 import com.aenadgrleey.core.domain.exceptions.WrongAuthorizationException
 import com.aenadgrleey.todo.domain.models.Importance
+import com.aenadgrleey.todo.domain.models.TodoItemData
 import com.aenadgrleey.todo.domain.repository.TodoItemRepository
-import com.aenadgrleey.todo.refactor.ui.model.TodoItemDataToUiStateMapper
+import com.aenadgrleey.todo.domain.utils.Mapper
 import com.aenadgrleey.todo.refactor.ui.model.UiAction
 import com.aenadgrleey.todo.refactor.ui.model.UiEvent
 import com.aenadgrleey.todo.refactor.ui.model.UiState
-import com.aenadgrleey.todo.refactor.ui.model.UiStateToTodoItemData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -29,10 +29,9 @@ import javax.inject.Provider
 
 class TodoRefactorViewModel @Inject constructor(
     private val repository: TodoItemRepository,
+    private val uiStateDataMapper: Mapper<UiState, TodoItemData>,
+    private val dataUiStateMapper: Mapper<TodoItemData?, UiState>,
 ) : ViewModel() {
-
-    private val uiStateDataMapper = UiStateToTodoItemData()
-    private val dataUiStateMapper = TodoItemDataToUiStateMapper()
 
     val uiEvents: Flow<UiEvent> get() = mUiEvents.receiveAsFlow()
     private var mUiEvents = Channel<UiEvent>()

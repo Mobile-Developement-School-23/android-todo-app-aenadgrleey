@@ -37,7 +37,7 @@ class TodoActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(FragmentContainerView(this).apply { id = R.id.fragment_container_view_tag })
-        activityComponent = applicationComponent.todoActivityComponent().create(
+        activityComponent = appComponent.todoActivityComponent().create(
             permissionGrantLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {},
             activity = this,
             fragmentManager = supportFragmentManager,

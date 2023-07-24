@@ -1,6 +1,8 @@
 package com.aenadgrleey.auth.data.provider
 
 import android.content.Context
+import android.os.Build
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import com.aenadgrleey.auth.BuildConfig
 import com.aenadgrleey.auth.data.provider.datastore.AuthDataStore
@@ -15,9 +17,12 @@ import javax.inject.Inject
 class AuthProviderImpl
 @Inject constructor(@AppContext private val context: Context) : MutableAuthProvider {
     override fun authInfoFlow() = context.authDataStore.data.map {
+        val tokenType = if (BuildConfig.DEBUG) "Bearer " else "OAuth "
+        val token = if (BuildConfig.DEBUG) "durry" else it[AuthDataStore.token]
+        val deviceId = if (BuildConfig.DEBUG) "debug device" else it[AuthDataStore.deviceId]
         AuthInfo(
-            if (BuildConfig.DEBUG) "Bearer durry" else "OAuth " + it[AuthDataStore.token],
-            if (BuildConfig.DEBUG) "debug device" else it[AuthDataStore.deviceId]
+            if (token != null) tokenType + token else null,
+            if (deviceId != null) "${Build.BRAND} ${Build.MODEL} ($deviceId)" else null
         )
     }
 
@@ -31,8 +36,13 @@ class AuthProviderImpl
 
     override suspend fun updateAuthInfo(authInfo: AuthInfo) {
         context.authDataStore.edit { settings ->
-            settings[AuthDataStore.token] = authInfo.authToken!!
-            settings[AuthDataStore.deviceId] = authInfo.deviceId!!
+            try {
+                authInfo.authToken!!.also { settings[AuthDataStore.token] = it }
+                authInfo.deviceId!!.also { settings[AuthDataStore.deviceId] = it }
+            } catch (exception: NullPointerException) {
+                Log.e("Auth", "Problems with authorization, clearing datastore")
+                settings.clear()
+            }
         }
     }
 }

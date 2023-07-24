@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.aenadgrleey.core.di.holder.scopedComponent
 import com.aenadgrleey.list.ui.di.TodoListUiComponent
 import com.aenadgrleey.list.ui.di.TodoListUiComponentProvider
@@ -23,7 +23,7 @@ class TodoListFragment : Fragment() {
 
     private var todoListViewComponent: TodoListViewComponent? = null
 
-    private val viewModel by activityViewModels<TodoListViewModel> { todoListUiComponent.viewModelFactory() }
+    private val viewModel by viewModels<TodoListViewModel> { todoListUiComponent.viewModelFactory() }
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {

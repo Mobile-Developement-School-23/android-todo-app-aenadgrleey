@@ -2,6 +2,10 @@ package com.aenadgrleey.todo.data.remote
 
 import com.aenadgrleey.auth.domain.AuthProvider
 import com.aenadgrleey.auth.domain.model.AuthInfo
+import com.aenadgrleey.core.domain.exceptions.DifferentRevisionsException
+import com.aenadgrleey.core.domain.exceptions.NoSuchElementOnServerException
+import com.aenadgrleey.core.domain.exceptions.ServerErrorException
+import com.aenadgrleey.core.domain.exceptions.WrongAuthorizationException
 import com.aenadgrleey.todo.data.remote.models.TodoItemDataNetwork
 import com.aenadgrleey.todo.data.remote.network.URLs
 import com.aenadgrleey.todo.data.remote.retrofit.RetrofitClient
@@ -51,7 +55,7 @@ class NetworkDataSourceImpl
     private val httpClient: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor { chain ->
             val newRequest: Request = chain.request().newBuilder()
-                .addHeader("Authorization", (authInfo.value.authToken))
+                .addHeader("Authorization", (authInfo.value.authToken) ?: "dummy")
                 .addHeader("X-Generate-Fails", "0")
                 .build()
             chain.proceed(newRequest)
@@ -110,7 +114,7 @@ class NetworkDataSourceImpl
                         return body()!!.item.toTodoItemData()
                     }
                 }
-            } catch (noSuchElementOnServer: com.aenadgrleey.core.domain.exceptions.NoSuchElementOnServerException) {
+            } catch (noSuchElementOnServer: NoSuchElementOnServerException) {
                 retrofitClient.addTodoItem(lastKnownRevision, TodoItemRequest(networkMapper.map(item))).run {
                     checkResponseCode()
                     lastKnownRevision = body()!!.revision
@@ -141,11 +145,11 @@ class NetworkDataSourceImpl
         private const val ANOTHER_SERVER_ERROR_CODE = 502
 
         private val errorCodesToExceptionsMap = mapOf(
-            UNSYNCHRONIZED_DATA_CODE to com.aenadgrleey.core.domain.exceptions.DifferentRevisionsException(),
-            WRONG_AUTHORIZATION_CODE to com.aenadgrleey.core.domain.exceptions.WrongAuthorizationException(),
-            NO_SUCH_ELEMENT_CODE to com.aenadgrleey.core.domain.exceptions.NoSuchElementOnServerException(),
-            SERVER_ERROR_CODE to com.aenadgrleey.core.domain.exceptions.ServerErrorException(),
-            ANOTHER_SERVER_ERROR_CODE to com.aenadgrleey.core.domain.exceptions.ServerErrorException()
+            UNSYNCHRONIZED_DATA_CODE to DifferentRevisionsException(),
+            WRONG_AUTHORIZATION_CODE to WrongAuthorizationException(),
+            NO_SUCH_ELEMENT_CODE to NoSuchElementOnServerException(),
+            SERVER_ERROR_CODE to ServerErrorException(),
+            ANOTHER_SERVER_ERROR_CODE to ServerErrorException()
         )
 
     }

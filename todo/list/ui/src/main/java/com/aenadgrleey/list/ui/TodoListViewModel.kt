@@ -6,11 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.aenadgrleey.core.domain.exceptions.ServerErrorException
 import com.aenadgrleey.core.domain.exceptions.WrongAuthorizationException
 import com.aenadgrleey.list.ui.model.TodoItem
-import com.aenadgrleey.list.ui.model.TodoItemDataToTodoItem
-import com.aenadgrleey.list.ui.model.TodoItemToTodoItemData
 import com.aenadgrleey.list.ui.model.UiAction
 import com.aenadgrleey.list.ui.model.UiEvent
+import com.aenadgrleey.todo.domain.models.TodoItemData
 import com.aenadgrleey.todo.domain.repository.TodoItemRepository
+import com.aenadgrleey.todo.domain.utils.Mapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -29,11 +29,10 @@ import javax.inject.Provider
 @OptIn(FlowPreview::class)
 class TodoListViewModel @Inject constructor(
     private val repository: TodoItemRepository,
+    private val dataPresenterMapper: Mapper<TodoItemData, TodoItem>,
+    private val presenterDataMapper: Mapper<TodoItem, TodoItemData>,
 ) : ViewModel() {
 
-
-    private val dataPresenterMapper = TodoItemDataToTodoItem()
-    private val presenterDataMapper = TodoItemToTodoItemData()
 
     val todoItems get() = mTodoItems
     private val mTodoItems = MutableStateFlow<List<TodoItem>>(listOf())

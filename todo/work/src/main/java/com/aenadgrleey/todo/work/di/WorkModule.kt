@@ -2,6 +2,7 @@ package com.aenadgrleey.todo.work.di
 
 import android.net.ConnectivityManager
 import android.net.Network
+import android.util.Log
 import androidx.work.BackoffPolicy
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
@@ -9,6 +10,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkerFactory
+import com.aenadgrleey.core.domain.exceptions.ServerErrorException
+import com.aenadgrleey.core.domain.exceptions.WrongAuthorizationException
 import com.aenadgrleey.todo.domain.repository.TodoItemRepository
 import com.aenadgrleey.todo.work.ChildWorkerFactory
 import com.aenadgrleey.todo.work.NotificationWorker
@@ -25,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -87,7 +91,20 @@ abstract class WorkModule {
             object : ConnectivityManager.NetworkCallback() {
                 // network is available for use
                 override fun onAvailable(network: Network) {
-                    CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) { repository.fetchRemoteData() }
+                    CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) {
+                        val NETWORK_TAG = "NetworkLog"
+                        try {
+                            repository.fetchRemoteData()
+                        } catch (unknownHostException: java.net.UnknownHostException) {
+                            Log.e(NETWORK_TAG, unknownHostException.toString())
+                        } catch (authErrorException: WrongAuthorizationException) {
+                            Log.e(NETWORK_TAG, authErrorException.toString())
+                        } catch (serverErrorException: ServerErrorException) {
+                            Log.e(NETWORK_TAG, serverErrorException.toString())
+                        } catch (socketTimeoutException: SocketTimeoutException) {
+                            Log.e(NETWORK_TAG, socketTimeoutException.toString())
+                        }
+                    }
                     super.onAvailable(network)
                 }
             }

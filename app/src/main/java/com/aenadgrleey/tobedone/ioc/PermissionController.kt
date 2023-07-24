@@ -21,8 +21,10 @@ class PermissionController @Inject constructor(
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 settingsRepository.settingFlow().collectLatest {
-                    if (it.logged)
-                        if (!it.notificationPermissionGranted) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) permissionGrantLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    //requesting permission only if user has already logged
+                    if (it.logged && !it.notificationPermissionGranted)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                            permissionGrantLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
         }
