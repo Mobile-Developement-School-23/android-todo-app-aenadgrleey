@@ -1,9 +1,11 @@
 package com.aenadgrleey.list.ui.recyclerview
 
 import android.content.res.ColorStateList
+import android.os.Build
 import android.text.SpannableString
 import android.text.style.StrikethroughSpan
 import android.view.Gravity
+import android.view.HapticFeedbackConstants
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.PopupMenu
@@ -51,7 +53,13 @@ class RecyclerViewRegularItemViewHolder(binding: TodoListItemBinding) : Recycler
     }
 
     fun setUpItemView(onItemClick: () -> Unit) {
-        mainView.setOnClickListener { onItemClick() }
+        mainView.setOnClickListener {
+            it.performHapticFeedback(
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) HapticFeedbackConstants.CONFIRM
+                else HapticFeedbackConstants.CONTEXT_CLICK
+            )
+            onItemClick()
+        }
     }
 
     fun setTextWithImportance(text: String, importance: Importance) {
@@ -83,7 +91,10 @@ class RecyclerViewRegularItemViewHolder(binding: TodoListItemBinding) : Recycler
             body.setTextColor(context.resolveColorAttribute(MaterialR.attr.colorOnSurface))
             completeIndicator.imageTintList = ColorStateList.valueOf(context.resolveColorAttribute(MaterialR.attr.colorOutline))
         }
-        completeIndicator.setOnClickListener { onCompleteButtonClick() }
+        completeIndicator.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+            onCompleteButtonClick()
+        }
     }
 
     fun setUpMenuButton(
@@ -105,9 +116,26 @@ class RecyclerViewRegularItemViewHolder(binding: TodoListItemBinding) : Recycler
             )
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.complete_task -> onCompleteActionClick()
-                    R.id.edit_task -> onEditActionClick()
-                    R.id.delete_task -> onDeleteActionClick()
+                    R.id.edit_task -> {
+                        onEditActionClick()
+                        it.performHapticFeedback(
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) HapticFeedbackConstants.CONFIRM
+                            else HapticFeedbackConstants.CONTEXT_CLICK
+                        )
+                    }
+
+                    R.id.delete_task -> {
+                        onDeleteActionClick()
+                        it.performHapticFeedback(
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) HapticFeedbackConstants.REJECT
+                            else HapticFeedbackConstants.CONTEXT_CLICK
+                        )
+                    }
+
+                    R.id.complete_task -> {
+                        onCompleteActionClick()
+                        it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+                    }
                 }
                 popupMenu.dismiss()
                 true

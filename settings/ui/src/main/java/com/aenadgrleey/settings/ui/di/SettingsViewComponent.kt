@@ -1,12 +1,12 @@
 package com.aenadgrleey.settings.ui.di
 
-import com.aenadgrleey.settings.ui.SettingDialogFragment
+import com.aenadgrleey.settings.ui.SettingsDialogFragment
 import dagger.Subcomponent
 
 @Subcomponent
 interface SettingsViewComponent {
 
-    fun inject(settingDialogFragment: SettingDialogFragment)
+    fun inject(settingsDialogFragment: SettingsDialogFragment)
 
     @Subcomponent.Factory
     interface Factory {

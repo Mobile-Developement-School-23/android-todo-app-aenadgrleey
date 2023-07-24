@@ -15,7 +15,7 @@ import com.aenadgrleey.auth.domain.AuthProvider
 import com.aenadgrleey.auth.ui.AuthFragment
 import com.aenadgrleey.list.ui.TodoListFragment
 import com.aenadgrleey.settings.domain.SettingsNavigator
-import com.aenadgrleey.settings.ui.SettingDialogFragment
+import com.aenadgrleey.settings.ui.SettingsDialogFragment
 import com.aenadgrleey.tobedone.di.view_component.ActivityViewScope
 import com.aenadgrleey.todo.refactor.domain.TodoItemId
 import com.aenadgrleey.todo.refactor.domain.TodoRefactorNavigator
@@ -62,7 +62,7 @@ class NavigationController
     }
 
     override fun navigateToSettings() {
-        SettingDialogFragment().show(supportFragmentManager, "settings")
+        SettingsDialogFragment().show(supportFragmentManager, "settings")
     }
 
     override fun navigateToRefactorFragment(todoItemId: String?) {
@@ -72,7 +72,6 @@ class NavigationController
             add<TodoRefactorFragment>(R.id.fragment_container_view_tag, "todorefactor", arguments)
             setReorderingAllowed(true)
             addToBackStack("todoRefactor")
-
         }
     }
 

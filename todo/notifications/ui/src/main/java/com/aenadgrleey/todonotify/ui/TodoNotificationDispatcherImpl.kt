@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.aenadgrleey.core.di.AppContext
 import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.domain.models.TodoItemData
@@ -29,7 +28,6 @@ class TodoNotificationDispatcherImpl @Inject constructor(
             action = TodoNotification.notificationAction
             putExtra(TodoNotification.todoItemIdTag, todoItemData.id!!)
         }
-        Log.v(TAG, "postponed")
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             todoItemData.deadline!!.time,

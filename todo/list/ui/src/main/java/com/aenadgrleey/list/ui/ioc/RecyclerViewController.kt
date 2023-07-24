@@ -1,6 +1,8 @@
 package com.aenadgrleey.list.ui.ioc
 
 import android.content.Context
+import android.os.Build
+import android.view.HapticFeedbackConstants
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -46,15 +48,12 @@ class RecyclerViewController @Inject constructor(
         onDeleteButtonClick = { viewModel.onUiAction(UiAction.DeleteTodoItem(it)) }
     )
 
+    fun onUiEvent(uiEvent: UiEvent) {
+        if (uiEvent == UiEvent.ScrollUp) recyclerView.smoothScrollToPosition(0)
+        if (uiEvent == UiEvent.ImmediateScrollUp) recyclerView.scrollToPosition(0)
+    }
+
     fun setUpRecycler() {
-        lifecycleOwner.lifecycleScope.launch {
-            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.recyclerEvents.collect {
-                    if (it == UiEvent.RecyclerEvent.ScrollUp) recyclerView.smoothScrollToPosition(0)
-                    if (it == UiEvent.RecyclerEvent.ImmediateScrollUp) recyclerView.scrollToPosition(0)
-                }
-            }
-        }
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.todoItems.collectLatest {
@@ -84,9 +83,14 @@ class RecyclerViewController @Inject constructor(
             RecyclerViewSwipeCallback(
                 context = context,
                 onCompleteSwipe = { pos ->
+                    (recyclerView.layoutManager as LinearLayoutManager).findViewByPosition(pos)!!.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
                     adapter.todoItems[pos].let { viewModel.onUiAction(UiAction.AddTodoItem(it.copy(completed = !it.completed))) }
                 },
                 onDeleteSwipe = { pos ->
+                    (recyclerView.layoutManager as LinearLayoutManager).findViewByPosition(pos)!!.performHapticFeedback(
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) HapticFeedbackConstants.REJECT
+                        else HapticFeedbackConstants.CONTEXT_CLICK
+                    )
                     adapter.todoItems[pos].let { viewModel.onUiAction(UiAction.DeleteTodoItem(it)) }
                 })
         ).attachToRecyclerView(recyclerView)

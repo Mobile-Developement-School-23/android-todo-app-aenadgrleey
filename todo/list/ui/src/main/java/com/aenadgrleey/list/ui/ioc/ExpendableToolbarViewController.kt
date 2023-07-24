@@ -2,6 +2,7 @@ package com.aenadgrleey.list.ui.ioc
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.HapticFeedbackConstants
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.core.ui.resolveColorAttribute
 import com.aenadgrleey.list.ui.TodoListViewModel
 import com.aenadgrleey.list.ui.model.UiAction
+import com.aenadgrleey.list.ui.model.UiEvent
 import com.aenadgrleey.todo.list.ui.databinding.ExpendableToolbarBinding
 import com.aenadrgleey.todo.list.domain.TodoListNavigator
 import com.google.android.material.appbar.AppBarLayout
@@ -32,24 +34,22 @@ class ExpendableToolbarViewController @Inject constructor(
     @ViewLifecycleOwner
     private val lifecycleOwner: LifecycleOwner,
 ) {
-    fun setUpToolbar() {
-        lifecycleOwner.lifecycleScope.launch {
-            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isShowingCompleted.collect { show ->
-                    if (show) toolbarBinding.visibilityIcon.run {
-                        val color = context.resolveColorAttribute(MaterialR.attr.colorPrimary)
-                        setImageResource(CommonR.drawable.visibility_36px)
-                        setColorFilter(color)
-                    }
-                    else toolbarBinding.visibilityIcon.run {
-                        val color = context.resolveColorAttribute(MaterialR.attr.colorOnSurfaceVariant)
-                        setImageResource(CommonR.drawable.visibility_off_36px)
-                        setColorFilter(color)
-                    }
-                }
-            }
-        }
+    fun onUiEvent(uiEvent: UiEvent) {
+        if (uiEvent !is UiEvent.VisibilityChange) return
 
+        if (uiEvent.visible) toolbarBinding.visibilityIcon.run {
+            val color = context.resolveColorAttribute(MaterialR.attr.colorPrimary)
+            setImageResource(CommonR.drawable.visibility_36px)
+            setColorFilter(color)
+        }
+        else toolbarBinding.visibilityIcon.run {
+            val color = context.resolveColorAttribute(MaterialR.attr.colorOnSurfaceVariant)
+            setImageResource(CommonR.drawable.visibility_off_36px)
+            setColorFilter(color)
+        }
+    }
+
+    fun setUpToolbar() {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.completedCount.collectLatest {
@@ -60,11 +60,20 @@ class ExpendableToolbarViewController @Inject constructor(
             }
         }
 
-        toolbarBinding.visibilityIcon.setOnClickListener { viewModel.onUiAction(UiAction.ToggledCompletedMark) }
+        toolbarBinding.visibilityIcon.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+            viewModel.onUiAction(UiAction.ToggledCompletedMark)
+        }
 
-        toolbarBinding.settingsButton.setOnClickListener { navigator.navigateToSettings() }
+        toolbarBinding.settingsButton.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+            navigator.navigateToSettings()
+        }
 
-        toolbarBinding.mainText.setOnClickListener { viewModel.onUiAction(UiAction.SmoothScrollUpRequest) }
+        toolbarBinding.mainText.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+            viewModel.onUiAction(UiAction.SmoothScrollUpRequest)
+        }
 
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val seekPosition = -verticalOffset / appBarLayout.totalScrollRange.toFloat()

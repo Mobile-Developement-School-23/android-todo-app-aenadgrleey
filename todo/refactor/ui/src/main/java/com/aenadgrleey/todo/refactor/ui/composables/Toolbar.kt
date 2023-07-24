@@ -21,7 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +39,7 @@ fun RefactorScreenToolbar(
     onUiAction: (UiAction) -> Unit,
 ) {
     val elevation by animateIntAsState(targetValue = if (dependentScrollState.value != 0) 10 else 0, label = "elevation")
+    val haptic = LocalHapticFeedback.current
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,7 +52,10 @@ fun RefactorScreenToolbar(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(start = 8.dp),
-                onClick = { onUiAction(UiAction.OnExitRequest) }
+                onClick = {
+                    onUiAction(UiAction.OnExitRequest)
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Close,
@@ -73,7 +79,10 @@ fun RefactorScreenToolbar(
             val completeColor = Color(LocalContext.current.getColor(R.color.green))
             IconButton(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                onClick = { onUiAction(UiAction.OnCompletenessChange(!completeness)) }
+                onClick = {
+                    onUiAction(UiAction.OnCompletenessChange(!completeness))
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.round_check_circle_outline_24),
@@ -87,7 +96,10 @@ fun RefactorScreenToolbar(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(end = 8.dp),
-                onClick = { onUiAction(UiAction.OnSaveRequest) }
+                onClick = {
+                    onUiAction(UiAction.OnSaveRequest)
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.round_save_24),

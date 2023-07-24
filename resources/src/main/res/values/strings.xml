@@ -69,6 +69,10 @@
     <string name="signInTitle">Sign in</string>
     <string name="emptyStateTitle">No todos.....</string>
     <string name="emptyStateBody">You have completed everything! \nIt\'s time to rest or create something new</string>
+    <string name="deletedItem">Deleted:&#160;</string>
+    <string name="cancel">Cancel</string>
+    <string name="problemAuth">Problems with authorization</string>
+    <string name="confirmDelete">Do you want to delete an item?</string>
 
 
 </resources>

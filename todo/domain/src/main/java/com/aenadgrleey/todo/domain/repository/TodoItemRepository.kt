@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 Repository for giving data to ui layer
  */
 interface TodoItemRepository {
-    fun todoItems(includeCompleted: Boolean): Flow<List<TodoItemData>>
+    fun todoItems(excludeCompleted: Boolean): Flow<List<TodoItemData>>
 
     suspend fun todoItem(id: String): TodoItemData?
 

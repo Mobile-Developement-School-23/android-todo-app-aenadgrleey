@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:colorBackground"
-        tools:alpha="1">
+        tools:visibility="visible">
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:layout_width="128dp"

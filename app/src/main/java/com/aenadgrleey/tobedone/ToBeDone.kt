@@ -43,14 +43,6 @@ class ToBeDone : Application(), Configuration.Provider,
         DynamicColors.applyToActivitiesIfAvailable(this)
         applicationComponent = DaggerApplicationComponent.builder()
             .applicationContext(this)
-            .notificationNavigator(object : TodoNotificationNavigator {
-                override val intentFromNotificationToActivity: Intent
-                    get() = Intent(applicationContext, TodoActivity::class.java).apply {
-                        action = TodoNotification.launchAppFromNotificationAction
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-
-            })
             .build()
         applicationComponent.injectIntoApplication(this)
     }
@@ -77,7 +69,16 @@ class ToBeDone : Application(), Configuration.Provider,
     }
 
     override fun provideNotificatorComponent(): TodoNotificatorComponent =
-        applicationComponent.todoNotificatorComponent().create()
+        applicationComponent.todoNotificatorComponent().create(
+            object : TodoNotificationNavigator {
+                override val intentFromNotificationToActivity: Intent
+                    get() = Intent(applicationContext, TodoActivity::class.java).apply {
+                        action = TodoNotification.launchAppFromNotificationAction
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+
+            }
+        )
 
     override fun provideTodoNotificationActionReceiverComponent(): TodoNotificationActionReceiverComponent =
         applicationComponent.todoNotificationActionReceiverComponent().create()

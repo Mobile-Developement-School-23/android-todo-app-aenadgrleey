@@ -1,8 +1,11 @@
 package com.aenadgrleey.todo.refactor.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.aenadgrleey.core.domain.exceptions.ServerErrorException
+import com.aenadgrleey.core.domain.exceptions.WrongAuthorizationException
 import com.aenadgrleey.todo.domain.models.Importance
 import com.aenadgrleey.todo.domain.repository.TodoItemRepository
 import com.aenadgrleey.todo.refactor.ui.model.TodoItemDataToUiStateMapper
@@ -10,13 +13,16 @@ import com.aenadgrleey.todo.refactor.ui.model.UiAction
 import com.aenadgrleey.todo.refactor.ui.model.UiEvent
 import com.aenadgrleey.todo.refactor.ui.model.UiState
 import com.aenadgrleey.todo.refactor.ui.model.UiStateToTodoItemData
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Provider
@@ -88,7 +94,7 @@ class TodoRefactorViewModel @Inject constructor(
                     return@launch
                 }
                 mUiEvents.send(UiEvent.ExitRequest)
-                repository.addTodoItem(uiStateDataMapper.map(it))
+                runGuaranteedIOOperation { repository.addTodoItem(uiStateDataMapper.map(it)) }
             }
         }
     }
@@ -96,13 +102,33 @@ class TodoRefactorViewModel @Inject constructor(
     private fun deleteTodoItem() {
         mUiState.value.let {
             viewModelScope.launch {
-                repository.deleteTodoItem(uiStateDataMapper.map(it))
                 mUiEvents.send(UiEvent.ExitRequest)
+                runGuaranteedIOOperation { repository.deleteTodoItem(uiStateDataMapper.map(it)) }
             }
         }
     }
 
+    private fun runGuaranteedIOOperation(block: suspend () -> Unit) {
+        CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) { block.invoke() }
+    }
+
+    private suspend fun catchRemoteExceptions(block: suspend () -> Unit) {
+        try {
+            block.invoke()
+        } catch (unknownHostException: java.net.UnknownHostException) {
+            Log.e(NETWORK_TAG, unknownHostException.toString())
+        } catch (authErrorException: WrongAuthorizationException) {
+            Log.e(NETWORK_TAG, authErrorException.toString())
+        } catch (serverErrorException: ServerErrorException) {
+            Log.e(NETWORK_TAG, serverErrorException.toString())
+        } catch (socketTimeoutException: SocketTimeoutException) {
+            Log.e(NETWORK_TAG, socketTimeoutException.toString())
+        }
+    }
+
     companion object {
+        const val NETWORK_TAG = "NetworkError"
+
         val emptyState = UiState(
             id = null,
             lastModifiedBy = null,

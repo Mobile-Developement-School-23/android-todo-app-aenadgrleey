@@ -26,7 +26,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -51,10 +53,13 @@ fun RefactorScreenImportanceSelector(selected: Importance, onUiAction: (UiAction
         ) {
 
             val items = remember { listOf(Importance.High, Importance.Common, Importance.Low) }
-
+            val haptic = LocalHapticFeedback.current
             items.forEachIndexed { index, importance ->
                 OutlinedButton(
-                    onClick = { onUiAction(UiAction.OnImportanceChange(importance)) },
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        onUiAction(UiAction.OnImportanceChange(importance))
+                    },
                     shape = when (index) {
                         0 -> RoundedCornerShape(topStart = cornerRadius, topEnd = 0.dp, bottomStart = cornerRadius, bottomEnd = 0.dp)
                         items.lastIndex -> RoundedCornerShape(topStart = 0.dp, topEnd = cornerRadius, bottomStart = 0.dp, bottomEnd = cornerRadius)

@@ -18,7 +18,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -38,24 +37,20 @@ class TodoListViewModel @Inject constructor(
 
     val todoItems get() = mTodoItems
     private val mTodoItems = MutableStateFlow<List<TodoItem>>(listOf())
+    private val mShowCompleted = MutableStateFlow(false)
 
-    val isShowingCompleted: StateFlow<Boolean> get() = mShowCompleted.asStateFlow()
-    private var mShowCompleted = MutableStateFlow(false)
-    val swipeRefreshEvents get() = mSwipeRefreshEvents.receiveAsFlow()
-    private val mSwipeRefreshEvents = Channel<UiEvent>()
-    val coordinatorEvents get() = mCoordinatorEvents.receiveAsFlow()
-    private val mCoordinatorEvents = Channel<UiEvent>()
-    val recyclerEvents get() = mRecyclerEvents.receiveAsFlow()
-    private val mRecyclerEvents = Channel<UiEvent.RecyclerEvent>()
     val completedCount: StateFlow<Int> get() = mCompletedCount
     private val mCompletedCount = MutableStateFlow(0)
+
+    val uiEvents get() = mUiEvents.receiveAsFlow()
+    private val mUiEvents = Channel<UiEvent>()
 
 
     init {
         viewModelScope.launch {
             mShowCompleted.collectLatest {
-                repository.todoItems(mShowCompleted.value).debounce(100).collectLatest {
-                    mTodoItems.value = it.map(dataPresenterMapper::map)
+                repository.todoItems(it).debounce(100).collectLatest { items ->
+                    mTodoItems.value = items.map(dataPresenterMapper::map)
                 }
             }
         }
@@ -71,16 +66,29 @@ class TodoListViewModel @Inject constructor(
     fun onUiAction(uiAction: UiAction) {
         viewModelScope.launch(Dispatchers.IO) {
             when (uiAction) {
-                UiAction.SmoothScrollUpRequest -> mRecyclerEvents.send(UiEvent.RecyclerEvent.ScrollUp)
-                UiAction.ImmediateScrollUpRequest -> mRecyclerEvents.send(UiEvent.RecyclerEvent.ImmediateScrollUp)
+                UiAction.SmoothScrollUpRequest -> mUiEvents.send(UiEvent.ScrollUp)
+                UiAction.ImmediateScrollUpRequest -> mUiEvents.send(UiEvent.ImmediateScrollUp)
                 is UiAction.AddTodoItem -> runGuaranteedIOOperation { repository.addTodoItem(presenterDataMapper.map(uiAction.todoItem)) }
-                is UiAction.DeleteTodoItem -> runGuaranteedIOOperation { repository.deleteTodoItem(presenterDataMapper.map(uiAction.todoItem)) }
-                UiAction.ToggledCompletedMark -> mShowCompleted.value = !mShowCompleted.value
-                UiAction.RefreshTodoItems -> {
-                    mSwipeRefreshEvents.send(UiEvent.SyncingWithServer)
-                    mCoordinatorEvents.send(UiEvent.SyncingWithServer)
-                    runGuaranteedIOOperation { repository.fetchRemoteData() }
+                UiAction.ToggledCompletedMark -> {
+                    mShowCompleted.value = !mShowCompleted.value
+                    mUiEvents.send(UiEvent.VisibilityChange(mShowCompleted.value))
                 }
+
+                is UiAction.UndoDeleteTodoItem -> runGuaranteedIOOperation { repository.addTodoItem(presenterDataMapper.map(uiAction.todoItem)) }
+                is UiAction.DeleteTodoItem -> {
+                    mUiEvents.send(UiEvent.ShowDeletedItem(uiAction.todoItem))
+                    runGuaranteedIOOperation { repository.deleteTodoItem(presenterDataMapper.map(uiAction.todoItem)) }
+                }
+
+                UiAction.RefreshTodoItems -> {
+                    mUiEvents.send(UiEvent.SyncingWithServer)
+                    runGuaranteedIOOperation {
+                        repository.fetchRemoteData()
+                        //it will be called only if fetch succeeds
+                        mUiEvents.send(UiEvent.SyncedWithServer)
+                    }
+                }
+
             }
         }
     }
@@ -95,22 +103,14 @@ class TodoListViewModel @Inject constructor(
         try {
             block.invoke()
         } catch (unknownHostException: java.net.UnknownHostException) {
-            mSwipeRefreshEvents.send(UiEvent.ConnectionError)
-            mCoordinatorEvents.send(UiEvent.ConnectionError)
+            mUiEvents.send(UiEvent.ConnectionError)
         } catch (authErrorException: WrongAuthorizationException) {
-            mSwipeRefreshEvents.send(UiEvent.BadServerResponse)
-            mCoordinatorEvents.send(UiEvent.BadServerResponse)
+            mUiEvents.send(UiEvent.BadServerResponse)
         } catch (serverErrorException: ServerErrorException) {
-            mSwipeRefreshEvents.send(UiEvent.BadServerResponse)
-            mCoordinatorEvents.send(UiEvent.BadServerResponse)
+            mUiEvents.send(UiEvent.BadServerResponse)
         } catch (socketTimeoutException: SocketTimeoutException) {
-            mSwipeRefreshEvents.send(UiEvent.BadServerResponse)
-            mCoordinatorEvents.send(UiEvent.BadServerResponse)
-        } finally {
-            mSwipeRefreshEvents.send(UiEvent.SyncedWithServer)
-            mCoordinatorEvents.send(UiEvent.SyncedWithServer)
+            mUiEvents.send(UiEvent.BadServerResponse)
         }
-
     }
 
     class ViewModelFactory @Inject constructor(

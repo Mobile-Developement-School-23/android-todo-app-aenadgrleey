@@ -7,4 +7,5 @@ sealed class UiAction {
     object RefreshTodoItems : UiAction()
     data class AddTodoItem(val todoItem: TodoItem) : UiAction()
     data class DeleteTodoItem(val todoItem: TodoItem) : UiAction()
+    data class UndoDeleteTodoItem(val todoItem: TodoItem) : UiAction()
 }

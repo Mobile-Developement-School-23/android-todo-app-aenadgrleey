@@ -23,8 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +39,7 @@ import java.util.Locale
 @Composable
 fun RefactorScreenDeadlineSelector(enabled: Boolean, date: Date?, onUiAction: (UiAction) -> Unit) {
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,6 +50,7 @@ fun RefactorScreenDeadlineSelector(enabled: Boolean, date: Date?, onUiAction: (U
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(radius = LocalConfiguration.current.screenWidthDp.dp)
             ) {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 if (enabled) launchDateTimePickers(date, context) {
                     onUiAction(UiAction.OnDeadlineChange(enabled, it))
                 }
@@ -55,7 +59,7 @@ fun RefactorScreenDeadlineSelector(enabled: Boolean, date: Date?, onUiAction: (U
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = LocalContext.current.resources.getString(string.deadline), style = MaterialTheme.typography.titleMedium)
+        Text(text = LocalContext.current.getString(string.deadline, ""), style = MaterialTheme.typography.titleMedium)
         val dateTimeFormat by remember { mutableStateOf(SimpleDateFormat("HH:mm dd.MM.yy", Locale("eng"))) }
         val valueStr = date?.let { dateTimeFormat.format(it).toString() } ?: context.resources.getString(string.deadlineExample)
         Row(
@@ -74,7 +78,10 @@ fun RefactorScreenDeadlineSelector(enabled: Boolean, date: Date?, onUiAction: (U
             )
         }
 
-        Switch(checked = enabled, onCheckedChange = { onUiAction(UiAction.OnDeadlineChange(!enabled, date)) })
+        Switch(checked = enabled, onCheckedChange = {
+            onUiAction(UiAction.OnDeadlineChange(!enabled, date))
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        })
     }
 }
 

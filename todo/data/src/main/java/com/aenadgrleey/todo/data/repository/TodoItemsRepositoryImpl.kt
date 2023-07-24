@@ -26,8 +26,8 @@ class TodoItemsRepositoryImpl @Inject constructor(
 ) : TodoItemRepository {
 
 
-    override fun todoItems(includeCompleted: Boolean): Flow<List<TodoItemData>> =
-        localDataSource.getTodoItems(includeCompleted)
+    override fun todoItems(excludeCompleted: Boolean): Flow<List<TodoItemData>> =
+        localDataSource.getTodoItems(excludeCompleted)
 
     override suspend fun todoItem(id: String): TodoItemData? = localDataSource.todoItem(id)
 

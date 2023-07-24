@@ -20,7 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -31,7 +33,8 @@ import com.aenadgrleey.resources.R as CommonR
 @Composable
 fun SettingScreenThemeSelector(currentTheme: AppTheme, onUiAction: (UiAction) -> Unit) {
     val themes = remember { listOf(AppTheme.Light, AppTheme.Dark, AppTheme.System) }
-    val cornerRadius = 8.dp
+    val cornerRadius = remember { 8.dp }
+    val haptic = LocalHapticFeedback.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,7 +42,10 @@ fun SettingScreenThemeSelector(currentTheme: AppTheme, onUiAction: (UiAction) ->
     ) {
         themes.forEachIndexed { index, theme ->
             OutlinedButton(
-                onClick = { onUiAction(UiAction.OnThemeSelect(theme)) },
+                onClick = {
+                    onUiAction(UiAction.OnThemeSelect(theme))
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                },
                 shape = when (index) {
                     // left outer button
                     0 -> RoundedCornerShape(topStart = cornerRadius, topEnd = 0.dp, bottomStart = cornerRadius, bottomEnd = 0.dp)

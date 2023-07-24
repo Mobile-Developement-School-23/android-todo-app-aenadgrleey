@@ -1,20 +1,18 @@
 package com.aenadgrleey.list.ui.ioc
 
 import android.content.Context
+import android.os.Build
+import android.view.HapticFeedbackConstants
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.aenadgrleey.core.di.FragmentContext
 import com.aenadgrleey.core.di.ViewLifecycleOwner
 import com.aenadgrleey.core.di.ViewScope
 import com.aenadgrleey.list.ui.TodoListViewModel
+import com.aenadgrleey.list.ui.model.UiAction
 import com.aenadgrleey.list.ui.model.UiEvent
 import com.aenadgrleey.resources.R
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ViewScope
@@ -26,18 +24,29 @@ class CoordinatorViewController @Inject constructor(
     @ViewLifecycleOwner
     private val lifecycleOwner: LifecycleOwner,
 ) {
-    fun setUpCoordinator() {
-        lifecycleOwner.lifecycleScope.launch {
-            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.coordinatorEvents.collectLatest { event ->
-                    when (event) {
-                        UiEvent.ConnectionError -> context.resources.getString(R.string.noInternetError)
-                        UiEvent.SyncedWithServer -> context.resources.getString(R.string.synced)
-                        UiEvent.BadServerResponse -> context.resources.getString(R.string.serverError)
-                        else -> null
-                    }?.let { Snackbar.make(coordinatorLayout, it, Snackbar.LENGTH_SHORT).show() }
+
+    suspend fun onUiEvent(uiEvent: UiEvent) {
+        val snackbarMessage: String? = when (uiEvent) {
+            UiEvent.ConnectionError -> context.resources.getString(R.string.noInternetError)
+            UiEvent.SyncedWithServer -> context.resources.getString(R.string.synced)
+            UiEvent.BadServerResponse -> context.getString(R.string.serverError)
+            is UiEvent.ShowDeletedItem -> context.getString(R.string.deletedItem) + uiEvent.todoItem.body
+            UiEvent.ProblemsWithAuth -> context.getString(R.string.problemAuth)
+            else -> null
+        }
+        snackbarMessage?.let {
+            val snackbar = Snackbar.make(coordinatorLayout, it, Snackbar.LENGTH_LONG)
+            snackbar.setTextMaxLines(1)
+            if (uiEvent is UiEvent.ShowDeletedItem) {
+                snackbar.setAction(context.getString(R.string.cancel)) { view ->
+                    view.performHapticFeedback(
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) HapticFeedbackConstants.CONFIRM
+                        else HapticFeedbackConstants.CONTEXT_CLICK
+                    )
+                    viewModel.onUiAction(UiAction.UndoDeleteTodoItem(uiEvent.todoItem))
                 }
             }
+            snackbar.show()
         }
     }
 }

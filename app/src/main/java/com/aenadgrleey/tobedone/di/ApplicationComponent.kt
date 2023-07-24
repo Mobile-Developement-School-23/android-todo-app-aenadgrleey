@@ -11,7 +11,6 @@ import com.aenadgrleey.settings.ui.di.SettingUiComponent
 import com.aenadgrleey.tobedone.ToBeDone
 import com.aenadgrleey.tobedone.di.view_component.TodoActivityViewComponent
 import com.aenadgrleey.todo.refactor.ui.di.TodoRefactorUiComponent
-import com.aenadgrleey.todonotify.domain.TodoNotificationNavigator
 import com.aenadgrleey.todonotify.ui.di.TodoNotificationActionReceiverComponent
 import com.aenadgrleey.todonotify.ui.di.TodoNotificatorComponent
 import dagger.BindsInstance
@@ -44,9 +43,6 @@ interface ApplicationComponent {
     interface Builder {
         @BindsInstance
         fun applicationContext(@AppContext context: Context): Builder
-
-        @BindsInstance
-        fun notificationNavigator(navigator: TodoNotificationNavigator): Builder
 
         fun build(): ApplicationComponent
     }

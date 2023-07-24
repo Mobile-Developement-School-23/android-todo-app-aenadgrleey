@@ -69,7 +69,7 @@ class TodoDeadlineNotificator : TodoNotificator() {
 
     private fun TodoItemData?.shouldNotify(): Boolean {
         if (this == null) return false
-        if (this.completed == true) return false
+        if (this.completed) return false
         if (((this.deadline?.time ?: 0L) - TodoNotification.spread) > Calendar.getInstance().time.time) return false
         return true
     }
