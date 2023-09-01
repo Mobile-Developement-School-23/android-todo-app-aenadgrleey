@@ -49,4 +49,4 @@ Following technologies were used during development process:
    scalability and adaptability while delivering a beautiful and intuitive
    user interface
 
-![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/dark_main_1.png) ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/light_main_1.png)
+| ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/dark_main_1.png) | ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/light_main_1.png)
