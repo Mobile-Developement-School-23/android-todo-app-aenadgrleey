@@ -76,10 +76,7 @@ class HardcodedDataSourceImpl @Inject constructor(@AppContext private val contex
     }
 
     override fun getTodoItems(excludeCompleted: Boolean): Flow<List<TodoItemData>> = mTodoItemsChannel.receiveAsFlow()
-        .onStart {
-            mTodoItemsChannel.send(items)
-            mTodoItemsCompletedCountChannel.send(items.count(TodoItemData::completed))
-        }
+        .onStart { this.emit(items) }
 
     override suspend fun getTodoItems(): List<TodoItemData> = items
 
@@ -90,10 +87,7 @@ class HardcodedDataSourceImpl @Inject constructor(@AppContext private val contex
     }
 
     override fun completedItemsCount(): Flow<Int> = mTodoItemsCompletedCountChannel.receiveAsFlow()
-        .onStart {
-            mTodoItemsChannel.send(items)
-            mTodoItemsCompletedCountChannel.send(items.count(TodoItemData::completed))
-        }
+        .onStart { this.emit(items.count(TodoItemData::completed)) }
 
     override suspend fun deleteTodoItem(todoItem: TodoItemData) {
         for (index in 0..items.lastIndex) {
