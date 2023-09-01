@@ -49,7 +49,15 @@ Following technologies were used during development process:
    scalability and adaptability while delivering a beautiful and intuitive
    user interface
 
-<p float="left">
-  <img src="https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/dark_main_1.png" width="50%" />
-  <img src="https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/light_main_1.png" width="50%" />
-</p>
+## App interface
+
+| Todo list                                                                                                                       |                                                                                                                                  |
+|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/dark_main_1.png)   | ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/light_main_1.png)   |
+| ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/dark_main_2.png)   | ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/light_main_2.png)   |
+| Todo edit                                                                                                                       |                                                                                                                                  |
+| ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/dark_edit.png)     | ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/light_edit.png)     |
+| App settings                                                                                                                    |                                                                                                                                  |
+| ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/dark_settings.png) | ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/light_settings.png) |
+| Authorization                                                                                                                   |                                                                                                                                  |
+| ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/dark_auth.png)     | ![](https://github.com/aenadgrleey/Mobile-Development-School-23-android-todo-app-aenadgrleey/blob/main/media/light_auth.png)     |
