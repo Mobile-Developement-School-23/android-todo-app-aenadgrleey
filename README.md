@@ -44,10 +44,9 @@ Following technologies were used during development process:
    Jetpack Compose, ToBeDone achieves a highly declarative and maintainable
    architecture. This not only enhances the user experience but also makes
    it easier for developers to extend and improve the application over
-   time. The combination of modern architectural principles and
-   cutting-edge UI technology ensures that ToBeDone is built for
-   scalability and adaptability while delivering a beautiful and intuitive
-   user interface
+   time.
+
+   ### *Currently remote API is not working so cloud sync is not available 
 
 ## App interface
 
